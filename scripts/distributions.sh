@@ -606,11 +606,7 @@ install_distribution_specific()
 		;;
 
 	esac
-
 }
-
-
-
 
 post_debootstrap_tweaks()
 {

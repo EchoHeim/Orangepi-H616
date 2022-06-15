@@ -199,13 +199,8 @@ fi
 
 # define distribution support status
 declare -A distro_name
-distro_name['stretch']="Debian 9 Stretch"
 distro_name['buster']="Debian 10 Buster"
-distro_name['bullseye']="Debian 11 Bullseye"
-distro_name['xenial']="Ubuntu Xenial 16.04 LTS"
-distro_name['bionic']="Ubuntu Bionic 18.04 LTS"
 distro_name['focal']="Ubuntu Focal 20.04 LTS"
-distro_name['eoan']="Ubuntu Eoan 19.10"
 
 if [[ ${BUILD_OPT} == image || ${BUILD_OPT} == rootfs ]]; then
 
@@ -222,12 +217,7 @@ if [[ ${BUILD_OPT} == image || ${BUILD_OPT} == rootfs ]]; then
 			[[ -z $BRANCH ]] && exit_with_error "No kernel branch selected"
 		fi
 
-                distro_menu "stretch"
                 distro_menu "buster"
-                distro_menu "bullseye"
-                distro_menu "xenial"
-                distro_menu "bionic"
-                distro_menu "eoan"
                 distro_menu "focal"
 
 		menustr="Select the target OS release package base"

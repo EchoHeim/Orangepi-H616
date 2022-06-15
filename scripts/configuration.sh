@@ -6,7 +6,6 @@
 # License version 2. This program is licensed "as is" without any
 # warranty of any kind, whether express or implied.
 
-
 [[ -z $ROOTPWD ]] && ROOTPWD="orangepi" # Must be changed @first login
 [[ -z $OPI_USERNAME ]] && OPI_USERNAME="orangepi" 
 [[ -z $OPI_PWD ]] && OPI_PWD="orangepi" 
