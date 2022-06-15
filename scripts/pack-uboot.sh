@@ -67,21 +67,21 @@ function do_common()
 	fi
 }
 
-do_pack_h3()
-{
-	cp $BOOTDIR/boot0_sdcard_${CHIP}.bin ${PACK_OUT}
-	cp $BOOTDIR/u-boot-${CHIP}.bin ${PACK_OUT}
-	cp $SYS_CONFIG ${PACK_OUT}/sys_config.fex
+# do_pack_h3()
+# {
+# 	cp $BOOTDIR/boot0_sdcard_${CHIP}.bin ${PACK_OUT}
+# 	cp $BOOTDIR/u-boot-${CHIP}.bin ${PACK_OUT}
+# 	cp $SYS_CONFIG ${PACK_OUT}/sys_config.fex
 
-	fex2bin  sys_config.fex sys_config.bin
-	update_boot0 boot0_sdcard_${CHIP}.bin sys_config.bin SDMMC_CARD >/dev/null 2>&1
-	update_uboot u-boot-${CHIP}.bin sys_config.bin >/dev/null 2>&1
+# 	fex2bin  sys_config.fex sys_config.bin
+# 	update_boot0 boot0_sdcard_${CHIP}.bin sys_config.bin SDMMC_CARD >/dev/null 2>&1
+# 	update_uboot u-boot-${CHIP}.bin sys_config.bin >/dev/null 2>&1
 
-	cp boot0_sdcard_${CHIP}.bin $UBOOT_BIN/boot0_sdcard_${CHIP}.bin 
-	cp u-boot-${CHIP}.bin $UBOOT_BIN/u-boot-${CHIP}.bin
-	cp sys_config.bin $UBOOT_BIN/script.bin_${BOARD}
-	cp sys_config.bin $EXTER/chips/${CHIP}/script/script.bin_${BOARD}
-}
+# 	cp boot0_sdcard_${CHIP}.bin $UBOOT_BIN/boot0_sdcard_${CHIP}.bin 
+# 	cp u-boot-${CHIP}.bin $UBOOT_BIN/u-boot-${CHIP}.bin
+# 	cp sys_config.bin $UBOOT_BIN/script.bin_${BOARD}
+# 	cp sys_config.bin $EXTER/chips/${CHIP}/script/script.bin_${BOARD}
+# }
 
 pack_uboot()
 {

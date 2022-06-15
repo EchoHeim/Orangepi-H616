@@ -6,9 +6,7 @@
 # License version 2. This program is licensed "as is" without any
 # warranty of any kind, whether express or implied.
 
-
 # Main program
-#
 
 if [[ $(basename "$0") == main.sh ]]; then
 
@@ -136,31 +134,7 @@ fi
 
 if [[ -z $BOARD ]]; then
 
-	# options+=("orangepir1"			"Allwinner H2+ quad core 256MB RAM WiFi SPI 2xETH")
-	# options+=("orangepizero"		"Allwinner H2+ quad core 256MB/512MB RAM WiFi SPI")
-	# options+=("orangepipc"			"Allwinner H3 quad core 1GB RAM")
-	# options+=("orangepipcplus"		"Allwinner H3 quad core 1GB RAM WiFi eMMC")
-	# options+=("orangepione"			"Allwinner H3 quad core 512MB/1GB RAM")
-	# options+=("orangepilite"		"Allwinner H3 quad core 512MB/1GB RAM WiFi")
-	# options+=("orangepiplus"		"Allwinner H3 quad core 1GB/2GB RAM WiFi GBE eMMC")
-	# options+=("orangepiplus2e"		"Allwinner H3 quad core 2GB RAM WiFi GBE eMMC")
-	# options+=("orangepizeroplus2h3" 	"Allwinner H3 quad core 512MB RAM WiFi/BT eMMC")
-	# options+=("orangepipch5"		"Allwinner H5 quad core 1GB RAM")
-	# options+=("orangepipc2"			"Allwinner H5 quad core 1GB RAM GBE SPI")
-	# options+=("orangepioneh5"		"Allwinner H5 quad core 512MB/1GB RAM")
-	# options+=("orangepiprime"		"Allwinner H5 quad core 2GB RAM GBE WiFi/BT")
-	# options+=("orangepizeroplus"		"Allwinner H5 quad core 512MB RAM GBE WiFi SPI")
-	# options+=("orangepizeroplus2h5"		"Allwinner H5 quad core 512MB RAM WiFi/BT eMMC")
-	# options+=("orangepi3"                   "Allwinner H6 quad core 1GB/2GB RAM GBE WiFi/BT-AP6256 eMMC USB3")
-	# options+=("orangepi3-lts"               "Allwinner H6 quad core 2GB RAM GBE WiFi/BT-AW859A eMMC USB3")
-	# options+=("orangepilite2"		"Allwinner H6 quad core 1GB RAM WiFi/BT USB3")
-	# options+=("orangepioneplus"		"Allwinner H6 quad core 1GB RAM GBE")
-	options+=("orangepizero2"		"Allwinner H616 quad core 512MB/1GB RAM WiFi/BT GBE SPI")
-	#options+=("orangepizero2-b"		"Allwinner H616 quad core 1GB RAM WiFi/BT GBE SPI")
-	#options+=("orangepizero2-lts"		"Allwinner H616 quad core 1.5GB RAM WiFi/BT GBE SPI")
-	# options+=("orangepi4"                   "Rockchip  RK3399 hexa core 4GB RAM GBE eMMc USB3 USB-C WiFi/BT")
-	# options+=("orangepir1plus"              "Rockchip  RK3328 quad core 1GB RAM 2xGBE 8211E USB2 SPI")
-	# options+=("orangepir1plus-lts"          "Rockchip  RK3328 quad core 1GB RAM 2xGBE YT8531C USB2 SPI")
+	options+=("orangepizero2"		"Allwinner H616 quad core")
 
 	menustr="Please choose a Board."
 	BOARD=$(whiptail --title "${titlestr}" --backtitle "${backtitle}" \
@@ -183,7 +157,6 @@ if [[ -z $BRANCH ]]; then
 
     options=()
     [[ $KERNEL_TARGET == *current* ]] && options+=("current" "Mainline")
-    [[ $KERNEL_TARGET == *legacy* ]] && options+=("legacy" "Old stable")
     [[ $KERNEL_TARGET == *dev* && $EXPERT = yes ]] && options+=("dev" "\Z1Development version (@kernel.org)\Zn")
 
     menustr="Select the target kernel branch\nExact kernel versions depend on selected board"
@@ -240,19 +213,7 @@ if [[ ${BUILD_OPT} == image || ${BUILD_OPT} == rootfs ]]; then
 
 	if [[ -z $RELEASE ]]; then
 
-		if [[ $BRANCH == legacy ]]; then
-		
-			if [[ $LINUXFAMILY == sun50iw9 || $LINUXFAMILY == sun50iw6 ]]; then
-		
-				RELEASE_TARGET="buster bionic focal"
-			elif [[ $LINUXFAMILY == rk3399 ]]; then
-
-				RELEASE_TARGET="xenial bionic buster"
-			else
-	       	 		RELEASE_TARGET="xenial"
-			fi
-
-		elif [[ $BRANCH == current ]]; then
+        if [[ $BRANCH == current ]]; then
 
 	        	RELEASE_TARGET="buster bionic focal"
 			[[ $LINUXFAMILY == sun50iw6 ]] && RELEASE_TARGET="buster focal"
@@ -378,26 +339,8 @@ prepare_host
 
 # fetch_from_repo <url> <dir> <ref> <subdir_flag>
 
-# ignore updates help on building all images - for internal purposes
-if [[ $IGNORE_UPDATES != yes ]]; then
-display_alert "Downloading sources" "" "info"
-
-	fetch_from_repo "$BOOTSOURCE" "$BOOTDIR" "$BOOTBRANCH" "yes"
-	fetch_from_repo "$KERNELSOURCE" "$KERNELDIR" "$KERNELBRANCH" "yes"
-	if [[ -n $ATFSOURCE ]]; then
-		fetch_from_repo "$ATFSOURCE" "${EXTER}/cache/sources/$ATFDIR" "$ATFBRANCH" "yes"
-	fi
-	
-	fetch_from_repo "https://github.com/linux-sunxi/sunxi-tools" "${EXTER}/cache/sources/sunxi-tools" "branch:master"
-	fetch_from_repo "https://github.com/armbian/rkbin" "${EXTER}/cache/sources/rkbin-tools" "branch:master"
-
-	if [[ $BOARD == orangepi4 ]]; then
-		fetch_from_repo "https://github.com/orangepi-xunlong/rk3399_gst_xserver_libs.git" "${EXTER}/cache/sources/rk3399_gst_xserver_libs" "branch:main"
-	fi
-fi
-
 compile_sunxi_tools
-install_rkbin_tools
+# install_rkbin_tools
 
 for option in $(tr ',' ' ' <<< "$CLEAN_LEVEL"); do
 	[[ $option != sources ]] && cleaning "$option"

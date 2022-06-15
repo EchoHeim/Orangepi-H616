@@ -163,7 +163,6 @@ if [[ "$BUILD_MINIMAL" != "yes"  ]]; then
 		ca-certificates expect iptables automake html2text \
 		bison flex libwrap0-dev libssl-dev libnl-3-dev libnl-genl-3-dev keyboard-configuration"
 
-
 	# Non-essential packages
 	PACKAGE_LIST_ADDITIONAL="$PACKAGE_LIST_ADDITIONAL alsa-utils btrfs-progs dosfstools iotop stress screen \
 		ntfs-3g vim pciutils evtest pv libfuse2 libdigest-sha-perl \
@@ -194,43 +193,6 @@ PACKAGE_LIST_PREDEPENDS=""
 # Release specific packages
 case $RELEASE in
 
-	xenial)
-		# Dependent desktop packages
-		PACKAGE_LIST_DESKTOP="xserver-xorg xserver-xorg-video-fbdev gvfs-backends gvfs-fuse xfonts-base xinit \
-			x11-xserver-utils xfce4 lxtask xfce4-terminal thunar-volman gtk2-engines gtk2-engines-murrine gtk2-engines-pixbuf \
-			libgtk2.0-bin network-manager-gnome xfce4-notifyd gnome-keyring gcr libgck-1-0 p11-kit pasystray pavucontrol \
-			pulseaudio pavumeter bluez bluez-tools pulseaudio-module-bluetooth blueman libpam-gnome-keyring \
-			libgl1-mesa-dri policykit-1 gnome-orca numix-gtk-theme synaptic apt-xapian-index lightdm lightdm-gtk-greeter xfce4-power-manager"
-
-		DEBOOTSTRAP_COMPONENTS="main"
-		DEBOOTSTRAP_LIST+=" btrfs-tools"
-		[[ -z $BUILD_MINIMAL || $BUILD_MINIMAL == no ]] && PACKAGE_LIST_RELEASE="man-db sysbench command-not-found"
-		PACKAGE_LIST_DESKTOP+=" paman libgcr-3-common gcj-jre-headless paprefs libgnome2-perl \
-								pulseaudio-module-gconf onboard"
-		PACKAGE_LIST_DESKTOP_RECOMMENDS+=" chromium-browser language-selector-gnome system-config-printer-common \
-								system-config-printer-gnome leafpad mirage"
-		PACKAGE_LIST_DESKTOP_FULL+=" thunderbird"
-	;;
-
-	stretch)
-		DEBOOTSTRAP_COMPONENTS="main"
-		DEBOOTSTRAP_LIST+=" rng-tools"
-		[[ -z $BUILD_MINIMAL || $BUILD_MINIMAL == no ]] && PACKAGE_LIST_RELEASE="man-db kbd net-tools gnupg2 dirmngr sysbench command-not-found"
-		PACKAGE_LIST_DESKTOP+=" paman libgcr-3-common gcj-jre-headless paprefs dbus-x11 libgnome2-perl pulseaudio-module-gconf onboard"
-		PACKAGE_LIST_DESKTOP_RECOMMENDS+=" chromium system-config-printer-common system-config-printer leafpad mirage"
-		PACKAGE_LIST_DESKTOP_FULL+=" thunderbird"
-	;;
-
-	bionic)
-		DEBOOTSTRAP_COMPONENTS="main,universe"
-		DEBOOTSTRAP_LIST+=" rng-tools fdisk"
-		[[ -z $BUILD_MINIMAL || $BUILD_MINIMAL == no ]] && PACKAGE_LIST_RELEASE="man-db kbd net-tools gnupg2 dirmngr networkd-dispatcher command-not-found"
-		PACKAGE_LIST_DESKTOP+=" xserver-xorg-input-all paprefs dbus-x11 libgnome2-perl pulseaudio-module-gconf onboard"
-		PACKAGE_LIST_DESKTOP_RECOMMENDS+=" chromium-browser system-config-printer-common system-config-printer \
-								language-selector-gnome leafpad mirage"
-		PACKAGE_LIST_DESKTOP_FULL+=" thunderbird"
-	;;
-
 	buster)
 		DEBOOTSTRAP_COMPONENTS="main"
 		DEBOOTSTRAP_LIST+=" rng-tools fdisk"
@@ -238,15 +200,6 @@ case $RELEASE in
 		PACKAGE_LIST_DESKTOP+=" paprefs dbus-x11 numix-icon-theme onboard"
 		PACKAGE_LIST_DESKTOP_RECOMMENDS+=" chromium system-config-printer-common system-config-printer mirage"
 		PACKAGE_LIST_DESKTOP_FULL+=" thunderbird"
-	;;
-
-	bullseye)
-		DEBOOTSTRAP_COMPONENTS="main"
-		DEBOOTSTRAP_LIST+=" haveged fdisk"
-		[[ -z $BUILD_MINIMAL || $BUILD_MINIMAL == no ]] && PACKAGE_LIST_RELEASE="man-db kbd net-tools gnupg2 dirmngr networkd-dispatcher command-not-found"
-		PACKAGE_LIST_DESKTOP+=" paprefs dbus-x11 numix-icon-theme"
-		PACKAGE_LIST_DESKTOP_RECOMMENDS+=" firefox-esr system-config-printer-common system-config-printer"
-		PACKAGE_LIST_DESKTOP_FULL+=""
 	;;
 
 
@@ -261,19 +214,7 @@ case $RELEASE in
 		PACKAGE_LIST_PREDEPENDS="policykit-1-gnome notification-daemon"
 	;;
 
-	eoan)
-		DEBOOTSTRAP_COMPONENTS="main,universe"
-		DEBOOTSTRAP_LIST+=" rng-tools fdisk"
-		[[ -z $BUILD_MINIMAL || $BUILD_MINIMAL == no ]] && PACKAGE_LIST_RELEASE="man-db kbd net-tools gnupg2 dirmngr networkd-dispatcher"
-		PACKAGE_LIST_DESKTOP+=" xserver-xorg-input-all paprefs dbus-x11 pulseaudio-module-gsettings onboard"
-		PACKAGE_LIST_DESKTOP_RECOMMENDS+=" firefox system-config-printer-common system-config-printer \
-								language-selector-gnome mirage"
-		PACKAGE_LIST_DESKTOP_FULL+=" thunderbird"
-		PACKAGE_LIST_PREDEPENDS="policykit-1-gnome notification-daemon"
-	;;
-
 esac
-
 
 DEBIAN_MIRROR='deb.debian.org/debian'
 DEBIAN_SECURTY='security.debian.org/'
