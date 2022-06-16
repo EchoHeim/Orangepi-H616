@@ -33,7 +33,7 @@ create_desktop_package ()
 	Recommends: ${PACKAGE_LIST_DESKTOP//[:space:]+/,}
 	Provides: ${CHOSEN_DESKTOP}
 	Pre-Depends: ${PACKAGE_LIST_PREDEPENDS//[:space:]+/,}
-	Description: Orange Pi desktop for ${DISTRIBUTION} ${RELEASE}
+	Description: BIQU-Hurakan desktop for ${DISTRIBUTION} ${RELEASE}
 	EOF
 
 	cat <<-EOF > "${destination}"/DEBIAN/postinst

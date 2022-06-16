@@ -233,8 +233,8 @@ chroot_build_packages()
 				# set upstream version
 				[[ -n "${package_upstream_version}" ]] && debchange --preserve --newversion "${package_upstream_version}" "Import from upstream"
 				# set local version
-				# debchange -l~orangepi${REVISION}-${builddate}+ "New Orange Pi release"
-				debchange -l~orangepi${REVISION}+ "New Orange Pi release"
+				# debchange -l~orangepi${REVISION}-${builddate}+ "New BIQU-Hurakan release"
+				debchange -l~orangepi${REVISION}+ "New BIQU-Hurakan release"
 				display_alert "Building package"
 				dpkg-buildpackage -b -uc -us -j2
 				if [[ \$? -eq 0 ]]; then

@@ -407,7 +407,7 @@ fingerprint_image()
 	display_alert "Fingerprinting"
 	cat <<-EOF > "${1}"
 	--------------------------------------------------------------------------------
-	Title:			Orange Pi $REVISION ${BOARD^} $DISTRIBUTION $RELEASE $BRANCH
+	Title:			BIQU-Hurakan $REVISION ${BOARD^} $DISTRIBUTION $RELEASE $BRANCH
 	Kernel:			Linux $VER
 	Build date:		$(date +'%d.%m.%Y')
 	Maintainer:		$MAINTAINER <$MAINTAINERMAIL>

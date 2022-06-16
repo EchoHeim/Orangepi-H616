@@ -142,9 +142,9 @@ install_common()
 	#chroot "${SDCARD}" /bin/bash -c "chage -d 0 root"
 
 	# change console welcome text
-	echo -e "Orange Pi ${REVISION} ${RELEASE^} \\l \n" > "${SDCARD}"/etc/issue
-	echo "Orange Pi ${REVISION} ${RELEASE^}" > "${SDCARD}"/etc/issue.net
-	sed -i "s/^PRETTY_NAME=.*/PRETTY_NAME=\"Orange Pi $REVISION "${RELEASE^}"\"/" "${SDCARD}"/etc/os-release
+	echo -e "BIQU-Hurakan ${REVISION} ${RELEASE^} \\l \n" > "${SDCARD}"/etc/issue
+	echo "BIQU-Hurakan ${REVISION} ${RELEASE^}" > "${SDCARD}"/etc/issue.net
+	sed -i "s/^PRETTY_NAME=.*/PRETTY_NAME=\"BIQU-Hurakan $REVISION "${RELEASE^}"\"/" "${SDCARD}"/etc/os-release
 
 	# enable few bash aliases enabled in Ubuntu by default to make it even
 	sed "s/#alias ll='ls -l'/alias ll='ls -l'/" -i "${SDCARD}"/etc/skel/.bashrc
@@ -331,7 +331,7 @@ install_common()
 
 	# freeze orangepi packages
 	if [[ $BSPFREEZE == yes ]]; then
-		display_alert "Freezing Orange Pi packages" "$BOARD" "info"
+		display_alert "Freezing BIQU-Hurakan packages" "$BOARD" "info"
 		chroot "${SDCARD}" /bin/bash -c "apt-mark hold ${CHOSEN_KERNEL} ${CHOSEN_KERNEL/image/headers} \
 			linux-u-boot-${BOARD}-${BRANCH} ${CHOSEN_KERNEL/image/dtb}" >> "${DEST}"/debug/install.log 2>&1
 	fi

@@ -33,7 +33,7 @@ if [[ $BUILD_ALL != "yes" ]]; then
 fi
 
 # We'll use this title on all menus
-backtitle="Orange Pi building script, http://www.orangepi.org" 
+
 titlestr="Choose an option"
 
 # if language not set, set to english
@@ -123,7 +123,7 @@ if [[ -z $BUILD_OPT ]]; then
 	options+=("image"	 "Full OS image for flashing")
 
 	menustr="Compile image | rootfs | kernel | u-boot"
-	BUILD_OPT=$(whiptail --title "${titlestr}" --backtitle "${backtitle}" --notags \
+	BUILD_OPT=$(whiptail --title "${titlestr}" --notags \
 			  --menu "${menustr}" "${TTY_Y}" "${TTY_X}" $((TTY_Y - 8))  \
 			  --cancel-button Exit --ok-button Select "${options[@]}" \
 			  3>&1 1>&2 2>&3)
@@ -137,7 +137,7 @@ if [[ -z $BOARD ]]; then
 	options+=("orangepizero2"		"Allwinner H616 quad core")
 
 	menustr="Please choose a Board."
-	BOARD=$(whiptail --title "${titlestr}" --backtitle "${backtitle}" \
+	BOARD=$(whiptail --title "${titlestr}"  \
 			  --menu "${menustr}" "${TTY_Y}" "${TTY_X}" $((TTY_Y - 8))  \
 			  --cancel-button Exit --ok-button Select "${options[@]}" \
 			  3>&1 1>&2 2>&3)
@@ -164,7 +164,7 @@ if [[ -z $BRANCH ]]; then
     if [[ "${#options[@]}" == 2 ]]; then
         BRANCH="${options[0]}"
     else
-		BRANCH=$(whiptail --title "${titlestr}" --backtitle "${backtitle}" \
+		BRANCH=$(whiptail --title "${titlestr}"  \
 				  --menu "${menustr}" "${TTY_Y}" "${TTY_X}" $((TTY_Y - 8))  \
 				  --cancel-button Exit --ok-button Select "${options[@]}" \
 				  3>&1 1>&2 2>&3)
@@ -187,7 +187,7 @@ if [[ ${BUILD_OPT} == image || ${BUILD_OPT} == kernel ]]; then
 		options+=("yes" "Show a kernel configuration menu before compilation")
 
 		menustr="Select the kernel configuration."
-		KERNEL_CONFIGURE=$(whiptail --title "${titlestr}" --backtitle "$backtitle" --notags \
+		KERNEL_CONFIGURE=$(whiptail --title "${titlestr}" --notags \
 						 --menu "${menustr}" $TTY_Y $TTY_X $((TTY_Y - 8)) \
 						 --cancel-button Exit --ok-button Select "${options[@]}" \
 						 3>&1 1>&2 2>&3)
@@ -221,7 +221,7 @@ if [[ ${BUILD_OPT} == image || ${BUILD_OPT} == rootfs ]]; then
                 distro_menu "focal"
 
 		menustr="Select the target OS release package base"
-		RELEASE=$(whiptail --title "${titlestr}" --backtitle "${backtitle}" \
+		RELEASE=$(whiptail --title "${titlestr}"  \
 				  --menu "${menustr}" "${TTY_Y}" "${TTY_X}" $((TTY_Y - 8))  \
 				  --cancel-button Exit --ok-button Select "${options[@]}" \
 				  3>&1 1>&2 2>&3)
@@ -239,7 +239,7 @@ if [[ ${BUILD_OPT} == image || ${BUILD_OPT} == rootfs ]]; then
 		options+=("yes"		"Image with desktop environment")
 
 		menustr="Select the target image type."
-		BUILD_DESKTOP=$(whiptail --title "${titlestr}" --backtitle "${backtitle}" --notags \
+		BUILD_DESKTOP=$(whiptail --title "${titlestr}" --notags \
 				  --menu "${menustr}" "${TTY_Y}" "${TTY_X}" $((TTY_Y - 8))  \
 				  --cancel-button Exit --ok-button Select "${options[@]}" \
 				  3>&1 1>&2 2>&3)
@@ -255,7 +255,7 @@ if [[ ${BUILD_OPT} == image || ${BUILD_OPT} == rootfs ]]; then
 	    options+=("yes" "Minimal image with console interface")
 		
 		menustr="Select the target image type."
-	    BUILD_MINIMAL=$(whiptail --title "${titlestr}" --backtitle "${backtitle}" --notags \
+	    BUILD_MINIMAL=$(whiptail --title "${titlestr}" --notags \
 				  --menu "${menustr}" "${TTY_Y}" "${TTY_X}" $((TTY_Y - 8))  \
 				  --cancel-button Exit --ok-button Select "${options[@]}" \
 				  3>&1 1>&2 2>&3)
@@ -330,7 +330,6 @@ prepare_host
 # fetch_from_repo <url> <dir> <ref> <subdir_flag>
 
 compile_sunxi_tools
-# install_rkbin_tools
 
 for option in $(tr ',' ' ' <<< "$CLEAN_LEVEL"); do
 	[[ $option != sources ]] && cleaning "$option"

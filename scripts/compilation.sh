@@ -14,7 +14,6 @@
 # compile_firmware
 # compile_orangepi-config
 # compile_sunxi_tools
-# install_rkbin_tools
 # grab_version
 # find_toolchain
 # advanced_patch
@@ -70,7 +69,7 @@ compile_atf()
 		'make ENABLE_BACKTRACE="0" $target_make $CTHREADS \
 		CROSS_COMPILE="$CCACHE $ATF_COMPILER"' 2>> "${DEST}"/debug/compilation.log \
 		${PROGRESS_LOG_TO_FILE:+' | tee -a $DEST/debug/compilation.log'} \
-		${OUTPUT_DIALOG:+' | dialog --backtitle "$backtitle" --progressbox "Compiling ATF..." $TTY_Y $TTY_X'} \
+		${OUTPUT_DIALOG:+' | dialog  --progressbox "Compiling ATF..." $TTY_Y $TTY_X'} \
 		${OUTPUT_VERYSILENT:+' >/dev/null 2>/dev/null'}
 
 	[[ ${PIPESTATUS[0]} -ne 0 ]] && exit_with_error "ATF compilation failed"
@@ -98,9 +97,6 @@ compile_atf()
 	# copy license file to pack it to u-boot package later
 	[[ -f license.md ]] && cp license.md "${atftempdir}"/
 }
-
-
-
 
 compile_uboot()
 {
@@ -211,7 +207,7 @@ compile_uboot()
 			'make $target_make $CTHREADS \
 			"${cross_compile}"' 2>>"${DEST}"/debug/compilation.log \
 			${PROGRESS_LOG_TO_FILE:+' | tee -a "${DEST}"/debug/compilation.log'} \
-			${OUTPUT_DIALOG:+' | dialog --backtitle "$backtitle" --progressbox "Compiling u-boot..." $TTY_Y $TTY_X'} \
+			${OUTPUT_DIALOG:+' | dialog --progressbox "Compiling u-boot..." $TTY_Y $TTY_X'} \
 			${OUTPUT_VERYSILENT:+' >/dev/null 2>/dev/null'}
 
 		[[ ${PIPESTATUS[0]} -ne 0 ]] && exit_with_error "U-boot compilation failed"
@@ -413,7 +409,7 @@ compile_kernel()
 		LOCALVERSION="-$LINUXFAMILY" \
 		$KERNEL_IMAGE_TYPE modules dtbs 2>>$DEST/debug/compilation.log' \
 		${PROGRESS_LOG_TO_FILE:+' | tee -a $DEST/debug/compilation.log'} \
-		${OUTPUT_DIALOG:+' | dialog --backtitle "$backtitle" \
+		${OUTPUT_DIALOG:+' | dialog  \
 		--progressbox "Compiling kernel..." $TTY_Y $TTY_X'} \
 		${OUTPUT_VERYSILENT:+' >/dev/null 2>/dev/null'}
 
@@ -447,7 +443,7 @@ compile_kernel()
 		DEBEMAIL="$MAINTAINERMAIL" \
 		CROSS_COMPILE="$CCACHE $KERNEL_COMPILER" 2>>$DEST/debug/compilation.log' \
 		${PROGRESS_LOG_TO_FILE:+' | tee -a $DEST/debug/compilation.log'} \
-		${OUTPUT_DIALOG:+' | dialog --backtitle "$backtitle" --progressbox "Creating kernel packages..." $TTY_Y $TTY_X'} \
+		${OUTPUT_DIALOG:+' | dialog --progressbox "Creating kernel packages..." $TTY_Y $TTY_X'} \
 		${OUTPUT_VERYSILENT:+' >/dev/null 2>/dev/null'}
 
 	cat <<-EOF > "${sources_pkg_dir}"/DEBIAN/control
@@ -482,9 +478,6 @@ compile_kernel()
 	hash_watch_2=$(cat "${EXTER}/config/kernel/${LINUXCONFIG}.config")
 	echo "${hash_watch_1}${hash_watch_2}" | git hash-object --stdin >> "${EXTER}/cache/hash/linux-image-${BRANCH}-${LINUXFAMILY}.githash"
 }
-
-
-
 
 compile_firmware()
 {
@@ -541,15 +534,11 @@ compile_firmware()
         mv "orangepi-firmware${FULL}_${REVISION}_all.deb" "${DEB_STORAGE}/"
 }
 
-
-
-
 compile_orangepi-config()
 {
 	local tmpdir=${SRC}/.tmp/orangepi-config_${REVISION}_all
 
 	display_alert "Building deb" "orangepi-config" "info"
-
 
 	mkdir -p "${tmpdir}"/{DEBIAN,usr/bin/,usr/sbin/,usr/lib/orangepi-config/}
 
@@ -566,7 +555,7 @@ compile_orangepi-config()
 	Suggests: libpam-google-authenticator, qrencode, network-manager, sunxi-tools
 	Section: utils
 	Priority: optional
-	Description: Orange Pi configuration utility
+	Description: BIQU-Hurakan configuration utility
 	END
 
 	install -m 755 $EXTER/cache/sources/orangepi-config/scripts/tv_grab_file $tmpdir/usr/bin/tv_grab_file
@@ -585,9 +574,6 @@ compile_orangepi-config()
 	rm -rf "${tmpdir}"
 }
 
-
-
-
 compile_sunxi_tools()
 {
 	# Compile and install only if git commit hash changed
@@ -599,20 +585,6 @@ compile_sunxi_tools()
 		make -s tools >/dev/null
 		mkdir -p /usr/local/bin/
 		make install-tools >/dev/null 2>&1
-		git rev-parse @ 2>/dev/null > .commit_id
-	fi
-}
-
-install_rkbin_tools()
-{
-	# install only if git commit hash changed
-	cd "${EXTER}"/cache/sources/rkbin-tools || exit
-	# need to check if /usr/local/bin/sunxi-fexc to detect new Docker containers with old cached sources
-	if [[ ! -f .commit_id || $(git rev-parse @ 2>/dev/null) != $(<.commit_id) || ! -f /usr/local/bin/loaderimage ]]; then
-		display_alert "Installing" "rkbin-tools" "info"
-		mkdir -p /usr/local/bin/
-		install -m 755 tools/loaderimage /usr/local/bin/
-		install -m 755 tools/trust_merger /usr/local/bin/
 		git rev-parse @ 2>/dev/null > .commit_id
 	fi
 }
@@ -777,7 +749,7 @@ userpatch_create()
 {
 	# create commit to start from clean source
 	git add .
-	git -c user.name='Orange Pi User' -c user.email='user@example.org' commit -q -m "Cleaning working copy"
+	git -c user.name='BIQU-Hurakan User' -c user.email='user@example.org' commit -q -m "Cleaning working copy"
 
 	local patch="$DEST/patch/$1-$LINUXFAMILY-$BRANCH.patch"
 
