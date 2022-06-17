@@ -8,7 +8,6 @@
 .*
 *.a
 *.asn1.[ch]
-*.bin
 *.cfgout
 *.dtb
 *.dtbo

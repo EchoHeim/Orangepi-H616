@@ -1,6 +1,6 @@
 
-/home/lodge/Allwinner/test/Orangepi-H616/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/bl31.elf:     file format elf64-littleaarch64
-/home/lodge/Allwinner/test/Orangepi-H616/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/bl31.elf
+/home/lodge/Allwinner/Orangepi-H616/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/bl31.elf:     file format elf64-littleaarch64
+/home/lodge/Allwinner/Orangepi-H616/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/bl31.elf
 architecture: aarch64, flags 0x00000112:
 EXEC_P, HAS_SYMS, D_PAGED
 start address 0x0000000040000000
@@ -36,15 +36,15 @@ Idx Name          Size      VMA               LMA               File off  Algn
                   CONTENTS, READONLY, DEBUGGING
  10 .debug_line   00011877  0000000000000000  0000000000000000  0004f970  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_str    00005818  0000000000000000  0000000000000000  000611e7  2**0
+ 11 .debug_str    00005813  0000000000000000  0000000000000000  000611e7  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .comment      0000005a  0000000000000000  0000000000000000  000669ff  2**0
+ 12 .comment      0000005a  0000000000000000  0000000000000000  000669fa  2**0
                   CONTENTS, READONLY
- 13 .debug_loc    00027b28  0000000000000000  0000000000000000  00066a59  2**0
+ 13 .debug_loc    00027b28  0000000000000000  0000000000000000  00066a54  2**0
                   CONTENTS, READONLY, DEBUGGING
- 14 .debug_ranges 00005f10  0000000000000000  0000000000000000  0008e590  2**4
+ 14 .debug_ranges 00005f10  0000000000000000  0000000000000000  0008e580  2**4
                   CONTENTS, READONLY, DEBUGGING
- 15 .debug_frame  00000d80  0000000000000000  0000000000000000  000944a0  2**3
+ 15 .debug_frame  00000d80  0000000000000000  0000000000000000  00094490  2**3
                   CONTENTS, READONLY, DEBUGGING
 SYMBOL TABLE:
 0000000040000000 l    d  .text	0000000000000000 .text
@@ -63,13 +63,13 @@ SYMBOL TABLE:
 0000000000000000 l    d  .debug_loc	0000000000000000 .debug_loc
 0000000000000000 l    d  .debug_ranges	0000000000000000 .debug_ranges
 0000000000000000 l    d  .debug_frame	0000000000000000 .debug_frame
-0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/test/Orangepi-H616/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/bl31_entrypoint.o
+0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/Orangepi-H616/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/bl31_entrypoint.o
 0000000000000000 l    df *ABS*	0000000000000000 assert.c
 0000000000000000 l    df *ABS*	0000000000000000 arm_arch_svc_setup.c
 0000000040000204 l     F .text	000000000000014c arm_arch_svc_smc_handler
 000000004000b5b0 l     O .rodata	0000000000000020 __svc_desc_arm_arch_svc
-0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/test/Orangepi-H616/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/cpu_data.o
-0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/test/Orangepi-H616/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/cortex_a53.o
+0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/Orangepi-H616/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/cpu_data.o
+0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/Orangepi-H616/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/cortex_a53.o
 0000000000000008 l       *ABS*	0000000000000000 CPU_MIDR_SIZE
 0000000000000008 l       *ABS*	0000000000000000 CPU_EXTRA1_FUNC_SIZE
 0000000000000008 l       *ABS*	0000000000000000 CPU_EXTRA2_FUNC_SIZE
@@ -127,7 +127,7 @@ SYMBOL TABLE:
 0000000040000778 l     F .text	0000000000000018 cortex_a53_cpu_reg_dump
 000000004000c068 l       .data	0000000000000000 cortex_a53_errata_lock
 000000004000c06c l       .data	0000000000000000 cortex_a53_errata_reported
-0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/test/Orangepi-H616/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/debug.o
+0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/Orangepi-H616/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/debug.o
 000000004000b4e4 l       .rodata	0000000000000000 assert_msg1
 000000004000b4f2 l       .rodata	0000000000000000 assert_msg2
 00000000400003dc l       .text	0000000000000000 _assert_loop
@@ -135,8 +135,8 @@ SYMBOL TABLE:
 000000004000b4f9 l       .rodata	0000000000000000 panic_msg
 0000000040000a70 l       .text	0000000000000000 panic_common
 0000000040000a98 l       .text	0000000000000000 _panic_handler
-0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/test/Orangepi-H616/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/platform_helpers.o
-0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/test/Orangepi-H616/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/cpu_helpers.o
+0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/Orangepi-H616/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/platform_helpers.o
+0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/Orangepi-H616/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/cpu_helpers.o
 0000000000000008 l       *ABS*	0000000000000000 CPU_MIDR_SIZE
 0000000000000008 l       *ABS*	0000000000000000 CPU_EXTRA1_FUNC_SIZE
 0000000000000008 l       *ABS*	0000000000000000 CPU_EXTRA2_FUNC_SIZE
@@ -161,7 +161,7 @@ SYMBOL TABLE:
 0000000000000058 l       *ABS*	0000000000000000 CPU_REG_DUMP
 0000000000000060 l       *ABS*	0000000000000000 CPU_OPS_SIZE
 0000000040001040 l       .text	0000000000000000 search_def_ptr
-0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/test/Orangepi-H616/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/cache_helpers.o
+0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/Orangepi-H616/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/cache_helpers.o
 0000000040000fec l       .text	0000000000000000 exit_loop_civac
 0000000040000fd8 l       .text	0000000000000000 loop_civac
 000000004000057c l       .text	0000000000000000 exit_loop_cvac
@@ -179,12 +179,12 @@ SYMBOL TABLE:
 0000000040000a1c l       .text	0000000000000000 loop3_cisw
 0000000040000a38 l       .text	0000000000000000 loop2_csw
 0000000040000a3c l       .text	0000000000000000 loop3_csw
-0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/test/Orangepi-H616/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/16550_console.o
+0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/Orangepi-H616/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/16550_console.o
 000000004000063c l       .text	0000000000000000 init_fail
 0000000040000738 l       .text	0000000000000000 register_fail
 0000000040000700 l       .text	0000000000000000 register_16550
 00000000400005cc l       .text	0000000000000000 no_char
-0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/test/Orangepi-H616/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/crash_reporting.o
+0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/Orangepi-H616/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/crash_reporting.o
 000000004000b0a9 l       .rodata	0000000000000000 gicc_regs
 000000004000b0cb l       .rodata	0000000000000000 icc_regs
 000000004000b0f7 l       .rodata	0000000000000000 gicd_pend_reg
@@ -213,7 +213,7 @@ SYMBOL TABLE:
 0000000040000e40 l       .text	0000000000000000 print_gic_common
 0000000040000e4c l       .text	0000000000000000 gicd_ispendr_loop
 0000000040000e88 l       .text	0000000000000000 exit_print_gic_regs
-0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/test/Orangepi-H616/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/ea_delegate.o
+0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/Orangepi-H616/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/ea_delegate.o
 0000000000000008 l       *ABS*	0000000000000000 CPU_MIDR_SIZE
 0000000000000008 l       *ABS*	0000000000000000 CPU_EXTRA1_FUNC_SIZE
 0000000000000008 l       *ABS*	0000000000000000 CPU_EXTRA2_FUNC_SIZE
@@ -240,15 +240,15 @@ SYMBOL TABLE:
 0000000040000aa0 l     F .text	000000000000009c ea_proceed
 0000000040000938 l     F .text	0000000000000004 delegate_sync_ea
 0000000040000934 l     F .text	0000000000000004 delegate_async_ea
-0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/test/Orangepi-H616/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/context.o
+0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/Orangepi-H616/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/context.o
 0000000040000c2c l       .text	0000000000000000 sve_not_enabled
-0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/test/Orangepi-H616/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/enable_mmu.o
-0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/test/Orangepi-H616/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/plat_helpers.o
-0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/test/Orangepi-H616/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/platform_mp_stack.o
+0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/Orangepi-H616/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/enable_mmu.o
+0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/Orangepi-H616/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/plat_helpers.o
+0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/Orangepi-H616/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/platform_mp_stack.o
 000000004000c080 l       stacks	0000000000000000 platform_normal_stacks
 0000000000000006 l       *ABS*	0000000000000000 TZ_COUNT
-0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/test/Orangepi-H616/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/psci_helpers.o
-0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/test/Orangepi-H616/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/runtime_exceptions.o
+0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/Orangepi-H616/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/psci_helpers.o
+0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/Orangepi-H616/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/runtime_exceptions.o
 0000000040009390 l       .text	0000000000000000 exp_from_EL3
 0000000040001438 l       .text	0000000000000000 smc_handler32
 000000004000143c l       .text	0000000000000000 smc_handler64
@@ -260,10 +260,10 @@ SYMBOL TABLE:
 00000000400014b0 l       .text	0000000000000000 smc_prohibited
 00000000400014a4 l       .text	0000000000000000 smc_unknown
 00000000400014dc l       .text	0000000000000000 rt_svc_fw_critical_error
-0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/test/Orangepi-H616/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/spinlock.o
+0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/Orangepi-H616/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/spinlock.o
 00000000400014f0 l       .text	0000000000000000 l1
 00000000400014f4 l       .text	0000000000000000 l2
-0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/test/Orangepi-H616/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/misc_helpers.o
+0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/Orangepi-H616/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/misc_helpers.o
 0000000040001530 l     F .text	0000000000000114 zeromem_dczva
 0000000000000000 l    df *ABS*	0000000000000000 common.c
 0000000000000000 l    df *ABS*	0000000000000000 sunxi_power.c
