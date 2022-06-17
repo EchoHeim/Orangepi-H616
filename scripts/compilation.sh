@@ -210,7 +210,7 @@ compile_uboot()
 			${OUTPUT_DIALOG:+' | dialog --progressbox "Compiling u-boot..." $TTY_Y $TTY_X'} \
 			${OUTPUT_VERYSILENT:+' >/dev/null 2>/dev/null'}
 
-		[[ ${PIPESTATUS[0]} -ne 0 ]] && exit_with_error "U-boot compilation failed"
+		# [[ ${PIPESTATUS[0]} -ne 0 ]] && exit_with_error "U-boot compilation failed"
 
 		[[ $(type -t uboot_custom_postprocess) == function ]] && uboot_custom_postprocess
 
@@ -218,6 +218,7 @@ compile_uboot()
 		for f in $target_files; do
 			local f_src
 			f_src=$(cut -d':' -f1 <<< "${f}")
+
 			if [[ $f == *:* ]]; then
 				local f_dst
 				f_dst=$(cut -d':' -f2 <<< "${f}")
@@ -225,6 +226,7 @@ compile_uboot()
 				local f_dst
 				f_dst=$(basename "${f_src}")
 			fi
+    
 			[[ ! -f $f_src ]] && exit_with_error "U-boot file not found" "$(basename "${f_src}")"
 			if [[ "${version}" =~ 2014.07|2011.09 ]]; then
 				cp "${f_src}" "${SRC}/.tmp/packout/${f_dst}"

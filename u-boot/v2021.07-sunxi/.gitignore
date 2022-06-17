@@ -40,7 +40,7 @@ fit-dtb.blob*
 /MLO*
 /SPL*
 /System.map
-/u-boot*
+# /u-boot*
 /boards.cfg
 /*.log
 

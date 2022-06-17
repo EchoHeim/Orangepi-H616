@@ -1,0 +1,4 @@
+ImagePos    Offset      Size  Name
+00000000  00000000  000a2bb3  main-section
+00000000   00000000  0000a000  blob
+0000a000   0000a000  00098bb3  fit
