@@ -133,11 +133,17 @@ ENABLE_BTI			:= 0
 # Use BRANCH_PROTECTION to enable PAUTH.
 ENABLE_PAUTH			:= 0
 
-# Flag to enable access to the HCRX_EL2 register by setting SCR_EL3.HXEn.
-ENABLE_FEAT_HCX			:= 0
-
 # Flag to enable access to the HAFGRTR_EL2 register
 ENABLE_FEAT_AMUv1		:= 0
+
+# Flag to enable AMUv1p1 extension.
+ENABLE_FEAT_AMUv1p1		:= 0
+
+# Flag to enable CSV2_2 extension.
+ENABLE_FEAT_CSV2_2 		:= 0
+
+# Flag to enable access to the HCRX_EL2 register by setting SCR_EL3.HXEn.
+ENABLE_FEAT_HCX			:= 0
 
 # Flag to enable access to the HDFGRTR_EL2 register
 ENABLE_FEAT_FGT			:= 0
@@ -147,6 +153,24 @@ ENABLE_FEAT_ECV			:= 0
 
 # Flag to enable use of the DIT feature.
 ENABLE_FEAT_DIT			:= 0
+
+# Flag to enable access to Privileged Access Never bit of PSTATE.
+ENABLE_FEAT_PAN			:= 0
+
+# Flag to enable access to the Random Number Generator registers
+ENABLE_FEAT_RNG			:= 0
+
+# Flag to enable Speculation Barrier Instruction
+ENABLE_FEAT_SB			:= 0
+
+# Flag to enable Secure EL-2 feature.
+ENABLE_FEAT_SEL2		:= 0
+
+# Flag to enable Virtualization Host Extensions
+ENABLE_FEAT_VHE 		:= 0
+
+# Flag to enable delayed trapping of WFE instruction (FEAT_TWED)
+ENABLE_FEAT_TWED		:= 0
 
 # By default BL31 encryption disabled
 ENCRYPT_BL31			:= 0
@@ -165,6 +189,9 @@ ERROR_DEPRECATED		:= 0
 
 # Fault injection support
 FAULT_INJECTION_SUPPORT		:= 0
+
+# Flag to enable architectural features detection mechanism
+FEATURE_DETECTION		:= 0
 
 # Byte alignment that each component in FIP is aligned to
 FIP_ALIGN			:= 0
@@ -230,6 +257,9 @@ RAS_EXTENSION			:= 0
 # By default, BL1 acts as the reset handler, not BL31
 RESET_TO_BL31			:= 0
 
+# By default, clear the input registers when RESET_TO_BL31 is enabled
+RESET_TO_BL31_WITH_PARAMS	:= 0
+
 # For Chain of Trust
 SAVE_KEYS			:= 0
 
@@ -250,6 +280,10 @@ SEPARATE_CODE_AND_RODATA	:= 0
 # separate memory region, which may be discontiguous from the rest of BL31.
 SEPARATE_NOBITS_REGION		:= 0
 
+# Put BL2 NOLOAD sections (.bss, stacks, page tables) in a separate memory
+# region, platform Makefile is free to override this value.
+SEPARATE_BL2_NOLOAD_REGION	:= 0
+
 # If the BL31 image initialisation code is recalimed after use for the secondary
 # cores stack
 RECLAIM_INIT_CODE		:= 0
@@ -259,6 +293,9 @@ SPD				:= none
 
 # Enable the Management Mode (MM)-based Secure Partition Manager implementation
 SPM_MM				:= 0
+
+# Use the FF-A SPMC implementation in EL3.
+SPMC_AT_EL3			:= 0
 
 # Use SPM at S-EL2 as a default config for SPMD
 SPMD_SPM_AT_SEL2		:= 1
@@ -403,6 +440,11 @@ else
 	override ENABLE_TRBE_FOR_NS	:= 0
 endif
 
+# By default, disable access to branch record buffer control registers from NS
+# lower ELs i.e. NS-EL2, or NS-EL1 if NS-EL2 implemented but unused
+# if FEAT_BRBE is implemented.
+ENABLE_BRBE_FOR_NS		:= 0
+
 # By default, disable access of trace system registers from NS lower
 # ELs  i.e. NS-EL2, or NS-EL1 if NS-EL2 implemented but unused if
 # system register trace is implemented.
@@ -412,3 +454,15 @@ ENABLE_SYS_REG_TRACE_FOR_NS	:= 0
 # lower ELs, i.e. NS-EL2, or NS-EL1 if NS-EL2 implemented but unused
 # if FEAT_TRF is implemented.
 ENABLE_TRF_FOR_NS		:= 0
+
+# In v8.6+ platforms with delayed trapping of WFE being supported
+# via FEAT_TWED, this flag takes the delay value to be set in the
+# SCR_EL3.TWEDEL(4bit) field, when FEAT_TWED is implemented.
+# By default it takes 0, and need to be updated by the platforms.
+TWED_DELAY			:= 0
+
+# By default, disable the mocking of RSS provided services
+PLAT_RSS_NOT_SUPPORTED		:= 0
+
+# Dynamic Root of Trust for Measurement support
+DRTM_SUPPORT			:= 0

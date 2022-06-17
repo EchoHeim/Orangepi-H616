@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 NXP
+ * Copyright 2021-2022 NXP
  * SPDX-License-Identifier: BSD-3-Clause
  *
  */
@@ -1673,6 +1673,10 @@ static void prog_dq_dqs_rcv_cntrl(uint16_t *phy,
 	int sel_analog_vref = 1;
 	uint32_t addr;
 
+#ifdef ERRATA_DDR_A050958
+	gain_curr_adj_defval = 0x1f;
+#endif
+
 	dq_dqs_rcv_cntrl = gain_curr_adj_defval << csr_gain_curr_adj_lsb |
 			major_mode_dbyte << csr_major_mode_dbyte_lsb	|
 			dfe_ctrl_defval << csr_dfe_ctrl_lsb		|
@@ -2212,10 +2216,14 @@ static int load_fw(uint16_t **phy_ptr,
 
 	size = PHY_GEN2_MAX_IMAGE_SIZE;
 	image_buf = (uintptr_t)phy_gen2_fw_img_buf;
-	mmap_add_dynamic_region(phy_gen2_fw_img_buf,
+	ret = mmap_add_dynamic_region(phy_gen2_fw_img_buf,
 			phy_gen2_fw_img_buf,
 			PHY_GEN2_MAX_IMAGE_SIZE,
 			MT_MEMORY | MT_RW | MT_SECURE);
+	if (ret != 0) {
+		ERROR("Failed to add dynamic memory region.\n");
+		return ret;
+	}
 	ret = img_loadr(imem_id, &image_buf, &size);
 	if (ret != 0) {
 		ERROR("Failed to load %d firmware.\n", imem_id);

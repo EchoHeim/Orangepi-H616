@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2019, ARM Limited and Contributors. All rights reserved.
+ * Copyright (c) 2013-2022, ARM Limited and Contributors. All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -47,10 +47,11 @@ unsigned int zynqmp_get_uart_clk(void)
 {
 	unsigned int ver = zynqmp_get_silicon_ver();
 
-	if (ver == ZYNQMP_CSU_VERSION_QEMU)
+	if (ver == ZYNQMP_CSU_VERSION_QEMU) {
 		return 133000000;
-	else
+	} else {
 		return 100000000;
+	}
 }
 
 #if LOG_LEVEL >= LOG_LEVEL_NOTICE
@@ -214,7 +215,8 @@ static const struct {
 #define ZYNQMP_PL_STATUS_MASK	BIT(ZYNQMP_PL_STATUS_BIT)
 #define ZYNQMP_CSU_VERSION_MASK	~(ZYNQMP_PL_STATUS_MASK)
 
-#define SILICON_ID_XCK26       0x4724093
+#define SILICON_ID_XCK24	0x4714093
+#define SILICON_ID_XCK26	0x4724093
 
 static char *zynqmp_get_silicon_idcode_name(void)
 {
@@ -232,8 +234,9 @@ static char *zynqmp_get_silicon_idcode_name(void)
 	chipid[0] = mmio_read_32(ZYNQMP_CSU_BASEADDR + ZYNQMP_CSU_IDCODE_OFFSET);
 	chipid[1] = mmio_read_32(EFUSE_BASEADDR + EFUSE_IPDISABLE_OFFSET);
 #else
-	if (pm_get_chipid(chipid) != PM_RET_SUCCESS)
+	if (pm_get_chipid(chipid) != PM_RET_SUCCESS) {
 		return "XCZUUNKN";
+	}
 #endif
 
 	id = chipid[0] & (ZYNQMP_CSU_IDCODE_DEVICE_CODE_MASK |
@@ -243,23 +246,29 @@ static char *zynqmp_get_silicon_idcode_name(void)
 
 	for (i = 0; i < ARRAY_SIZE(zynqmp_devices); i++) {
 		if (zynqmp_devices[i].id == id &&
-		    zynqmp_devices[i].ver == (ver & ZYNQMP_CSU_VERSION_MASK))
+		    zynqmp_devices[i].ver == (ver & ZYNQMP_CSU_VERSION_MASK)) {
 			break;
+		}
 	}
 
 	if (i >= ARRAY_SIZE(zynqmp_devices)) {
-		if (chipid[0] == SILICON_ID_XCK26) {
+		switch (chipid[0]) {
+		case SILICON_ID_XCK24:
+			return "XCK24";
+		case SILICON_ID_XCK26:
 			return "XCK26";
-		} else {
+		default:
 			return "XCZUUNKN";
 		}
 	}
 
-	if (!zynqmp_devices[i].evexists)
+	if (!zynqmp_devices[i].evexists) {
 		return zynqmp_devices[i].name;
+	}
 
-	if (ver & ZYNQMP_PL_STATUS_MASK)
+	if ((ver & ZYNQMP_PL_STATUS_MASK) != 0U) {
 		return zynqmp_devices[i].name;
+	}
 
 	len = strlen(zynqmp_devices[i].name) - 2;
 	for (j = 0; j < strlen(name); j++) {
@@ -329,8 +338,8 @@ static void zynqmp_print_platform_name(void)
 		break;
 	}
 
-	NOTICE("TF-A running on %s/%s at 0x%x\n",
-	       zynqmp_print_silicon_idcode(), label, BL31_BASE);
+	VERBOSE("TF-A running on %s/%s at 0x%x\n",
+		zynqmp_print_silicon_idcode(), label, BL31_BASE);
 	VERBOSE("TF-A running on v%d/RTL%d.%d\n",
 	       zynqmp_get_ps_ver(), (rtl & 0xf0) >> 4, rtl & 0xf);
 }
@@ -345,8 +354,9 @@ unsigned int zynqmp_get_bootmode(void)
 
 	ret = pm_mmio_read(CRL_APB_BOOT_MODE_USER, &r);
 
-	if (ret != PM_RET_SUCCESS)
+	if (ret != PM_RET_SUCCESS) {
 		r = mmio_read_32(CRL_APB_BOOT_MODE_USER);
+	}
 
 	return r & CRL_APB_BOOT_MODE_MASK;
 }
@@ -373,8 +383,9 @@ unsigned int plat_get_syscnt_freq2(void)
 {
 	unsigned int ver = zynqmp_get_silicon_ver();
 
-	if (ver == ZYNQMP_CSU_VERSION_QEMU)
+	if (ver == ZYNQMP_CSU_VERSION_QEMU) {
 		return 65000000;
-	else
+	} else {
 		return mmio_read_32(IOU_SCNTRS_BASEFREQ);
+	}
 }

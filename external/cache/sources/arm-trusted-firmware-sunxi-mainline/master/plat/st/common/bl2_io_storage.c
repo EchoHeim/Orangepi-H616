@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2021, ARM Limited and Contributors. All rights reserved.
+ * Copyright (c) 2015-2022, ARM Limited and Contributors. All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -38,6 +38,7 @@
 #include <platform_def.h>
 #include <stm32cubeprogrammer.h>
 #include <stm32mp_fconf_getter.h>
+#include <stm32mp_io_storage.h>
 #include <usb_dfu.h>
 
 /* IO devices */
@@ -121,6 +122,37 @@ int open_storage(const uintptr_t spec)
 	return io_dev_init(storage_dev_handle, 0);
 }
 
+#if STM32MP_EMMC_BOOT
+static uint32_t get_boot_part_fip_header(void)
+{
+	io_block_spec_t emmc_boot_fip_block_spec = {
+		.offset = STM32MP_EMMC_BOOT_FIP_OFFSET,
+		.length = MMC_BLOCK_SIZE, /* We are interested only in first 4 bytes */
+	};
+	uint32_t magic = 0U;
+	int io_result;
+	size_t bytes_read;
+	uintptr_t fip_hdr_handle;
+
+	io_result = io_open(storage_dev_handle, (uintptr_t)&emmc_boot_fip_block_spec,
+			    &fip_hdr_handle);
+	assert(io_result == 0);
+
+	io_result = io_read(fip_hdr_handle, (uintptr_t)&magic, sizeof(magic),
+			    &bytes_read);
+	if ((io_result != 0) || (bytes_read != sizeof(magic))) {
+		panic();
+	}
+
+	io_close(fip_hdr_handle);
+
+	VERBOSE("%s: eMMC boot magic at offset 256K: %08x\n",
+		__func__, magic);
+
+	return magic;
+}
+#endif
+
 static void print_boot_device(boot_api_context_t *boot_context)
 {
 	switch (boot_context->boot_interface_selected) {
@@ -194,7 +226,7 @@ static void boot_mmc(enum mmc_device_type mmc_dev_type,
 		panic();
 	}
 
-	/* Open MMC as a block device to read GPT table */
+	/* Open MMC as a block device to read FIP */
 	io_result = register_io_dev_block(&mmc_dev_con);
 	if (io_result != 0) {
 		panic();
@@ -203,6 +235,25 @@ static void boot_mmc(enum mmc_device_type mmc_dev_type,
 	io_result = io_dev_open(mmc_dev_con, (uintptr_t)&mmc_block_dev_spec,
 				&storage_dev_handle);
 	assert(io_result == 0);
+
+#if STM32MP_EMMC_BOOT
+	if (mmc_dev_type == MMC_IS_EMMC) {
+		io_result = mmc_part_switch_current_boot();
+		assert(io_result == 0);
+
+		if (get_boot_part_fip_header() != TOC_HEADER_NAME) {
+			WARN("%s: Can't find FIP header on eMMC boot partition. Trying GPT\n",
+			     __func__);
+			io_result = mmc_part_switch_user();
+			assert(io_result == 0);
+			return;
+		}
+
+		VERBOSE("%s: FIP header found on eMMC boot partition\n",
+			__func__);
+		image_block_spec.offset = STM32MP_EMMC_BOOT_FIP_OFFSET;
+	}
+#endif
 }
 #endif /* STM32MP_SDMMC || STM32MP_EMMC */
 
@@ -384,8 +435,14 @@ int bl2_plat_handle_pre_image_load(unsigned int image_id)
 
 	switch (boot_itf) {
 #if STM32MP_SDMMC || STM32MP_EMMC
-	case BOOT_API_CTX_BOOT_INTERFACE_SEL_FLASH_SD:
 	case BOOT_API_CTX_BOOT_INTERFACE_SEL_FLASH_EMMC:
+#if STM32MP_EMMC_BOOT
+		if (image_block_spec.offset == STM32MP_EMMC_BOOT_FIP_OFFSET) {
+			break;
+		}
+#endif
+		/* fallthrough */
+	case BOOT_API_CTX_BOOT_INTERFACE_SEL_FLASH_SD:
 		if (!gpt_init_done) {
 /*
  * With FWU Multi Bank feature enabled, the selection of
@@ -409,6 +466,7 @@ int bl2_plat_handle_pre_image_load(unsigned int image_id)
 			gpt_init_done = true;
 		} else {
 			bl_mem_params_node_t *bl_mem_params = get_bl_mem_params_node(image_id);
+			assert(bl_mem_params != NULL);
 
 			mmc_block_dev_spec.buffer.offset = bl_mem_params->image_info.image_base;
 			mmc_block_dev_spec.buffer.length = bl_mem_params->image_info.image_max_size;
@@ -485,22 +543,46 @@ int plat_get_image_source(unsigned int image_id, uintptr_t *dev_handle,
 
 #if (STM32MP_SDMMC || STM32MP_EMMC) && PSA_FWU_SUPPORT
 /*
- * Eventually, this function will return the
- * boot index to be passed on to the Update
- * Agent after performing certain checks like
- * a watchdog timeout, or Auth failure while
- * trying to load from a certain bank.
- * For now, since we do not have that logic
- * implemented, just pass the active_index
- * read from the metadata.
+ * In each boot in non-trial mode, we set the BKP register to
+ * FWU_MAX_TRIAL_REBOOT, and return the active_index from metadata.
+ *
+ * As long as the update agent didn't update the "accepted" field in metadata
+ * (i.e. we are in trial mode), we select the new active_index.
+ * To avoid infinite boot loop at trial boot we decrement a BKP register.
+ * If this counter is 0:
+ *     - an unexpected TAMPER event raised (that resets the BKP registers to 0)
+ *     - a power-off occurs before the update agent was able to update the
+ *       "accepted' field
+ *     - we already boot FWU_MAX_TRIAL_REBOOT times in trial mode.
+ * we select the previous_active_index.
  */
+#define INVALID_BOOT_IDX		0xFFFFFFFF
+
 uint32_t plat_fwu_get_boot_idx(void)
 {
-	const struct fwu_metadata *metadata;
+	/*
+	 * Select boot index and update boot counter only once per boot
+	 * even if this function is called several times.
+	 */
+	static uint32_t boot_idx = INVALID_BOOT_IDX;
+	const struct fwu_metadata *data;
 
-	metadata = fwu_get_metadata();
+	data = fwu_get_metadata();
 
-	return metadata->active_index;
+	if (boot_idx == INVALID_BOOT_IDX) {
+		boot_idx = data->active_index;
+		if (fwu_is_trial_run_state()) {
+			if (stm32_get_and_dec_fwu_trial_boot_cnt() == 0U) {
+				WARN("Trial FWU fails %u times\n",
+				     FWU_MAX_TRIAL_REBOOT);
+				boot_idx = data->previous_active_index;
+			}
+		} else {
+			stm32_set_max_fwu_trial_boot_cnt();
+		}
+	}
+
+	return boot_idx;
 }
 
 static void *stm32_get_image_spec(const uuid_t *img_type_uuid)

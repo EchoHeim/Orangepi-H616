@@ -31,12 +31,12 @@ build/sun50i_h616/debug/bl31/std_svc_setup.o: \
  include/lib/psci/psci_lib.h include/lib/pmf/pmf.h \
  include/lib/pmf/pmf_helpers.h include/plat/common/platform.h \
  include/drivers/fwu/fwu_metadata.h include/tools_share/uuid.h \
- include/lib/runtime_instr.h include/services/gtsi_svc.h \
- include/services/pci_svc.h include/services/rmi_svc.h \
+ include/lib/runtime_instr.h include/services/pci_svc.h \
  include/services/rmmd_svc.h include/services/sdei.h \
  include/lib/spinlock.h include/services/sdei_flags.h \
- include/services/spm_mm_svc.h include/services/spmd_svc.h \
- include/services/ffa_svc.h include/services/std_svc.h \
+ include/services/spm_mm_svc.h include/services/spmc_svc.h \
+ include/services/ffa_svc.h include/services/spm_core_manifest.h \
+ include/services/spmd_svc.h include/services/std_svc.h \
  include/services/trng_svc.h
 
 include/lib/libc/assert.h:
@@ -147,11 +147,7 @@ include/tools_share/uuid.h:
 
 include/lib/runtime_instr.h:
 
-include/services/gtsi_svc.h:
-
 include/services/pci_svc.h:
-
-include/services/rmi_svc.h:
 
 include/services/rmmd_svc.h:
 
@@ -163,9 +159,13 @@ include/services/sdei_flags.h:
 
 include/services/spm_mm_svc.h:
 
-include/services/spmd_svc.h:
+include/services/spmc_svc.h:
 
 include/services/ffa_svc.h:
+
+include/services/spm_core_manifest.h:
+
+include/services/spmd_svc.h:
 
 include/services/std_svc.h:
 

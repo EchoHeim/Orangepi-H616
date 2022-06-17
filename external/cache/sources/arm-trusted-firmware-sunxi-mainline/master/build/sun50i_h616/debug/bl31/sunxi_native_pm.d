@@ -30,7 +30,7 @@ build/sun50i_h616/debug/bl31/sunxi_native_pm.o: \
  include/common/interrupt_props.h include/drivers/delay_timer.h \
  include/lib/mmio.h include/lib/psci/psci.h include/lib/bakery_lock.h \
  include/lib/psci/psci_lib.h \
- plat/allwinner/common/include/sunxi_private.h
+ plat/allwinner/common/include/sunxi_private.h include/common/fdt_fixup.h
 
 include/arch/aarch64/arch_helpers.h:
 
@@ -125,3 +125,5 @@ include/lib/bakery_lock.h:
 include/lib/psci/psci_lib.h:
 
 plat/allwinner/common/include/sunxi_private.h:
+
+include/common/fdt_fixup.h:

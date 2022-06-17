@@ -23,8 +23,8 @@ build/sun50i_h616/debug/bl31/sunxi_pm.o: plat/allwinner/common/sunxi_pm.c \
  plat/allwinner/sun50i_h616/include/sunxi_mmap.h include/common/debug.h \
  include/lib/libc/stdarg.h include/lib/libc/stdio.h \
  include/lib/libc/aarch64/stdio_.h include/drivers/console.h \
- include/drivers/console_assertions.h include/lib/mmio.h \
- include/lib/psci/psci.h include/lib/bakery_lock.h \
+ include/drivers/console_assertions.h include/common/fdt_fixup.h \
+ include/lib/mmio.h include/lib/psci/psci.h include/lib/bakery_lock.h \
  include/lib/psci/psci_lib.h \
  plat/allwinner/sun50i_h616/include/sunxi_cpucfg.h \
  plat/allwinner/common/include/sunxi_private.h
@@ -106,6 +106,8 @@ include/lib/libc/aarch64/stdio_.h:
 include/drivers/console.h:
 
 include/drivers/console_assertions.h:
+
+include/common/fdt_fixup.h:
 
 include/lib/mmio.h:
 

@@ -29,7 +29,7 @@ build/sun50i_h616/debug/bl31/sunxi_cpu_ops.o: \
  include/lib/psci/psci_lib.h include/drivers/fwu/fwu_metadata.h \
  include/tools_share/uuid.h \
  plat/allwinner/sun50i_h616/include/sunxi_cpucfg.h \
- plat/allwinner/common/include/sunxi_private.h
+ plat/allwinner/common/include/sunxi_private.h include/common/fdt_fixup.h
 
 include/lib/libc/assert.h:
 
@@ -128,3 +128,5 @@ include/tools_share/uuid.h:
 plat/allwinner/sun50i_h616/include/sunxi_cpucfg.h:
 
 plat/allwinner/common/include/sunxi_private.h:
+
+include/common/fdt_fixup.h:

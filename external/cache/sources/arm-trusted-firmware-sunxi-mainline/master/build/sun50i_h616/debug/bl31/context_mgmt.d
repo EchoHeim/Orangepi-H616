@@ -26,13 +26,14 @@ build/sun50i_h616/debug/bl31/context_mgmt.o: \
  include/drivers/console_assertions.h \
  include/arch/aarch64/arch_features.h include/bl31/interrupt_mgmt.h \
  include/lib/libc/errno.h include/lib/el3_runtime/aarch64/context.h \
- include/lib/el3_runtime/context_mgmt.h \
+ include/drivers/arm/gicv3.h include/common/interrupt_props.h \
+ include/drivers/arm/gic_common.h include/lib/el3_runtime/context_mgmt.h \
  include/lib/el3_runtime/pubsub_events.h include/lib/el3_runtime/pubsub.h \
- include/lib/extensions/amu.h include/lib/extensions/mpam.h \
- include/lib/extensions/sme.h include/lib/extensions/spe.h \
- include/lib/extensions/sve.h include/lib/extensions/sys_reg_trace.h \
- include/lib/extensions/trbe.h include/lib/extensions/trf.h \
- include/lib/extensions/twed.h include/lib/utils.h
+ include/lib/extensions/amu.h include/lib/extensions/brbe.h \
+ include/lib/extensions/mpam.h include/lib/extensions/sme.h \
+ include/lib/extensions/spe.h include/lib/extensions/sve.h \
+ include/lib/extensions/sys_reg_trace.h include/lib/extensions/trbe.h \
+ include/lib/extensions/trf.h include/lib/utils.h
 
 include/lib/libc/assert.h:
 
@@ -120,6 +121,12 @@ include/lib/libc/errno.h:
 
 include/lib/el3_runtime/aarch64/context.h:
 
+include/drivers/arm/gicv3.h:
+
+include/common/interrupt_props.h:
+
+include/drivers/arm/gic_common.h:
+
 include/lib/el3_runtime/context_mgmt.h:
 
 include/lib/el3_runtime/pubsub_events.h:
@@ -127,6 +134,8 @@ include/lib/el3_runtime/pubsub_events.h:
 include/lib/el3_runtime/pubsub.h:
 
 include/lib/extensions/amu.h:
+
+include/lib/extensions/brbe.h:
 
 include/lib/extensions/mpam.h:
 
@@ -141,7 +150,5 @@ include/lib/extensions/sys_reg_trace.h:
 include/lib/extensions/trbe.h:
 
 include/lib/extensions/trf.h:
-
-include/lib/extensions/twed.h:
 
 include/lib/utils.h:

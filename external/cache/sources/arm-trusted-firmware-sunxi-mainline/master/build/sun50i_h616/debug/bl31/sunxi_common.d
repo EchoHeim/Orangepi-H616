@@ -8,7 +8,7 @@ build/sun50i_h616/debug/bl31/sunxi_common.o: \
  include/drivers/console.h include/lib/libc/stdint.h \
  include/lib/libc/limits.h include/lib/libc/aarch64/limits_.h \
  include/lib/libc/aarch64/stdint_.h include/drivers/console_assertions.h \
- include/lib/cassert.h include/lib/mmio.h \
+ include/lib/cassert.h include/lib/mmio.h include/lib/smccc.h \
  include/lib/xlat_tables/xlat_tables_v2.h \
  include/lib/xlat_tables/xlat_tables_defs.h include/arch/aarch64/arch.h \
  include/lib/xlat_tables/xlat_mmu_helpers.h include/lib/libc/string.h \
@@ -30,9 +30,11 @@ build/sun50i_h616/debug/bl31/sunxi_common.o: \
  plat/allwinner/sun50i_h616/include/sunxi_mmap.h \
  include/lib/xlat_tables/xlat_tables_arch.h \
  include/lib/xlat_tables/aarch64/xlat_tables_aarch64.h \
+ include/services/arm_arch_svc.h \
  plat/allwinner/common/include/sunxi_def.h \
- plat/allwinner/common/include/sunxi_private.h include/lib/psci/psci.h \
- include/lib/bakery_lock.h include/lib/psci/psci_lib.h
+ plat/allwinner/common/include/sunxi_private.h include/common/fdt_fixup.h \
+ include/lib/psci/psci.h include/lib/bakery_lock.h \
+ include/lib/psci/psci_lib.h
 
 include/lib/libc/errno.h:
 
@@ -71,6 +73,8 @@ include/drivers/console_assertions.h:
 include/lib/cassert.h:
 
 include/lib/mmio.h:
+
+include/lib/smccc.h:
 
 include/lib/xlat_tables/xlat_tables_v2.h:
 
@@ -122,9 +126,13 @@ include/lib/xlat_tables/xlat_tables_arch.h:
 
 include/lib/xlat_tables/aarch64/xlat_tables_aarch64.h:
 
+include/services/arm_arch_svc.h:
+
 plat/allwinner/common/include/sunxi_def.h:
 
 plat/allwinner/common/include/sunxi_private.h:
+
+include/common/fdt_fixup.h:
 
 include/lib/psci/psci.h:
 

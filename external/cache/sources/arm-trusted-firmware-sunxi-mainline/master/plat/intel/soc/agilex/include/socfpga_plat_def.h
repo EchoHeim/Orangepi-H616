@@ -19,6 +19,9 @@
 #define INTEL_SIP_SMC_FPGA_CONFIG_SIZE		0x2000000
 
 /* Register Mapping */
+#define SOCFPGA_CCU_NOC_REG_BASE		0xf7000000
+#define SOCFPGA_F2SDRAMMGR_REG_BASE		U(0xf8024000)
+
 #define SOCFPGA_MMC_REG_BASE			0xff808000
 
 #define SOCFPGA_RSTMGR_REG_BASE			0xffd11000
@@ -29,5 +32,9 @@
 #define SOCFPGA_SOC2FPGA_SCR_REG_BASE           0xffd21200
 #define SOCFPGA_LWSOC2FPGA_SCR_REG_BASE         0xffd21300
 
-#endif /* PLAT_SOCFPGA_DEF_H */
+/* Platform specific system counter */
+#define PLAT_SYS_COUNTER_FREQ_IN_MHZ	get_cpu_clk()
 
+uint32_t get_cpu_clk(void);
+
+#endif /* PLAT_SOCFPGA_DEF_H */

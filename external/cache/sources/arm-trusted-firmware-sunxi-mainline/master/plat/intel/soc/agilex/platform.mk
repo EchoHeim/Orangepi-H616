@@ -26,6 +26,7 @@ PLAT_BL_COMMON_SOURCES	:=	\
 			lib/xlat_tables/xlat_tables_common.c 		\
 			plat/intel/soc/common/aarch64/platform_common.c \
 			plat/intel/soc/common/aarch64/plat_helpers.S	\
+			plat/intel/soc/common/drivers/ccu/ncore_ccu.c	\
 			plat/intel/soc/common/socfpga_delay_timer.c
 
 BL2_SOURCES     +=	\
@@ -44,17 +45,20 @@ BL2_SOURCES     +=	\
 		plat/intel/soc/agilex/soc/agilex_memory_controller.c	\
 		plat/intel/soc/agilex/soc/agilex_mmc.c			\
 		plat/intel/soc/agilex/soc/agilex_pinmux.c		\
-                plat/intel/soc/common/bl2_plat_mem_params_desc.c	\
+		plat/intel/soc/common/bl2_plat_mem_params_desc.c	\
 		plat/intel/soc/common/socfpga_image_load.c		\
 		plat/intel/soc/common/socfpga_storage.c			\
 		plat/intel/soc/common/soc/socfpga_emac.c		\
+		plat/intel/soc/common/soc/socfpga_firewall.c	\
 		plat/intel/soc/common/soc/socfpga_handoff.c		\
 		plat/intel/soc/common/soc/socfpga_mailbox.c		\
 		plat/intel/soc/common/soc/socfpga_reset_manager.c	\
-		plat/intel/soc/common/soc/socfpga_system_manager.c	\
 		plat/intel/soc/common/drivers/qspi/cadence_qspi.c	\
-		plat/intel/soc/common/drivers/wdt/watchdog.c		\
-		plat/intel/soc/common/drivers/ccu/ncore_ccu.c
+		plat/intel/soc/common/drivers/wdt/watchdog.c
+
+include lib/zlib/zlib.mk
+PLAT_INCLUDES	+=	-Ilib/zlib
+BL2_SOURCES	+=	$(ZLIB_SOURCES)
 
 BL31_SOURCES	+=	\
 		drivers/arm/cci/cci.c					\
@@ -62,8 +66,10 @@ BL31_SOURCES	+=	\
 		lib/cpus/aarch64/cortex_a53.S				\
 		plat/common/plat_psci_common.c				\
 		plat/intel/soc/agilex/bl31_plat_setup.c 		\
+		plat/intel/soc/agilex/soc/agilex_clock_manager.c	\
 		plat/intel/soc/common/socfpga_psci.c			\
 		plat/intel/soc/common/socfpga_sip_svc.c			\
+		plat/intel/soc/common/socfpga_sip_svc_v2.c		\
 		plat/intel/soc/common/socfpga_topology.c		\
 		plat/intel/soc/common/sip/socfpga_sip_ecc.c		\
 		plat/intel/soc/common/sip/socfpga_sip_fcs.c		\

@@ -25,9 +25,9 @@ build/sun50i_h616/debug/bl31/bl31_main.o: bl31/bl31_main.c \
  include/lib/libc/aarch64/stdio_.h include/drivers/console.h \
  include/drivers/console_assertions.h \
  include/arch/aarch64/arch_features.h include/bl31/bl31.h \
- include/bl31/ehf.h include/common/runtime_svc.h \
- include/arch/aarch64/smccc_helpers.h include/lib/smccc.h \
- include/lib/el3_runtime/aarch64/context.h \
+ include/bl31/ehf.h include/common/feat_detect.h \
+ include/common/runtime_svc.h include/arch/aarch64/smccc_helpers.h \
+ include/lib/smccc.h include/lib/el3_runtime/aarch64/context.h \
  include/lib/el3_runtime/context_mgmt.h include/lib/pmf/pmf.h \
  include/lib/pmf/pmf_helpers.h include/plat/common/platform.h \
  include/lib/psci/psci.h include/lib/bakery_lock.h \
@@ -118,6 +118,8 @@ include/arch/aarch64/arch_features.h:
 include/bl31/bl31.h:
 
 include/bl31/ehf.h:
+
+include/common/feat_detect.h:
 
 include/common/runtime_svc.h:
 

@@ -24,26 +24,6 @@
 		};
 	};
 
-	nvmem_layout: nvmem_layout@0 {
-		compatible = "st,stm32-nvmem-layout";
-
-		nvmem-cells = <&cfg0_otp>,
-			      <&part_number_otp>,
-			      <&monotonic_otp>,
-			      <&nand_otp>,
-			      <&uid_otp>,
-			      <&package_otp>,
-			      <&hw2_otp>;
-
-		nvmem-cell-names = "cfg0_otp",
-				   "part_number_otp",
-				   "monotonic_otp",
-				   "nand_otp",
-				   "uid_otp",
-				   "package_otp",
-				   "hw2_otp";
-	};
-
 	psci {
 		compatible = "arm,psci-1.0";
 		method = "smc";
@@ -552,7 +532,7 @@
 		 * Break node order to solve dependency probe issue between
 		 * pinctrl and exti.
 		 */
-		pinctrl: pin-controller@50002000 {
+		pinctrl: pinctrl@50002000 {
 			#address-cells = <1>;
 			#size-cells = <1>;
 			compatible = "st,stm32mp157-pinctrl";
@@ -683,7 +663,7 @@
 			};
 		};
 
-		pinctrl_z: pin-controller-z@54004000 {
+		pinctrl_z: pinctrl@54004000 {
 			#address-cells = <1>;
 			#size-cells = <1>;
 			compatible = "st,stm32mp157-z-pinctrl";

@@ -168,6 +168,7 @@
 #define PLAT_UART1_BASE		(0xFFC02100)
 
 #define CRASH_CONSOLE_BASE	PLAT_UART0_BASE
+#define PLAT_INTEL_UART_BASE	PLAT_UART0_BASE
 
 #ifndef SIMICS_BUILD
 #define PLAT_BAUDRATE		(115200)
@@ -191,7 +192,7 @@
  * System counter frequency related constants
  ******************************************************************************/
 #define PLAT_SYS_COUNTER_FREQ_IN_TICKS	(400000000)
-#define PLAT_SYS_COUNTER_FREQ_IN_MHZ	(400)
+#define PLAT_SYS_COUNTER_CONVERT_TO_MHZ	(1000000)
 
 #define PLAT_INTEL_SOCFPGA_GICD_BASE	PLAT_GICD_BASE
 #define PLAT_INTEL_SOCFPGA_GICC_BASE	PLAT_GICC_BASE

@@ -10,8 +10,8 @@ build/sun50i_h616/debug/bl31/sunxi_security.o: \
  include/drivers/console_assertions.h include/lib/cassert.h \
  include/lib/mmio.h plat/allwinner/sun50i_h616/include/sunxi_ccu.h \
  plat/allwinner/sun50i_h616/include/sunxi_mmap.h \
- plat/allwinner/common/include/sunxi_private.h include/lib/psci/psci.h \
- plat/allwinner/common/include/platform_def.h \
+ plat/allwinner/common/include/sunxi_private.h include/common/fdt_fixup.h \
+ include/lib/psci/psci.h plat/allwinner/common/include/platform_def.h \
  include/common/tbbr/tbbr_img_def.h \
  include/export/common/tbbr/tbbr_img_def_exp.h \
  include/export/common/tbbr/../../lib/utils_def_exp.h \
@@ -71,6 +71,8 @@ plat/allwinner/sun50i_h616/include/sunxi_ccu.h:
 plat/allwinner/sun50i_h616/include/sunxi_mmap.h:
 
 plat/allwinner/common/include/sunxi_private.h:
+
+include/common/fdt_fixup.h:
 
 include/lib/psci/psci.h:
 

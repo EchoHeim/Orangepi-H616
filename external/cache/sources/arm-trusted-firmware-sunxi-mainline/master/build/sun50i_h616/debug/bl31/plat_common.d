@@ -24,10 +24,10 @@ build/sun50i_h616/debug/bl31/plat_common.o: \
  include/lib/libc/stdarg.h include/lib/libc/stdio.h \
  include/lib/libc/aarch64/stdio_.h include/drivers/console.h \
  include/drivers/console_assertions.h include/lib/libc/inttypes.h \
- include/lib/libc/aarch64/inttypes_.h include/lib/extensions/twed.h \
- include/plat/common/platform.h include/lib/psci/psci.h \
- include/lib/bakery_lock.h include/lib/psci/psci_lib.h \
- include/drivers/fwu/fwu_metadata.h include/tools_share/uuid.h
+ include/lib/libc/aarch64/inttypes_.h include/plat/common/platform.h \
+ include/lib/psci/psci.h include/lib/bakery_lock.h \
+ include/lib/psci/psci_lib.h include/drivers/fwu/fwu_metadata.h \
+ include/tools_share/uuid.h
 
 include/lib/libc/assert.h:
 
@@ -110,8 +110,6 @@ include/drivers/console_assertions.h:
 include/lib/libc/inttypes.h:
 
 include/lib/libc/aarch64/inttypes_.h:
-
-include/lib/extensions/twed.h:
 
 include/plat/common/platform.h:
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2021, ARM Limited and Contributors. All rights reserved.
+ * Copyright (c) 2013-2022, Arm Limited and Contributors. All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -14,6 +14,7 @@
 #include <bl31/ehf.h>
 #include <common/bl_common.h>
 #include <common/debug.h>
+#include <common/feat_detect.h>
 #include <common/runtime_svc.h>
 #include <drivers/console.h>
 #include <lib/el3_runtime/context_mgmt.h>
@@ -122,6 +123,11 @@ void bl31_main(void)
 {
 	NOTICE("BL31: %s\n", version_string);
 	NOTICE("BL31: %s\n", build_message);
+
+#if FEATURE_DETECTION
+	/* Detect if features enabled during compilation are supported by PE. */
+	detect_arch_features();
+#endif /* FEATURE_DETECTION */
 
 #ifdef SUPPORT_UNKNOWN_MPID
 	if (unsupported_mpid_flag == 0) {
@@ -253,7 +259,16 @@ void __init bl31_prepare_next_image_entry(void)
 		(image_type == SECURE) ? "secure" : "normal");
 	print_entry_point_info(next_image_info);
 	cm_init_my_context(next_image_info);
-	cm_prepare_el3_exit(image_type);
+
+	/*
+	* If we are entering the Non-secure world, use
+	* 'cm_prepare_el3_exit_ns' to exit.
+	*/
+	if (image_type == NON_SECURE) {
+		cm_prepare_el3_exit_ns();
+	} else {
+		cm_prepare_el3_exit(image_type);
+	}
 }
 
 /*******************************************************************************

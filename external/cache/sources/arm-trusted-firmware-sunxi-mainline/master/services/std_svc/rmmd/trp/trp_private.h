@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Arm Limited and Contributors. All rights reserved.
+ * Copyright (c) 2021-2022, Arm Limited and Contributors. All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -30,6 +30,10 @@ typedef struct trp_args {
 
 #define write_trp_arg(args, offset, val) (((args)->regs[offset >> 3])	\
 					 = val)
+/* RMI SMC64 FIDs handled by the TRP */
+#define RMI_RMM_REQ_VERSION		SMC64_RMI_FID(U(0))
+#define RMI_RMM_GRANULE_DELEGATE	SMC64_RMI_FID(U(1))
+#define RMI_RMM_GRANULE_UNDELEGATE	SMC64_RMI_FID(U(2))
 
 /* Definitions for RMI VERSION */
 #define RMI_ABI_VERSION_MAJOR		U(0x0)

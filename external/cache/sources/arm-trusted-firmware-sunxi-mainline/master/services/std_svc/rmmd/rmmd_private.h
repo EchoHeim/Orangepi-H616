@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, ARM Limited and Contributors. All rights reserved.
+ * Copyright (c) 2021-2022, ARM Limited and Contributors. All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -31,7 +31,6 @@
 
 #ifndef __ASSEMBLER__
 #include <stdint.h>
-#include <services/rmi_svc.h>
 
 typedef enum rmm_state {
 	RMM_STATE_RESET = 0,
@@ -51,6 +50,12 @@ typedef struct rmmd_rmm_context {
 /* Functions used to enter/exit the RMM synchronously */
 uint64_t rmmd_rmm_sync_entry(rmmd_rmm_context_t *ctx);
 __dead2 void rmmd_rmm_sync_exit(uint64_t rc);
+
+/* Functions implementing attestation utilities for RMM */
+int rmmd_attest_get_platform_token(uint64_t buf_pa, uint64_t *buf_len,
+				   uint64_t challenge_hash_len);
+int rmmd_attest_get_signing_key(uint64_t buf_pa, uint64_t *buf_len,
+				   uint64_t ecc_curve);
 
 /* Assembly helpers */
 uint64_t rmmd_rmm_enter(uint64_t *c_rt_ctx);
