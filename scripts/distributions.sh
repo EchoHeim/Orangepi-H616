@@ -164,14 +164,13 @@ install_common()
 	# NOTE: this needs to be executed before family_tweaks
 	local bootscript_src=${BOOTSCRIPT%%:*}
 	local bootscript_dst=${BOOTSCRIPT##*:}
+
+    echo "${bootscript_src}===234="
+
 	cp "${EXTER}/config/bootscripts/${bootscript_src}" "${SDCARD}/boot/${bootscript_dst}"
 
 	if [[ -n $BOOTENV_FILE ]]; then
-		if [[ -f $USERPATCHES_PATH/bootenv/$BOOTENV_FILE ]]; then
-			cp "$USERPATCHES_PATH/bootenv/${BOOTENV_FILE}" "${SDCARD}"/boot/orangepiEnv.txt
-		elif [[ -f $EXTER/config/bootenv/$BOOTENV_FILE ]]; then
-			cp "${EXTER}/config/bootenv/${BOOTENV_FILE}" "${SDCARD}"/boot/orangepiEnv.txt
-		fi
+		cp "${SRC}/scripts/config/sun50iw9-default.txt" "${SDCARD}"/boot/orangepiEnv.txt
 	fi
 
 	if [[ $ROOTFS_TYPE == nfs ]]; then

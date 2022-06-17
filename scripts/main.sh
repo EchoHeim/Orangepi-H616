@@ -9,7 +9,6 @@
 # Main program
 
 if [[ $(basename "$0") == main.sh ]]; then
-
 	echo "Please use build.sh to start the build process"
 	exit 255
 fi
@@ -45,25 +44,15 @@ titlestr="Choose an option"
 [[ -z $FORCE_CHECKOUT ]] && FORCE_CHECKOUT=yes
 
 # Load libraries
-# shellcheck source=debootstrap.sh
+
 source "${SRC}"/scripts/debootstrap.sh	# system specific install
-# shellcheck source=image-helpers.sh
 source "${SRC}"/scripts/image-helpers.sh	# helpers for OS image building
-# shellcheck source=distributions.sh
 source "${SRC}"/scripts/distributions.sh	# system specific install
-# shellcheck source=desktop.sh
-source "${SRC}"/scripts/desktop.sh		# desktop specific install
-# shellcheck source=compilation.sh
+# source "${SRC}"/scripts/desktop.sh		# desktop specific install
 source "${SRC}"/scripts/compilation.sh	# patching and compilation of kernel, uboot, ATF
-# shellcheck source=compilation-prepare.sh
-#source "${SRC}"/scripts/compilation-prepare.sh	# kernel plugins - 3rd party drivers that are not upstreamed. Like WG, AUFS, various Wifi
-# shellcheck source=makeboarddeb.sh
 source "${SRC}"/scripts/makeboarddeb.sh	# create board support package
-# shellcheck source=general.sh
 source "${SRC}"/scripts/general.sh		# general functions
-# shellcheck source=chroot-buildpackages.sh
 source "${SRC}"/scripts/chroot-buildpackages.sh	# building packages in chroot
-# shellcheck source=pack.sh
 source "${SRC}"/scripts/pack-uboot.sh
 
 # compress and remove old logs
@@ -119,8 +108,6 @@ if [[ -z $BUILD_OPT ]]; then
 
 	options+=("u-boot"	 "U-boot package")
 	options+=("kernel"	 "Kernel package")
-	options+=("rootfs"	 "Rootfs and all deb packages")
-	options+=("image"	 "Full OS image for flashing")
 
 	menustr="Compile image | rootfs | kernel | u-boot"
 	BUILD_OPT=$(whiptail --title "${titlestr}" --notags \
@@ -132,146 +119,24 @@ if [[ -z $BUILD_OPT ]]; then
 	[[ -z $BUILD_OPT ]] && exit_with_error "No option selected"
 fi
 
-if [[ -z $BOARD ]]; then
-
-	options+=("orangepizero2"		"Allwinner H616 quad core")
-
-	menustr="Please choose a Board."
-	BOARD=$(whiptail --title "${titlestr}"  \
-			  --menu "${menustr}" "${TTY_Y}" "${TTY_X}" $((TTY_Y - 8))  \
-			  --cancel-button Exit --ok-button Select "${options[@]}" \
-			  3>&1 1>&2 2>&3)
-
-	unset options
-	[[ -z $BOARD ]] && exit_with_error "No option selected"
-fi
-
+BOARD="orangepizero2"
 BOARD_TYPE="conf"
+
 # shellcheck source=/dev/null
-source "${EXTER}/config/boards/${BOARD}.${BOARD_TYPE}"
+source "${SRC}/scripts/config/orangepizero2.conf"
 LINUXFAMILY="${BOARDFAMILY}"
 
-[[ -z $KERNEL_TARGET ]] && exit_with_error "Board configuration does not define valid kernel config"
-
-if [[ -z $BRANCH ]]; then
-
-    options=()
-    [[ $KERNEL_TARGET == *current* ]] && options+=("current" "Mainline")
-    [[ $KERNEL_TARGET == *dev* && $EXPERT = yes ]] && options+=("dev" "\Z1Development version (@kernel.org)\Zn")
-
-    menustr="Select the target kernel branch\nExact kernel versions depend on selected board"
-    # do not display selection dialog if only one kernel branch is available
-    if [[ "${#options[@]}" == 2 ]]; then
-        BRANCH="${options[0]}"
-    else
-		BRANCH=$(whiptail --title "${titlestr}"  \
-				  --menu "${menustr}" "${TTY_Y}" "${TTY_X}" $((TTY_Y - 8))  \
-				  --cancel-button Exit --ok-button Select "${options[@]}" \
-				  3>&1 1>&2 2>&3)
-    fi
-
-    unset options
-    [[ -z $BRANCH ]] && exit_with_error "No kernel branch selected"
-
-else
-
-    [[ $KERNEL_TARGET != *$BRANCH* ]] && exit_with_error "Kernel branch not defined for this board" "$BRANCH"
-
-fi
-
-if [[ ${BUILD_OPT} == image || ${BUILD_OPT} == kernel ]]; then
-
-	if [[ -z $KERNEL_CONFIGURE ]]; then
-
-		options+=("no" "Do not change the kernel configuration")
-		options+=("yes" "Show a kernel configuration menu before compilation")
-
-		menustr="Select the kernel configuration."
-		KERNEL_CONFIGURE=$(whiptail --title "${titlestr}" --notags \
-						 --menu "${menustr}" $TTY_Y $TTY_X $((TTY_Y - 8)) \
-						 --cancel-button Exit --ok-button Select "${options[@]}" \
-						 3>&1 1>&2 2>&3)
-
-		unset options
-		[[ -z $KERNEL_CONFIGURE ]] && exit_with_error "No option selected"
-	fi
-fi
+BRANCH="current"
 
 # define distribution support status
 declare -A distro_name
-distro_name['buster']="Debian 10 Buster"
-distro_name['focal']="Ubuntu Focal 20.04 LTS"
-
-if [[ ${BUILD_OPT} == image || ${BUILD_OPT} == rootfs ]]; then
-
-	RELEASE_TARGET="stretch buster bullseye xenial bionic eoan focal"
-
-	if [[ -z $RELEASE ]]; then
-
-        if [[ $BRANCH == current ]]; then
-
-	        	RELEASE_TARGET="buster bionic focal"
-			[[ $LINUXFAMILY == sun50iw6 ]] && RELEASE_TARGET="buster focal"
-		else
-
-			[[ -z $BRANCH ]] && exit_with_error "No kernel branch selected"
-		fi
-
-                distro_menu "buster"
-                distro_menu "focal"
-
-		menustr="Select the target OS release package base"
-		RELEASE=$(whiptail --title "${titlestr}"  \
-				  --menu "${menustr}" "${TTY_Y}" "${TTY_X}" $((TTY_Y - 8))  \
-				  --cancel-button Exit --ok-button Select "${options[@]}" \
-				  3>&1 1>&2 2>&3)
-
-		unset options
-		[[ -z $RELEASE ]] && exit_with_error "No option selected"
-	fi
-
-	# don't show desktop option if we choose minimal build
-	[[ $BUILD_MINIMAL == yes ]] && BUILD_DESKTOP="no"
-
-	if [[ -z $BUILD_DESKTOP ]]; then
-
-		options+=("no"		"Image with console interface (server)")
-		options+=("yes"		"Image with desktop environment")
-
-		menustr="Select the target image type."
-		BUILD_DESKTOP=$(whiptail --title "${titlestr}" --notags \
-				  --menu "${menustr}" "${TTY_Y}" "${TTY_X}" $((TTY_Y - 8))  \
-				  --cancel-button Exit --ok-button Select "${options[@]}" \
-				  3>&1 1>&2 2>&3)
-
-		unset options
-		[[ -z $BUILD_DESKTOP ]] && exit_with_error "No option selected"
-		[[ $BUILD_DESKTOP == yes ]] && BUILD_MINIMAL="no"
-	fi
-
-	if [[ $BUILD_DESKTOP == "no" && -z $BUILD_MINIMAL ]]; then
-	
-	    options+=("no" "Standard image with console interface")
-	    options+=("yes" "Minimal image with console interface")
-		
-		menustr="Select the target image type."
-	    BUILD_MINIMAL=$(whiptail --title "${titlestr}" --notags \
-				  --menu "${menustr}" "${TTY_Y}" "${TTY_X}" $((TTY_Y - 8))  \
-				  --cancel-button Exit --ok-button Select "${options[@]}" \
-				  3>&1 1>&2 2>&3)
-
-	    unset options
-	    [[ -z $BUILD_MINIMAL ]] && exit_with_error "No option selected"
-	fi
-fi
 
 #prevent conflicting setup
-[[ $BUILD_DESKTOP == yes ]] && BUILD_MINIMAL=no
-[[ $BUILD_DESKTOP == yes ]] && IMAGETYPE="desktop"
-[[ $BUILD_DESKTOP == no ]] && IMAGETYPE="server"
-[[ $BUILD_MINIMAL == yes ]] && EXTERNAL_NEW=no
 
+IMAGETYPE="server"
+EXTERNAL_NEW=no
 CONTAINER_COMPAT="no"
+
 [[ -z $COMPRESS_OUTPUTIMAGE ]] && COMPRESS_OUTPUTIMAGE="yes"
 
 #shellcheck source=configuration.sh
@@ -284,9 +149,7 @@ if [[ $USEALLCORES != no ]]; then
 	CTHREADS="-j$((CPUS + CPUS/2))"
 
 else
-
 	CTHREADS="-j1"
-
 fi
 
 if [[ $BUILD_ALL == yes && -n $GPG_PASS ]]; then

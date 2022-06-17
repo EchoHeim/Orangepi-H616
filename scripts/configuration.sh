@@ -96,10 +96,7 @@ SDCARD="${SRC}/.tmp/rootfs-${BRANCH}-${BOARD}-${RELEASE}-${BUILD_DESKTOP}-${BUIL
 MOUNT="${SRC}/.tmp/mount-${BRANCH}-${BOARD}-${RELEASE}-${BUILD_DESKTOP}-${BUILD_MINIMAL}"
 DESTIMG="${SRC}/.tmp/image-${BRANCH}-${BOARD}-${RELEASE}-${BUILD_DESKTOP}-${BUILD_MINIMAL}"
 
-[[ ! -f ${EXTER}/config/sources/families/$LINUXFAMILY.conf ]] && \
-    exit_with_error "Sources configuration not found" "$LINUXFAMILY"
-
-source "${EXTER}/config/sources/families/${LINUXFAMILY}.conf"
+source "${SRC}/scripts/config/sun50iw9.conf"
 
 if [[ -f $USERPATCHES_PATH/sources/families/$LINUXFAMILY.conf ]]; then
 	display_alert "Adding user provided $LINUXFAMILY overrides"
@@ -107,7 +104,7 @@ if [[ -f $USERPATCHES_PATH/sources/families/$LINUXFAMILY.conf ]]; then
 fi
 
 # load architecture defaults
-source "${EXTER}/config/sources/${ARCH}.conf"
+source "${SRC}/scripts/config/${ARCH}.conf"
 
 # dropbear needs to be configured differently
 [[ $CRYPTROOT_ENABLE == yes && $RELEASE == xenial ]] && exit_with_error "Encrypted rootfs is not supported in Xenial"
