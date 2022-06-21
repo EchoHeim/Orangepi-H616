@@ -1,0 +1,37 @@
+Format: 1.8
+Date: Tue, 21 Jun 2022 18:14:52 +0800
+Source: linux-5.13.0-sun50iw9
+Binary: linux-dtb-current-sun50iw9 linux-headers-current-sun50iw9 linux-image-current-sun50iw9 linux-libc-dev
+Architecture: arm64
+Version: 2.1.8
+Distribution: focal
+Urgency: low
+Maintainer: Orange Pi <leeboby@aliyun.com>
+Changed-By: Orange Pi <leeboby@aliyun.com>
+Description:
+ linux-dtb-current-sun50iw9 - Armbian Linux DTB, version 5.13.0-sun50iw9 current
+ linux-headers-current-sun50iw9 - Linux kernel headers for 5.13.0-sun50iw9 on arm64 current
+ linux-image-current-sun50iw9 - Linux kernel, orangepi version 5.13.0-sun50iw9 current
+ linux-libc-dev - Armbian Linux support headers for userspace development
+Changes:
+ linux-5.13.0-sun50iw9 (2.1.8) focal; urgency=low
+ .
+   * Armbian built Linux kernel. current
+Checksums-Sha1:
+ ba67f38bbc33bd7470d5ee9b98de45f6ec8166f9 5962 linux-5.13.0-sun50iw9_2.1.8_arm64.buildinfo
+ d0eed0e374b2d5e23836a3413ed3780a9a671ec9 15420 linux-dtb-current-sun50iw9_2.1.8_arm64.deb
+ 7b897cacc3a881cb06261df20b3ec4a449d8e9d6 12174708 linux-headers-current-sun50iw9_2.1.8_arm64.deb
+ e77a8a59d576adb0c9d58a315b299a181c860b20 28698524 linux-image-current-sun50iw9_2.1.8_arm64.deb
+ 073ef1e630ca81833925c79d8b10b35dfe06cb2b 1155000 linux-libc-dev_2.1.8_arm64.deb
+Checksums-Sha256:
+ de7fbb4d71616813d13e680b7d6f77fa0f50b3c775b746edb2823aee035afab4 5962 linux-5.13.0-sun50iw9_2.1.8_arm64.buildinfo
+ 4c5fa67135f9305e5f539308c1355c6537e914f8fa56d864c42f4f85cf6be528 15420 linux-dtb-current-sun50iw9_2.1.8_arm64.deb
+ 27f43cc505717a67adeca3fab7e6e2a468ac2bff124c83c374bddaa87bcf9542 12174708 linux-headers-current-sun50iw9_2.1.8_arm64.deb
+ 76cc4049f3ee0fcab7a3c8d9fdd4bb2a9e910f45561a36e2000a9fcadc21f155 28698524 linux-image-current-sun50iw9_2.1.8_arm64.deb
+ c1ccab982e7e971debb39470e2bdc941dbfbd856eb6a6d7b8842fa2d01f421da 1155000 linux-libc-dev_2.1.8_arm64.deb
+Files:
+ d37cb9b6bfa4f4cc995af6f4a21e2192 5962 kernel optional linux-5.13.0-sun50iw9_2.1.8_arm64.buildinfo
+ 982cf704ac6fc2d2593d0c1f22634b89 15420 kernel optional linux-dtb-current-sun50iw9_2.1.8_arm64.deb
+ a641c66f462f8dcbeec764ed6f7f7ba7 12174708 devel optional linux-headers-current-sun50iw9_2.1.8_arm64.deb
+ 0efbd6a227c6322edf31e0d42fa2dbac 28698524 kernel optional linux-image-current-sun50iw9_2.1.8_arm64.deb
+ ac7895f5836562240b1cbda9cb558553 1155000 devel optional linux-libc-dev_2.1.8_arm64.deb

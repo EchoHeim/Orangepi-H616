@@ -16,7 +16,8 @@
 .tmp
 output
 
-# toolchains
+toolchains/gcc-arm-9.2-2019.12-x86_64-aarch64-none-linux-gnu/libexec
+
 # userpatches
 
 external/cache/rootfs

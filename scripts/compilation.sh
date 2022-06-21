@@ -585,8 +585,6 @@ compile_orangepi-config()
 }
 
 
-
-
 compile_sunxi_tools()
 {
 	# Compile and install only if git commit hash changed

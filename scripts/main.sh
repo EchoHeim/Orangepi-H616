@@ -134,45 +134,9 @@ if [[ -z $BUILD_OPT ]]; then
 	[[ -z $BUILD_OPT ]] && exit_with_error "No option selected"
 fi
 
-if [[ -z $BOARD ]]; then
-
-	# options+=("orangepir1"			"Allwinner H2+ quad core 256MB RAM WiFi SPI 2xETH")
-	# options+=("orangepizero"		"Allwinner H2+ quad core 256MB/512MB RAM WiFi SPI")
-	# options+=("orangepipc"			"Allwinner H3 quad core 1GB RAM")
-	# options+=("orangepipcplus"		"Allwinner H3 quad core 1GB RAM WiFi eMMC")
-	# options+=("orangepione"			"Allwinner H3 quad core 512MB/1GB RAM")
-	# options+=("orangepilite"		"Allwinner H3 quad core 512MB/1GB RAM WiFi")
-	# options+=("orangepiplus"		"Allwinner H3 quad core 1GB/2GB RAM WiFi GBE eMMC")
-	# options+=("orangepiplus2e"		"Allwinner H3 quad core 2GB RAM WiFi GBE eMMC")
-	# options+=("orangepizeroplus2h3" 	"Allwinner H3 quad core 512MB RAM WiFi/BT eMMC")
-	# options+=("orangepipch5"		"Allwinner H5 quad core 1GB RAM")
-	# options+=("orangepipc2"			"Allwinner H5 quad core 1GB RAM GBE SPI")
-	# options+=("orangepioneh5"		"Allwinner H5 quad core 512MB/1GB RAM")
-	# options+=("orangepiprime"		"Allwinner H5 quad core 2GB RAM GBE WiFi/BT")
-	# options+=("orangepizeroplus"		"Allwinner H5 quad core 512MB RAM GBE WiFi SPI")
-	# options+=("orangepizeroplus2h5"		"Allwinner H5 quad core 512MB RAM WiFi/BT eMMC")
-	# options+=("orangepi3"                   "Allwinner H6 quad core 1GB/2GB RAM GBE WiFi/BT-AP6256 eMMC USB3")
-	# options+=("orangepi3-lts"               "Allwinner H6 quad core 2GB RAM GBE WiFi/BT-AW859A eMMC USB3")
-	# options+=("orangepilite2"		"Allwinner H6 quad core 1GB RAM WiFi/BT USB3")
-	# options+=("orangepioneplus"		"Allwinner H6 quad core 1GB RAM GBE")
-	options+=("orangepizero2"		"Allwinner H616 quad core 512MB/1GB RAM WiFi/BT GBE SPI")
-	#options+=("orangepizero2-b"		"Allwinner H616 quad core 1GB RAM WiFi/BT GBE SPI")
-	#options+=("orangepizero2-lts"		"Allwinner H616 quad core 1.5GB RAM WiFi/BT GBE SPI")
-	# options+=("orangepi4"                   "Rockchip  RK3399 hexa core 4GB RAM GBE eMMc USB3 USB-C WiFi/BT")
-	# options+=("orangepir1plus"              "Rockchip  RK3328 quad core 1GB RAM 2xGBE 8211E USB2 SPI")
-	# options+=("orangepir1plus-lts"          "Rockchip  RK3328 quad core 1GB RAM 2xGBE YT8531C USB2 SPI")
-
-	menustr="Please choose a Board."
-	BOARD=$(whiptail --title "${titlestr}" --backtitle "${backtitle}" \
-			  --menu "${menustr}" "${TTY_Y}" "${TTY_X}" $((TTY_Y - 8))  \
-			  --cancel-button Exit --ok-button Select "${options[@]}" \
-			  3>&1 1>&2 2>&3)
-
-	unset options
-	[[ -z $BOARD ]] && exit_with_error "No option selected"
-fi
-
+BOARD="orangepizero2"
 BOARD_TYPE="conf"
+
 # shellcheck source=/dev/null
 source "${EXTER}/config/boards/${BOARD}.${BOARD_TYPE}"
 LINUXFAMILY="${BOARDFAMILY}"

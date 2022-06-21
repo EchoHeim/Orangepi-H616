@@ -69,16 +69,6 @@ update_src() {
 #declare -f update_src >> $TMPFILE
 #echo update_src >> $TMPFILE
 
-#do not update/checkout git with root privileges to messup files onwership.
-#due to in docker/VM, we can't su to a normal user, so do not update/checkout git.
-#if [[ `systemd-detect-virt` == 'none' ]]; then
-#	if [[ $EUID == 0 ]]; then
-#		su `stat --format=%U $SRC/.git` -c "bash $TMPFILE"
-#	else
-#		bash $TMPFILE
-#	fi
-#fi
-
 #rm $TMPFILE
 
 # Check for required packages for compiling
@@ -89,56 +79,6 @@ fi
 if [[ -z "$(which getfacl)" ]]; then
 	sudo apt-get update
 	sudo apt-get install -y acl
-fi
-
-# Check for Vagrant
-if [[ "$1" == vagrant && -z "$(which vagrant)" ]]; then
-	display_alert "Vagrant not installed." "Installing"
-	sudo apt-get update
-	sudo apt-get install -y vagrant virtualbox
-fi
-
-if [[ "$1" == dockerpurge && -f /etc/debian_version ]]; then
-	display_alert "Purging Orange Pi Docker containers" "" "wrn"
-	docker container ls -a | grep orangepi | awk '{print $1}' | xargs docker container rm &> /dev/null
-	docker image ls | grep orangepi | awk '{print $3}' | xargs docker image rm &> /dev/null
-	shift
-	set -- "docker" "$@"
-fi
-
-if [[ "$1" == docker-shell ]]; then
-	shift
-	SHELL_ONLY=yes
-	set -- "docker" "$@"
-fi
-
-# Install Docker if not there but wanted. We cover only Debian based distro install. Else, manual Docker install is needed
-if [[ "$1" == docker && -f /etc/debian_version && -z "$(which docker)" ]]; then
-
-	# add exception for Ubuntu Focal until Docker provides dedicated binary
-	codename=$(lsb_release -sc)
-	codeid=$(lsb_release -is | awk '{print tolower($0)}')
-	[[ $codeid == linuxmint && $codename == debbie ]] && codename="buster" && codeid="debian"
-	[[ $codename == focal ]] && codename="bionic"
-
-	display_alert "Docker not installed." "Installing" "Info"
-	echo "deb [arch=amd64] https://download.docker.com/linux/${codeid} ${codename} edge" > /etc/apt/sources.list.d/docker.list
-
-	# minimal set of utilities that are needed for prep
-	packages=("curl" "gnupg" "apt-transport-https")
-	for i in "${packages[@]}"
-	do
-	[[ ! $(which $i) ]] && install_packages+=$i" "
-	done
-	[[ -z $install_packages ]] && apt-get update;apt-get install -y -qq --no-install-recommends $install_packages
-
-	curl -fsSL "https://download.docker.com/linux/${codeid}/gpg" | apt-key add -qq - > /dev/null 2>&1
-	export DEBIAN_FRONTEND=noninteractive
-	apt-get update
-	apt-get install -y -qq --no-install-recommends docker-ce
-	display_alert "Add yourself to docker group to avoid root privileges" "" "wrn"
-	"$SRC/build.sh" "$@"
-	exit $?
 fi
 
 EXTER="${SRC}/external"
@@ -157,37 +97,9 @@ if ! ls ${SRC}/userpatches/{config-example.conf,config-docker.conf,config-vagran
                 ln -fs config-example.conf "${SRC}"/userpatches/config-default.conf || exit 1
 	fi
 
-	# Create Docker config
-	if [[ ! -f "${SRC}"/userpatches/config-docker.conf ]]; then
-		cp "${EXTER}"/config/templates/config-docker.conf "${SRC}"/userpatches/config-docker.conf || exit 1
-	fi
-
-	# Create Docker file
-        if [[ ! -f "${SRC}"/userpatches/Dockerfile ]]; then
-                cp "${EXTER}"/config/templates/Dockerfile "${SRC}"/userpatches/Dockerfile || exit 1
-        fi
-
-	# Create Vagrant config
-	if [[ ! -f "${SRC}"/userpatches/config-vagrant.conf ]]; then
-	        cp "${EXTER}"/config/templates/config-vagrant.conf "${SRC}"/userpatches/config-vagrant.conf || exit 1
-	fi
-
-	# Create Vagrant file
-	if [[ ! -f "${SRC}"/userpatches/Vagrantfile ]]; then
-		cp "${EXTER}"/config/templates/Vagrantfile "${SRC}"/userpatches/Vagrantfile || exit 1
-	fi
-
 fi
 
-if [[ -z "$CONFIG" && -n "$1" && -f "${SRC}/userpatches/config-$1.conf" ]]; then
-	CONFIG="userpatches/config-$1.conf"
-	shift
-fi
-
-# usind default if custom not found
-if [[ -z "$CONFIG" && -f "${SRC}/userpatches/config-default.conf" ]]; then
-	CONFIG="$SRC/userpatches/config-default.conf"
-fi
+CONFIG="$SRC/userpatches/config-default.conf"
 
 # source build configuration file
 CONFIG_FILE="$(realpath "$CONFIG")"
@@ -215,10 +127,4 @@ while [[ $1 == *=* ]]; do
     eval "$parameter=\"$value\""
 done
 
-if [[ $BUILD_ALL == yes || $BUILD_ALL == demo ]]; then
-	# shellcheck source=scripts/build-all-ng.sh
-	source "${SRC}"/scripts/build-all-ng.sh
-else
-	# shellcheck source=scripts/main.sh
-	source "${SRC}"/scripts/main.sh
-fi
+source "${SRC}"/scripts/main.sh
