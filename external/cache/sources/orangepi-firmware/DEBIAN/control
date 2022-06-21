@@ -1,0 +1,9 @@
+Package: orangepi-firmware
+Version: 2.1.8
+Architecture: all
+Maintainer: Orange Pi <leeboby@aliyun.com>
+Installed-Size: 1
+Replaces: linux-firmware, firmware-brcm80211, firmware-ralink, firmware-samsung, firmware-realtek, orangepi-firmware
+Section: kernel
+Priority: optional
+Description: Linux firmware

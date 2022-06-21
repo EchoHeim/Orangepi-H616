@@ -22,6 +22,7 @@
 # prepare_host_basic
 # prepare_host
 # webseed
+# download_and_verify
 # run_after_build
 
 # cleaning <target>
@@ -406,7 +407,7 @@ fingerprint_image()
 	display_alert "Fingerprinting"
 	cat <<-EOF > "${1}"
 	--------------------------------------------------------------------------------
-	Title:			BIQU-Hurakan $REVISION ${BOARD^} $DISTRIBUTION $RELEASE $BRANCH
+	Title:			Orange Pi $REVISION ${BOARD^} $DISTRIBUTION $RELEASE $BRANCH
 	Kernel:			Linux $VER
 	Build date:		$(date +'%d.%m.%Y')
 	Maintainer:		$MAINTAINER <$MAINTAINERMAIL>
@@ -570,6 +571,7 @@ display_alert "Building kernel splash logo" "$RELEASE" "info"
 
 function distro_menu ()
 {
+
 	for i in "${!distro_name[@]}"
 	do
 		if [[ "${i}" == "${1}" ]]; then
@@ -690,7 +692,7 @@ prepare_host()
 	#
 	# NO_HOST_RELEASE_CHECK overrides the check for a supported host system
 	# Disable host OS check at your own risk, any issues reported with unsupported releases will be closed without a discussion
-	if [[ -z $codename || "bionic buster eoan focal jammy debbie tricia ulyana" != *"$codename"* ]]; then
+	if [[ -z $codename || "bionic buster eoan focal debbie tricia ulyana" != *"$codename"* ]]; then
 		if [[ $NO_HOST_RELEASE_CHECK == yes ]]; then
 			display_alert "You are running on an unsupported system" "${codename:-(unknown)}" "wrn"
 			display_alert "Do not report any errors, warnings or other issues encountered beyond this point" "" "wrn"
@@ -703,7 +705,7 @@ prepare_host()
 		exit_with_error "Windows subsystem for Linux is not a supported build environment"
 	fi
 
-	if [[ -z $codename || "jammy" == "$codename" || "focal" == "$codename" || "eoan" == "$codename"  || "debbie" == "$codename"  || "buster" == "$codename" || "ulyana" == "$codename" ]]; then
+	if [[ -z $codename || "focal" == "$codename" || "eoan" == "$codename"  || "debbie" == "$codename"  || "buster" == "$codename" || "ulyana" == "$codename" ]]; then
 	    hostdeps="${hostdeps/lib32ncurses5 lib32tinfo5/lib32ncurses6 lib32tinfo6}"
 	fi
 
@@ -798,11 +800,14 @@ prepare_host()
 
 	USE_TORRENT_STATUS=${USE_TORRENT}
 	USE_TORRENT="no"
+	# for toolchain in ${toolchains[@]}; do
+	# 	download_and_verify "_toolchain" "${toolchain##*/}"
+	# done
 
     cd $SRC/toolchains/gcc-arm-9.2-2019.12-x86_64-aarch64-none-linux-gnu/
-    if [[ ! -d libexec ]]; then
-		sudo cat libexec.tar.gz.0* | sudo tar zx
-	fi
+    if [ ! -d libexec ]; then
+        cat libexec.tar.gz* | tar zx
+    fi
 
 	USE_TORRENT=${USE_TORRENT_STATUS}
 
@@ -890,6 +895,138 @@ WEBSEED=(
 	text="${text:1}"
 	echo "${text}"
 }
+
+download_and_verify()
+{
+
+	local remotedir=$1
+	local filename=$2
+	local localdir=$SRC/toolchains
+	local dirname=${filename//.tar.xz}
+
+        if [[ $DOWNLOAD_MIRROR == china ]]; then
+		local server="https://mirrors.tuna.tsinghua.edu.cn/armbian-releases/"
+			else
+		local server="https://dl.armbian.com/"
+        fi
+
+	if [[ -f ${localdir}/${dirname}/.download-complete ]]; then
+		return
+	fi
+
+	cd "${localdir}" || exit
+
+	# use local control file
+	if [[ -f $EXTER/config/torrents/${filename}.asc ]]; then
+		local torrent=$EXTER/config/torrents/${filename}.torrent
+		ln -s $EXTER/config/torrents/${filename}.asc ${localdir}/${filename}.asc
+	elif [[ ! $(wget -S --spider "${server}${remotedir}/${filename}.asc" 2>&1 >/dev/null | grep 'HTTP/1.1 200 OK') ]]; then
+		return
+	else
+		# download control file
+		local torrent=${server}$remotedir/${filename}.torrent
+		aria2c --download-result=hide --disable-ipv6=true --summary-interval=0 --console-log-level=error --auto-file-renaming=false \
+		--continue=false --allow-overwrite=true --dir="${localdir}" "$(webseed "$remotedir/${filename}.asc")" -o "${filename}.asc"
+		[[ $? -ne 0 ]] && display_alert "Failed to download control file" "" "wrn"
+	fi
+
+	# download torrent first
+	if [[ ${USE_TORRENT} == "yes" ]]; then
+
+		display_alert "downloading using torrent network" "$filename"
+		local ariatorrent="--summary-interval=0 --auto-save-interval=0 --seed-time=0 --bt-stop-timeout=15 --console-log-level=error \
+		--allow-overwrite=true --download-result=hide --rpc-save-upload-metadata=false --auto-file-renaming=false \
+		--file-allocation=trunc --continue=true ${torrent} \
+		--dht-file-path=$EXTER/cache/.aria2/dht.dat --disable-ipv6=true --stderr --follow-torrent=mem --dir=${localdir}"
+
+		# exception. It throws error if dht.dat file does not exists. Error suppress needed only at first download.
+		if [[ -f $EXTER/cache/.aria2/dht.dat ]]; then
+			# shellcheck disable=SC2086
+			aria2c ${ariatorrent}
+		else
+			# shellcheck disable=SC2035
+			aria2c ${ariatorrent} &> "${DEST}"/debug/torrent.log
+		fi
+		# mark complete
+		[[ $? -eq 0 ]] && touch "${localdir}/${filename}.complete"
+
+	fi
+
+
+	# direct download if torrent fails
+	if [[ ! -f "${localdir}/${filename}.complete" ]]; then
+		if [[ $(wget -S --spider "${server}${remotedir}/${filename}" 2>&1 >/dev/null \
+			| grep 'HTTP/1.1 200 OK') ]]; then
+			display_alert "downloading using http(s) network" "$filename"
+			aria2c --download-result=hide --rpc-save-upload-metadata=false --console-log-level=error \
+			--dht-file-path="${SRC}"/cache/.aria2/dht.dat --disable-ipv6=true --summary-interval=0 --auto-file-renaming=false --dir="${localdir}" "$(webseed "${remotedir}/${filename}")" -o "${filename}"
+			# mark complete
+			[[ $? -eq 0 ]] && touch "${localdir}/${filename}.complete" && echo ""
+
+		fi
+	fi
+
+	if [[ -f ${localdir}/${filename}.asc ]]; then
+
+		if grep -q 'BEGIN PGP SIGNATURE' "${localdir}/${filename}.asc"; then
+
+			if [[ ! -d $EXTER/cache/.gpg ]]; then
+				mkdir -p $EXTER/cache/.gpg
+				chmod 700 $EXTER/cache/.gpg
+				touch $EXTER/cache/.gpg/gpg.conf
+				chmod 600 $EXTER/cache/.gpg/gpg.conf
+			fi
+
+			# Verify archives with Linaro and Armbian GPG keys
+
+			if [ x"" != x"${http_proxy}" ]; then
+				(gpg --homedir $EXTER/cache/.gpg --no-permission-warning --list-keys 8F427EAF >> $DEST/debug/output.log 2>&1\
+				 || gpg --homedir $EXTER/cache/.gpg --no-permission-warning \
+				--keyserver hkp://keyserver.ubuntu.com:80 --keyserver-options http-proxy="${http_proxy}" \
+				--recv-keys 8F427EAF >> $EXTER/debug/output.log 2>&1)
+
+				(gpg --homedir $EXTER/cache/.gpg --no-permission-warning --list-keys 9F0E78D5 >> $DEST/debug/output.log 2>&1\
+				|| gpg --homedir $EXTER/cache/.gpg --no-permission-warning \
+				--keyserver hkp://keyserver.ubuntu.com:80 --keyserver-options http-proxy="${http_proxy}" \
+				--recv-keys 9F0E78D5 >> $DEST/debug/output.log 2>&1)
+			else
+				(gpg --homedir $EXTER/cache/.gpg --no-permission-warning --list-keys 8F427EAF >> $DEST/debug/output.log 2>&1\
+				 || gpg --homedir $EXTER/cache/.gpg --no-permission-warning \
+				--keyserver hkp://keyserver.ubuntu.com:80 \
+				--recv-keys 8F427EAF >> "${DEST}"/debug/output.log 2>&1)
+
+				(gpg --homedir $EXTER/cache/.gpg --no-permission-warning --list-keys 9F0E78D5 >> $DEST/debug/output.log 2>&1\
+				|| gpg --homedir $EXTER/cache/.gpg --no-permission-warning \
+				--keyserver hkp://keyserver.ubuntu.com:80 \
+				--recv-keys 9F0E78D5 >> "${DEST}"/debug/output.log 2>&1)
+			fi
+
+			gpg --homedir $EXTER/cache/.gpg --no-permission-warning --verify \
+			--trust-model always -q "${localdir}/${filename}.asc" >> "${DEST}"/debug/output.log 2>&1
+			[[ ${PIPESTATUS[0]} -eq 0 ]] && verified=true && display_alert "Verified" "PGP" "info"
+
+		else
+
+			md5sum -c --status "${localdir}/${filename}.asc" && verified=true && display_alert "Verified" "MD5" "info"
+
+		fi
+
+		if [[ $verified == true ]]; then
+			if [[ "${filename:(-6)}" == "tar.xz" ]]; then
+
+				display_alert "decompressing"
+				pv -p -b -r -c -N "[ .... ] ${filename}" "${filename}" | xz -dc | tar xp --xattrs --no-same-owner --overwrite
+				[[ $? -eq 0 ]] && touch "${localdir}/${dirname}/.download-complete"
+			fi
+		else
+			exit_with_error "verification failed"
+		fi
+
+	fi
+}
+
+
+
 
 function run_after_build()
 {

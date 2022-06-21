@@ -251,6 +251,7 @@ kernel/drivers/net/phy/mdio_devres.ko
 kernel/drivers/net/phy/phylink.ko
 kernel/drivers/net/phy/libphy.ko
 kernel/drivers/net/phy/sunxi-ephy.ko
+kernel/drivers/net/phy/ac200.ko
 kernel/drivers/net/phy/fixed_phy.ko
 kernel/drivers/net/phy/motorcomm.ko
 kernel/drivers/net/mdio/of_mdio.ko

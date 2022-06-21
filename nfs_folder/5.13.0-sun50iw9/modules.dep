@@ -2543,6 +2543,7 @@ kernel/net/ipv6/sit.ko: kernel/net/ipv4/tunnel4.ko kernel/net/ipv4/ip_tunnel.ko
 kernel/net/ipv6/ip6_tunnel.ko: kernel/net/ipv6/tunnel6.ko
 kernel/net/ipv6/ip6_gre.ko: kernel/net/ipv6/ip6_tunnel.ko kernel/net/ipv6/tunnel6.ko kernel/net/ipv4/gre.ko
 kernel/net/ipv6/ip6_udp_tunnel.ko:
+kernel/net/bpfilter/bpfilter.ko:
 kernel/net/sunrpc/auth_gss/rpcsec_gss_krb5.ko:
 kernel/net/wireless/cfg80211.ko:
 kernel/net/rfkill/rfkill-gpio.ko:

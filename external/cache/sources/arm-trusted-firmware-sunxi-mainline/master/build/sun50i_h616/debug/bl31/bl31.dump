@@ -1,6 +1,6 @@
 
-/home/lodge/Allwinner/Orangepi-H616/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/bl31.elf:     file format elf64-littleaarch64
-/home/lodge/Allwinner/Orangepi-H616/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/bl31.elf
+/home/lodge/Allwinner/orangepi-build/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/bl31.elf:     file format elf64-littleaarch64
+/home/lodge/Allwinner/orangepi-build/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/bl31.elf
 architecture: aarch64, flags 0x00000112:
 EXEC_P, HAS_SYMS, D_PAGED
 start address 0x0000000040000000
@@ -36,11 +36,11 @@ Idx Name          Size      VMA               LMA               File off  Algn
                   CONTENTS, READONLY, DEBUGGING
  10 .debug_line   00011877  0000000000000000  0000000000000000  0004f970  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_str    00005813  0000000000000000  0000000000000000  000611e7  2**0
+ 11 .debug_str    00005814  0000000000000000  0000000000000000  000611e7  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .comment      0000005a  0000000000000000  0000000000000000  000669fa  2**0
+ 12 .comment      0000005a  0000000000000000  0000000000000000  000669fb  2**0
                   CONTENTS, READONLY
- 13 .debug_loc    00027b28  0000000000000000  0000000000000000  00066a54  2**0
+ 13 .debug_loc    00027b28  0000000000000000  0000000000000000  00066a55  2**0
                   CONTENTS, READONLY, DEBUGGING
  14 .debug_ranges 00005f10  0000000000000000  0000000000000000  0008e580  2**4
                   CONTENTS, READONLY, DEBUGGING
@@ -63,13 +63,13 @@ SYMBOL TABLE:
 0000000000000000 l    d  .debug_loc	0000000000000000 .debug_loc
 0000000000000000 l    d  .debug_ranges	0000000000000000 .debug_ranges
 0000000000000000 l    d  .debug_frame	0000000000000000 .debug_frame
-0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/Orangepi-H616/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/bl31_entrypoint.o
+0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/orangepi-build/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/bl31_entrypoint.o
 0000000000000000 l    df *ABS*	0000000000000000 assert.c
 0000000000000000 l    df *ABS*	0000000000000000 arm_arch_svc_setup.c
 0000000040000204 l     F .text	000000000000014c arm_arch_svc_smc_handler
-000000004000b5b0 l     O .rodata	0000000000000020 __svc_desc_arm_arch_svc
-0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/Orangepi-H616/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/cpu_data.o
-0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/Orangepi-H616/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/cortex_a53.o
+000000004000b5b8 l     O .rodata	0000000000000020 __svc_desc_arm_arch_svc
+0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/orangepi-build/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/cpu_data.o
+0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/orangepi-build/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/cortex_a53.o
 0000000000000008 l       *ABS*	0000000000000000 CPU_MIDR_SIZE
 0000000000000008 l       *ABS*	0000000000000000 CPU_EXTRA1_FUNC_SIZE
 0000000000000008 l       *ABS*	0000000000000000 CPU_EXTRA2_FUNC_SIZE
@@ -113,30 +113,30 @@ SYMBOL TABLE:
 0000000040000760 l     F .text	0000000000000018 cortex_a53_core_pwr_dwn
 000000004000073c l     F .text	0000000000000024 cortex_a53_cluster_pwr_dwn
 00000000400007bc l     F .text	00000000000000e8 cortex_a53_errata_report
-000000004000b40f l       .rodata	0000000000000000 cortex_a53_errata_819472_str
-000000004000b462 l       .rodata	0000000000000000 cortex_a53_cpu_str
-000000004000b416 l       .rodata	0000000000000000 cortex_a53_errata_824069_str
-000000004000b41d l       .rodata	0000000000000000 cortex_a53_errata_826319_str
-000000004000b424 l       .rodata	0000000000000000 cortex_a53_errata_827319_str
-000000004000b42b l       .rodata	0000000000000000 cortex_a53_errata_835769_str
-000000004000b432 l       .rodata	0000000000000000 cortex_a53_errata_disable_non_temporal_hint_str
-000000004000b44c l       .rodata	0000000000000000 cortex_a53_errata_843419_str
-000000004000b453 l       .rodata	0000000000000000 cortex_a53_errata_855873_str
-000000004000b45a l       .rodata	0000000000000000 cortex_a53_errata_1530924_str
-000000004000b46d l       .rodata	0000000000000000 cortex_a53_regs
+000000004000b416 l       .rodata	0000000000000000 cortex_a53_errata_819472_str
+000000004000b469 l       .rodata	0000000000000000 cortex_a53_cpu_str
+000000004000b41d l       .rodata	0000000000000000 cortex_a53_errata_824069_str
+000000004000b424 l       .rodata	0000000000000000 cortex_a53_errata_826319_str
+000000004000b42b l       .rodata	0000000000000000 cortex_a53_errata_827319_str
+000000004000b432 l       .rodata	0000000000000000 cortex_a53_errata_835769_str
+000000004000b439 l       .rodata	0000000000000000 cortex_a53_errata_disable_non_temporal_hint_str
+000000004000b453 l       .rodata	0000000000000000 cortex_a53_errata_843419_str
+000000004000b45a l       .rodata	0000000000000000 cortex_a53_errata_855873_str
+000000004000b461 l       .rodata	0000000000000000 cortex_a53_errata_1530924_str
+000000004000b474 l       .rodata	0000000000000000 cortex_a53_regs
 0000000040000778 l     F .text	0000000000000018 cortex_a53_cpu_reg_dump
 000000004000c068 l       .data	0000000000000000 cortex_a53_errata_lock
 000000004000c06c l       .data	0000000000000000 cortex_a53_errata_reported
-0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/Orangepi-H616/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/debug.o
-000000004000b4e4 l       .rodata	0000000000000000 assert_msg1
-000000004000b4f2 l       .rodata	0000000000000000 assert_msg2
+0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/orangepi-build/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/debug.o
+000000004000b4eb l       .rodata	0000000000000000 assert_msg1
+000000004000b4f9 l       .rodata	0000000000000000 assert_msg2
 00000000400003dc l       .text	0000000000000000 _assert_loop
 00000000400003c0 l       .text	0000000000000000 dec_print_loop
-000000004000b4f9 l       .rodata	0000000000000000 panic_msg
+000000004000b500 l       .rodata	0000000000000000 panic_msg
 0000000040000a70 l       .text	0000000000000000 panic_common
 0000000040000a98 l       .text	0000000000000000 _panic_handler
-0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/Orangepi-H616/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/platform_helpers.o
-0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/Orangepi-H616/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/cpu_helpers.o
+0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/orangepi-build/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/platform_helpers.o
+0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/orangepi-build/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/cpu_helpers.o
 0000000000000008 l       *ABS*	0000000000000000 CPU_MIDR_SIZE
 0000000000000008 l       *ABS*	0000000000000000 CPU_EXTRA1_FUNC_SIZE
 0000000000000008 l       *ABS*	0000000000000000 CPU_EXTRA2_FUNC_SIZE
@@ -161,7 +161,7 @@ SYMBOL TABLE:
 0000000000000058 l       *ABS*	0000000000000000 CPU_REG_DUMP
 0000000000000060 l       *ABS*	0000000000000000 CPU_OPS_SIZE
 0000000040001040 l       .text	0000000000000000 search_def_ptr
-0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/Orangepi-H616/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/cache_helpers.o
+0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/orangepi-build/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/cache_helpers.o
 0000000040000fec l       .text	0000000000000000 exit_loop_civac
 0000000040000fd8 l       .text	0000000000000000 loop_civac
 000000004000057c l       .text	0000000000000000 exit_loop_cvac
@@ -179,28 +179,28 @@ SYMBOL TABLE:
 0000000040000a1c l       .text	0000000000000000 loop3_cisw
 0000000040000a38 l       .text	0000000000000000 loop2_csw
 0000000040000a3c l       .text	0000000000000000 loop3_csw
-0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/Orangepi-H616/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/16550_console.o
+0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/orangepi-build/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/16550_console.o
 000000004000063c l       .text	0000000000000000 init_fail
 0000000040000738 l       .text	0000000000000000 register_fail
 0000000040000700 l       .text	0000000000000000 register_16550
 00000000400005cc l       .text	0000000000000000 no_char
-0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/Orangepi-H616/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/crash_reporting.o
-000000004000b0a9 l       .rodata	0000000000000000 gicc_regs
-000000004000b0cb l       .rodata	0000000000000000 icc_regs
-000000004000b0f7 l       .rodata	0000000000000000 gicd_pend_reg
-000000004000b12f l       .rodata	0000000000000000 newline
-000000004000b131 l       .rodata	0000000000000000 spacer
-000000004000b138 l       .rodata	0000000000000000 prefix
-000000004000b13b l       .rodata	0000000000000000 print_spacer
-000000004000b14d l       .rodata	0000000000000000 gp_regs
-000000004000b1bc l       .rodata	0000000000000000 el3_sys_regs
-000000004000b219 l       .rodata	0000000000000000 non_el3_sys_regs
-000000004000b365 l       .rodata	0000000000000000 aarch32_regs
-000000004000b37c l       .rodata	0000000000000000 panic_msg
-000000004000b38e l       .rodata	0000000000000000 excpt_msg
-000000004000b3ae l       .rodata	0000000000000000 intr_excpt_msg
-000000004000b3d4 l       .rodata	0000000000000000 x30_msg
-000000004000b3d8 l       .rodata	0000000000000000 excpt_msg_el
+0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/orangepi-build/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/crash_reporting.o
+000000004000b0b0 l       .rodata	0000000000000000 gicc_regs
+000000004000b0d2 l       .rodata	0000000000000000 icc_regs
+000000004000b0fe l       .rodata	0000000000000000 gicd_pend_reg
+000000004000b136 l       .rodata	0000000000000000 newline
+000000004000b138 l       .rodata	0000000000000000 spacer
+000000004000b13f l       .rodata	0000000000000000 prefix
+000000004000b142 l       .rodata	0000000000000000 print_spacer
+000000004000b154 l       .rodata	0000000000000000 gp_regs
+000000004000b1c3 l       .rodata	0000000000000000 el3_sys_regs
+000000004000b220 l       .rodata	0000000000000000 non_el3_sys_regs
+000000004000b36c l       .rodata	0000000000000000 aarch32_regs
+000000004000b383 l       .rodata	0000000000000000 panic_msg
+000000004000b395 l       .rodata	0000000000000000 excpt_msg
+000000004000b3b5 l       .rodata	0000000000000000 intr_excpt_msg
+000000004000b3db l       .rodata	0000000000000000 x30_msg
+000000004000b3df l       .rodata	0000000000000000 excpt_msg_el
 00000000400013ec l     F .text	000000000000004c size_controlled_print
 00000000400013f4 l       .text	0000000000000000 test_size_list
 0000000040001430 l       .text	0000000000000000 exit_size_print
@@ -213,7 +213,7 @@ SYMBOL TABLE:
 0000000040000e40 l       .text	0000000000000000 print_gic_common
 0000000040000e4c l       .text	0000000000000000 gicd_ispendr_loop
 0000000040000e88 l       .text	0000000000000000 exit_print_gic_regs
-0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/Orangepi-H616/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/ea_delegate.o
+0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/orangepi-build/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/ea_delegate.o
 0000000000000008 l       *ABS*	0000000000000000 CPU_MIDR_SIZE
 0000000000000008 l       *ABS*	0000000000000000 CPU_EXTRA1_FUNC_SIZE
 0000000000000008 l       *ABS*	0000000000000000 CPU_EXTRA2_FUNC_SIZE
@@ -240,15 +240,15 @@ SYMBOL TABLE:
 0000000040000aa0 l     F .text	000000000000009c ea_proceed
 0000000040000938 l     F .text	0000000000000004 delegate_sync_ea
 0000000040000934 l     F .text	0000000000000004 delegate_async_ea
-0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/Orangepi-H616/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/context.o
+0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/orangepi-build/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/context.o
 0000000040000c2c l       .text	0000000000000000 sve_not_enabled
-0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/Orangepi-H616/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/enable_mmu.o
-0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/Orangepi-H616/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/plat_helpers.o
-0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/Orangepi-H616/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/platform_mp_stack.o
+0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/orangepi-build/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/enable_mmu.o
+0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/orangepi-build/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/plat_helpers.o
+0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/orangepi-build/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/platform_mp_stack.o
 000000004000c080 l       stacks	0000000000000000 platform_normal_stacks
 0000000000000006 l       *ABS*	0000000000000000 TZ_COUNT
-0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/Orangepi-H616/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/psci_helpers.o
-0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/Orangepi-H616/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/runtime_exceptions.o
+0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/orangepi-build/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/psci_helpers.o
+0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/orangepi-build/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/runtime_exceptions.o
 0000000040009390 l       .text	0000000000000000 exp_from_EL3
 0000000040001438 l       .text	0000000000000000 smc_handler32
 000000004000143c l       .text	0000000000000000 smc_handler64
@@ -260,10 +260,10 @@ SYMBOL TABLE:
 00000000400014b0 l       .text	0000000000000000 smc_prohibited
 00000000400014a4 l       .text	0000000000000000 smc_unknown
 00000000400014dc l       .text	0000000000000000 rt_svc_fw_critical_error
-0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/Orangepi-H616/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/spinlock.o
+0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/orangepi-build/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/spinlock.o
 00000000400014f0 l       .text	0000000000000000 l1
 00000000400014f4 l       .text	0000000000000000 l2
-0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/Orangepi-H616/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/misc_helpers.o
+0000000000000000 l    df *ABS*	0000000000000000 /home/lodge/Allwinner/orangepi-build/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/misc_helpers.o
 0000000040001530 l     F .text	0000000000000114 zeromem_dczva
 0000000000000000 l    df *ABS*	0000000000000000 common.c
 0000000000000000 l    df *ABS*	0000000000000000 sunxi_power.c
@@ -333,7 +333,7 @@ SYMBOL TABLE:
 0000000000000000 l    df *ABS*	0000000000000000 memmove.c
 0000000000000000 l    df *ABS*	0000000000000000 memset.c
 0000000000000000 l    df *ABS*	0000000000000000 sunxi_topology.c
-000000004000aceb l     O .rodata	0000000000000003 plat_power_domain_tree_desc
+000000004000acf2 l     O .rodata	0000000000000003 plat_power_domain_tree_desc
 0000000000000000 l    df *ABS*	0000000000000000 plat_bl_common.c
 0000000000000000 l    df *ABS*	0000000000000000 sunxi_common.c
 000000004000a2b0 l     O .rodata	00000000000000a0 sunxi_mmap
@@ -365,7 +365,7 @@ SYMBOL TABLE:
 0000000000000000 l    df *ABS*	0000000000000000 std_svc_setup.c
 00000000400076f4 l     F .text	00000000000000b8 std_svc_smc_handler
 00000000400076bc l     F .text	0000000000000038 std_svc_setup
-000000004000b5d0 l     O .rodata	0000000000000020 __svc_desc_std_svc
+000000004000b5d8 l     O .rodata	0000000000000020 __svc_desc_std_svc
 0000000000000000 l    df *ABS*	0000000000000000 strcmp.c
 0000000000000000 l    df *ABS*	0000000000000000 strlen.c
 0000000000000000 l    df *ABS*	0000000000000000 strncmp.c
@@ -405,9 +405,9 @@ SYMBOL TABLE:
 0000000040000690 g     F .text	000000000000001c console_16550_flush
 0000000040009600 g     F .text	0000000000000000 sync_exception_aarch32
 0000000040001528 g     F .text	0000000000000008 zeromem
-000000004000a3f0 g     O .rodata	000000000000000d version_string
+000000004000a3f0 g     O .rodata	0000000000000014 version_string
 0000000040000414 g     F .text	0000000000000008 asm_print_newline
-000000004000b650 g       .rodata	0000000000000000 __pubsub_psci_suspend_pwrdown_finish_end
+000000004000b658 g       .rodata	0000000000000000 __pubsub_psci_suspend_pwrdown_finish_end
 0000000040006ee0 g     F .text	00000000000000f4 psci_validate_entry_point
 0000000040004f3c g     F .text	000000000000003c mmap_add_ctx
 0000000040005484 g     F .text	0000000000000038 print_entry_point_info
@@ -485,15 +485,15 @@ SYMBOL TABLE:
 0000000040006cc0 g     F .text	000000000000005c psci_system_off
 0000000040001140 g     F .text	0000000000000004 platform_mem_init
 00000000400045d8 g     F .text	0000000000000014 gicd_write_icenabler
-000000004000b650 g       .rodata	0000000000000000 __pubsub_cm_exited_secure_world_end
+000000004000b658 g       .rodata	0000000000000000 __pubsub_cm_exited_secure_world_end
 0000000040004f2c g     F .text	0000000000000010 mmap_add
 0000000040000144 g     F .text	000000000000009c bl31_warm_entrypoint
 0000000040005348 g     F .text	000000000000000c plat_get_syscnt_freq2
 0000000040001124  w    F .text	0000000000000008 plat_panic_handler
-000000004000b5b0 g       .rodata	0000000000000000 __RT_SVC_DESCS_START__
+000000004000b5b8 g       .rodata	0000000000000000 __RT_SVC_DESCS_START__
 0000000040004324 g     F .text	00000000000000e8 fdt_subnode_offset_namelen
 000000004000d080 g       stacks	0000000000000000 __STACKS_END__
-000000004000b650 g       .rodata	0000000000000000 __pubsub_psci_suspend_pwrdown_start_end
+000000004000b658 g       .rodata	0000000000000000 __pubsub_psci_suspend_pwrdown_start_end
 00000000400004b8 g     F .text	0000000000000048 check_smccc_arch_wa3_applies
 0000000040000548 g     F .text	0000000000000038 clean_dcache_range
 0000000040007d20 g     F .text	00000000000000e0 sunxi_prepare_dtb
@@ -505,10 +505,10 @@ SYMBOL TABLE:
 0000000040001348 g     F .text	0000000000000070 restore_gp_pmcr_pauth_regs
 0000000040003564 g     F .text	0000000000000018 fdt_header_size
 00000000400070d8 g     F .text	00000000000000dc psci_warmboot_entrypoint
-000000004000b650 g       .rodata	0000000000000000 __pubsub_cm_exited_normal_world_start
+000000004000b658 g       .rodata	0000000000000000 __pubsub_cm_exited_normal_world_start
 0000000040001130  w    F .text	0000000000000010 plat_set_my_stack
 0000000040002218 g     F .text	0000000000000040 cm_set_context_by_index
-000000004000b5f0 g       .rodata	0000000000000000 __RT_SVC_DESCS_END__
+000000004000b5f8 g       .rodata	0000000000000000 __RT_SVC_DESCS_END__
 0000000040002f4c g     F .text	0000000000000040 fdt_check_node_offset_
 00000000400003e4 g     F .text	0000000000000030 asm_print_hex
 0000000040001cdc g     F .text	0000000000000008 bl31_plat_arch_setup
@@ -523,7 +523,7 @@ SYMBOL TABLE:
 00000000400010c4 g     F .text	0000000000000004 plat_crash_console_flush
 0000000040009000 g       .text	0000000000000000 runtime_exceptions
 0000000040007aac g     F .text	0000000000000030 sunxi_cpu_power_off_self
-000000004000b650 g       .rodata	0000000000000000 __pubsub_cm_exited_secure_world_start
+000000004000b658 g       .rodata	0000000000000000 __pubsub_cm_exited_secure_world_start
 0000000040006c74 g     F .text	000000000000004c psci_spd_migrate_info
 00000000400034ac g     F .text	000000000000004c fdt_getprop
 0000000040000350 g     F .text	0000000000000018 _cpu_data_by_index
@@ -545,7 +545,7 @@ SYMBOL TABLE:
 0000000040001bf4 g     F .text	0000000000000058 bl31_early_platform_setup2
 00000000400005a8 g     F .text	000000000000002c console_16550_core_getc
 000000004000487c g     F .text	0000000000000114 gicv2_secure_ppi_sgi_setup_props
-000000004000b5f0 g       .rodata	0000000000000000 __PMF_SVC_DESCS_END__
+000000004000b5f8 g       .rodata	0000000000000000 __PMF_SVC_DESCS_END__
 00000000400088a0 g     F .text	000000000000001c xlat_get_min_virt_addr_space_size
 000000004000c078 g       .data	0000000000000000 __RELA_END__
 000000004000c078 g       .data	0000000000000000 __RELA_START__
@@ -559,7 +559,7 @@ SYMBOL TABLE:
 000000004000112c  w    F .text	0000000000000004 plat_reset_handler
 0000000040000e94 g     F .text	0000000000000070 enable_mmu_direct_el3
 00000000400042e0 g     F .text	0000000000000044 fdt_subnode_offset
-000000004000b650 g       .rodata	0000000000000000 __pubsub_cm_entering_normal_world_end
+000000004000b658 g       .rodata	0000000000000000 __pubsub_cm_entering_normal_world_end
 0000000040000ff0 g     F .text	0000000000000054 get_cpu_ops_ptr
 0000000040000000 g     F .text	0000000000000144 bl31_entrypoint
 00000000400020a4 g     F .text	000000000000003c cm_get_context_by_index
@@ -588,7 +588,7 @@ SYMBOL TABLE:
 000000004000a000 g       .rodata	0000000000000000 __RODATA_START__
 000000004000c071 g       .data	0000000000000000 __DATA_END__
 00000000400003e8 g       .text	0000000000000000 asm_print_hex_bits
-000000004000b5f0 g       .rodata	0000000000000000 __CPU_OPS_START__
+000000004000b5f8 g       .rodata	0000000000000000 __CPU_OPS_START__
 0000000040008124 g     F .text	00000000000000a8 udelay
 0000000040002f8c g     F .text	0000000000000040 fdt_check_prop_offset_
 0000000040007f50 g     F .text	000000000000006c tcr_physical_addr_size_bits
@@ -599,7 +599,7 @@ SYMBOL TABLE:
 000000004000440c g     F .text	0000000000000044 generic_delay_timer_init
 0000000040005b54 g     F .text	00000000000001d4 psci_cpu_suspend_start
 000000004000617c g     F .text	0000000000000058 psci_init_req_local_pwr_states
-000000004000b650 g       .rodata	0000000000000000 __pubsub_cm_entering_secure_world_end
+000000004000b658 g       .rodata	0000000000000000 __pubsub_cm_entering_secure_world_end
 0000000040004450 g     F .text	0000000000000020 generic_delay_timer_init_args
 0000000040004e2c g     F .text	0000000000000034 memcmp
 00000000400008d4 g     F .text	0000000000000010 cpu_get_rev_var
@@ -612,12 +612,12 @@ SYMBOL TABLE:
 0000000040004578 g     F .text	0000000000000040 gicd_set_icfgr
 0000000040012010 g     O coherent_ram	0000000000000020 psci_non_cpu_pd_nodes
 000000004000dfa0 g       .bss	0000000000000000 __BSS_END__
-000000004000b650 g       .rodata	0000000000000000 __CPU_OPS_END__
+000000004000b658 g       .rodata	0000000000000000 __CPU_OPS_END__
 0000000040005e4c g     F .text	0000000000000004 psci_do_pwrdown_sequence
 000000004000326c g     F .text	0000000000000054 fdt_get_property_namelen
 0000000040001278 g     F .text	000000000000003c psci_do_pwrdown_cache_maintenance
 0000000040002258 g     F .text	000000000000004c cm_set_next_eret_context
-000000004000b650 g       .rodata	0000000000000000 __pubsub_cm_entering_secure_world_start
+000000004000b658 g       .rodata	0000000000000000 __pubsub_cm_entering_secure_world_start
 0000000040005624 g     F .text	000000000000005c psci_cpu_on
 0000000040007a1c g     F .text	0000000000000090 sunxi_cpu_power_off_others
 0000000040001f14 g     F .text	00000000000000c0 bl31_prepare_next_image_entry
@@ -625,26 +625,26 @@ SYMBOL TABLE:
 0000000040012000 g       coherent_ram	0000000000000000 __COHERENT_RAM_START__
 000000004000dec0 g     O .bss	0000000000000004 psci_plat_core_count
 0000000040005fcc g     F .text	0000000000000068 psci_features
-000000004000b650 g       .rodata	0000000000000000 __GOT_END__
+000000004000b658 g       .rodata	0000000000000000 __GOT_END__
 0000000040004eb4 g     F .text	0000000000000078 memset
 00000000400006e4 g     F .text	0000000000000058 console_16550_register
 0000000040002ba4 g     F .text	0000000000000044 fdt_add_subnode
-000000004000a641 g     O .rodata	0000000000000001 axp_chip_id
-000000004000b5f0 g       .rodata	0000000000000000 __PARSER_LIB_DESCS_END__
+000000004000a648 g     O .rodata	0000000000000001 axp_chip_id
+000000004000b5f8 g       .rodata	0000000000000000 __PARSER_LIB_DESCS_END__
 0000000040002720 g     F .text	0000000000000098 errata_print_msg
 00000000400060ec g     F .text	0000000000000090 psci_get_target_local_pwr_states
-000000004000b650 g       .rodata	0000000000000000 __pubsub_cm_exited_normal_world_end
+000000004000b658 g       .rodata	0000000000000000 __pubsub_cm_exited_normal_world_end
 0000000040000f04 g     F .text	000000000000001c enter_lower_el_async_ea
 000000004000dc48 g     O .bss	0000000000000008 psci_plat_pm_ops
 0000000040005338  w    F .text	0000000000000008 plat_get_soc_revision
 00000000400086dc g     F .text	0000000000000044 xlat_arch_get_max_supported_pa
 0000000040001fd4 g     F .text	0000000000000014 bl31_setup
-000000004000b650 g       .rodata	0000000000000000 __pubsub_psci_suspend_pwrdown_start_start
-000000004000b650 g       .rodata	0000000000000000 __GOT_START__
+000000004000b658 g       .rodata	0000000000000000 __pubsub_psci_suspend_pwrdown_start_start
+000000004000b658 g       .rodata	0000000000000000 __GOT_START__
 0000000040008084 g     F .text	0000000000000060 tf_log_newline
 0000000040000f08 g       .text	0000000000000000 handle_lower_el_async_ea
 0000000040004470 g     F .text	0000000000000030 get_arm_std_svc_args
-000000004000b650 g       .rodata	0000000000000000 __pubsub_cm_entering_normal_world_start
+000000004000b658 g       .rodata	0000000000000000 __pubsub_cm_entering_normal_world_start
 0000000000000000 g       *ABS*	0000000000000000 __PERCPU_TIMESTAMP_SIZE__
 00000000400077ac g     F .text	000000000000002c strcmp
 0000000040001aa4 g     F .text	00000000000000ec bakery_lock_get
@@ -652,7 +652,7 @@ SYMBOL TABLE:
 000000004000a000 g       .text	0000000000000000 __TEXT_END__
 00000000400062b4 g     F .text	0000000000000080 psci_mem_protect
 0000000040003a68 g     F .text	00000000000001b0 fdt_open_into
-000000004000b5f0 g       .rodata	0000000000000000 __FCONF_POPULATOR_END__
+000000004000b5f8 g       .rodata	0000000000000000 __FCONF_POPULATOR_END__
 0000000040001b90 g     F .text	0000000000000064 bakery_lock_release
 00000000400044a0 g     F .text	0000000000000024 get_interrupt_type_handler
 000000004000532c g     F .text	000000000000000c plat_get_power_domain_tree_desc
@@ -678,7 +678,7 @@ SYMBOL TABLE:
 000000004000d080 g       .bss	0000000000000000 __BSS_START__
 0000000040007304 g     F .text	0000000000000038 rsb_set_bus_speed
 0000000040004fac g     F .text	000000000000025c mmap_add_region_ctx
-000000004000b5f0 g       .rodata	0000000000000000 __PMF_SVC_DESCS_START__
+000000004000b5f8 g       .rodata	0000000000000000 __PMF_SVC_DESCS_START__
 00000000400010e0 g     F .text	0000000000000008 plat_crash_console_putc
 000000004000d080 g     O .bss	0000000000000200 percpu_data
 00000000400008e4 g     F .text	0000000000000014 cpu_rev_var_hs
@@ -688,8 +688,8 @@ SYMBOL TABLE:
 00000000400065c4 g     F .text	0000000000000030 psci_query_sys_suspend_pwrstate
 0000000040004d40 g     F .text	000000000000008c is_mmu_enabled_ctx
 0000000040007fbc g     F .text	00000000000000c8 tf_log
-000000004000b650 g       .rodata	0000000000000000 __pubsub_psci_cpu_on_finish_start
-000000004000b5f0 g       .rodata	0000000000000000 __FCONF_POPULATOR_START__
+000000004000b658 g       .rodata	0000000000000000 __pubsub_psci_cpu_on_finish_start
+000000004000b5f8 g       .rodata	0000000000000000 __FCONF_POPULATOR_START__
 00000000400008f8 g     F .text	0000000000000014 cpu_rev_var_ls
 00000000400044c4 g     F .text	0000000000000050 get_scr_el3_from_routing_model
 0000000040013000 g       coherent_ram	0000000000000000 __RW_END__
@@ -707,7 +707,7 @@ SYMBOL TABLE:
 0000000040001108  w    F .text	0000000000000004 plat_handle_double_fault
 000000004000df80 g       .bss	0000000000000000 __PMF_TIMESTAMP_END__
 0000000040004b78 g     F .text	00000000000001c8 init_xlat_tables_ctx
-000000004000b650 g       .rodata	0000000000000000 __pubsub_psci_suspend_pwrdown_finish_start
+000000004000b658 g       .rodata	0000000000000000 __pubsub_psci_suspend_pwrdown_finish_start
 0000000040001110 g     F .text	0000000000000014 plat_my_core_pos
 00000000400030a8 g     F .text	0000000000000064 fdt_get_alias_namelen
 0000000040004748 g     F .text	0000000000000088 gicv2_driver_init
@@ -726,7 +726,7 @@ SYMBOL TABLE:
 0000000040003ea0 g     F .text	000000000000009c fdt_ro_probe_
 0000000040005510 g     F .text	000000000000006c psci_acquire_pwr_domain_locks
 00000000400038cc g     F .text	000000000000004c fdt_node_check_compatible
-000000004000b650 g       .rodata	0000000000000000 __pubsub_psci_cpu_on_finish_end
+000000004000b658 g       .rodata	0000000000000000 __pubsub_psci_cpu_on_finish_end
 0000000040000b3c g     F .text	00000000000000a0 el1_sysregs_context_restore
 000000004000dd38 g     O .bss	0000000000000008 console_list
 000000004000664c g     F .text	00000000000000a0 psci_set_pwr_domains_to_run
@@ -740,7 +740,7 @@ SYMBOL TABLE:
 0000000040004f78 g     F .text	0000000000000034 mmap_add_region
 0000000040000000 g       .text	0000000000000000 __TEXT_START__
 00000000400026c0 g     F .text	0000000000000060 errata_needs_reporting
-000000004000b5f0 g       .rodata	0000000000000000 __PARSER_LIB_DESCS_START__
+000000004000b5f8 g       .rodata	0000000000000000 __PARSER_LIB_DESCS_START__
 000000004000dc50 g     O .bss	0000000000000008 psci_spd_pm
 
 
@@ -876,8 +876,8 @@ Disassembly of section .text:
     400001e4:	2a0103e2 	mov	w2, w1
     400001e8:	aa0003e1 	mov	x1, x0
     400001ec:	910003fd 	mov	x29, sp
-    400001f0:	f0000040 	adrp	x0, 4000b000 <plat_power_domain_tree_desc+0x315>
-    400001f4:	91162400 	add	x0, x0, #0x589
+    400001f0:	f0000040 	adrp	x0, 4000b000 <plat_power_domain_tree_desc+0x30e>
+    400001f4:	91164000 	add	x0, x0, #0x590
     400001f8:	940014b1 	bl	400054bc <printf>
     400001fc:	940008ae 	bl	400024b4 <console_flush>
     40000200:	940003c9 	bl	40001124 <plat_panic_handler>
@@ -904,7 +904,7 @@ Disassembly of section .text:
     4000024c:	54000200 	b.eq	4000028c <arm_arch_svc_smc_handler+0x88>  // b.none
     40000250:	2a0203e1 	mov	w1, w2
     40000254:	d0000040 	adrp	x0, 4000a000 <__TEXT_END__>
-    40000258:	91388400 	add	x0, x0, #0xe21
+    40000258:	9138a000 	add	x0, x0, #0xe28
     4000025c:	94001f58 	bl	40007fbc <tf_log>
     40000260:	92800000 	mov	x0, #0xffffffffffffffff    	// #-1
     40000264:	1400000c 	b	40000294 <arm_arch_svc_smc_handler+0x90>
@@ -989,11 +989,11 @@ Disassembly of section .text:
     40000388:	aa0103e6 	mov	x6, x1
     4000038c:	9400034f 	bl	400010c8 <plat_crash_console_init>
     40000390:	b4000260 	cbz	x0, 400003dc <_assert_loop>
-    40000394:	10058a84 	adr	x4, 4000b4e4 <assert_msg1>
+    40000394:	70058aa4 	adr	x4, 4000b4eb <assert_msg1>
     40000398:	94000021 	bl	4000041c <asm_print_str>
     4000039c:	aa0503e4 	mov	x4, x5
     400003a0:	9400001f 	bl	4000041c <asm_print_str>
-    400003a4:	50058a64 	adr	x4, 4000b4f2 <assert_msg2>
+    400003a4:	30058aa4 	adr	x4, 4000b4f9 <assert_msg2>
     400003a8:	9400001d 	bl	4000041c <asm_print_str>
     400003ac:	f270bcdf 	tst	x6, #0xffffffffffff0000
     400003b0:	54000161 	b.ne	400003dc <_assert_loop>  // b.any
@@ -1105,13 +1105,13 @@ Disassembly of section .text:
     400004b8:	d53ed040 	mrs	x0, tpidr_el3
     400004bc:	f100001f 	cmp	x0, #0x0
     400004c0:	54000081 	b.ne	400004d0 <check_smccc_arch_wa3_applies+0x18>  // b.any
-    400004c4:	70057ee0 	adr	x0, 4000b4a3 <cortex_a53_regs+0x36>
+    400004c4:	50057f20 	adr	x0, 4000b4aa <cortex_a53_regs+0x36>
     400004c8:	d28036c1 	mov	x1, #0x1b6                 	// #438
     400004cc:	17ffffae 	b	40000384 <asm_assert>
     400004d0:	f9400800 	ldr	x0, [x0, #16]
     400004d4:	f100001f 	cmp	x0, #0x0
     400004d8:	54000081 	b.ne	400004e8 <check_smccc_arch_wa3_applies+0x30>  // b.any
-    400004dc:	70057e20 	adr	x0, 4000b4a3 <cortex_a53_regs+0x36>
+    400004dc:	50057e60 	adr	x0, 4000b4aa <cortex_a53_regs+0x36>
     400004e0:	d2803761 	mov	x1, #0x1bb                 	// #443
     400004e4:	17ffffa8 	b	40000384 <asm_assert>
     400004e8:	f9401000 	ldr	x0, [x0, #32]
@@ -1125,13 +1125,13 @@ Disassembly of section .text:
     40000500:	d53ed040 	mrs	x0, tpidr_el3
     40000504:	f100001f 	cmp	x0, #0x0
     40000508:	54000081 	b.ne	40000518 <check_wa_cve_2017_5715+0x18>  // b.any
-    4000050c:	70057ca0 	adr	x0, 4000b4a3 <cortex_a53_regs+0x36>
+    4000050c:	50057ce0 	adr	x0, 4000b4aa <cortex_a53_regs+0x36>
     40000510:	d2802e81 	mov	x1, #0x174                 	// #372
     40000514:	17ffff9c 	b	40000384 <asm_assert>
     40000518:	f9400800 	ldr	x0, [x0, #16]
     4000051c:	f100001f 	cmp	x0, #0x0
     40000520:	54000081 	b.ne	40000530 <check_wa_cve_2017_5715+0x30>  // b.any
-    40000524:	70057be0 	adr	x0, 4000b4a3 <cortex_a53_regs+0x36>
+    40000524:	50057c20 	adr	x0, 4000b4aa <cortex_a53_regs+0x36>
     40000528:	d2802f21 	mov	x1, #0x179                 	// #377
     4000052c:	17ffff96 	b	40000384 <asm_assert>
     40000530:	f9400800 	ldr	x0, [x0, #16]
@@ -1164,7 +1164,7 @@ Disassembly of section .text:
 0000000040000580 <console_16550_core_flush>:
     40000580:	f100001f 	cmp	x0, #0x0
     40000584:	54000081 	b.ne	40000594 <console_16550_core_flush+0x14>  // b.any
-    40000588:	30057ce0 	adr	x0, 4000b525 <panic_msg+0x2c>
+    40000588:	10057d20 	adr	x0, 4000b52c <panic_msg+0x2c>
     4000058c:	d2801de1 	mov	x1, #0xef                  	// #239
     40000590:	17ffff7d 	b	40000384 <asm_assert>
     40000594:	b9401401 	ldr	w1, [x0, #20]
@@ -1176,7 +1176,7 @@ Disassembly of section .text:
 00000000400005a8 <console_16550_core_getc>:
     400005a8:	f100001f 	cmp	x0, #0x0
     400005ac:	54000081 	b.ne	400005bc <console_16550_core_getc+0x14>  // b.any
-    400005b0:	30057ba0 	adr	x0, 4000b525 <panic_msg+0x2c>
+    400005b0:	10057be0 	adr	x0, 4000b52c <panic_msg+0x2c>
     400005b4:	d2801861 	mov	x1, #0xc3                  	// #195
     400005b8:	17ffff73 	b	40000384 <asm_assert>
     400005bc:	b9401401 	ldr	w1, [x0, #20]
@@ -1223,7 +1223,7 @@ Disassembly of section .text:
 0000000040000644 <console_16550_core_putc>:
     40000644:	f100003f 	cmp	x1, #0x0
     40000648:	54000081 	b.ne	40000658 <console_16550_core_putc+0x14>  // b.any
-    4000064c:	300576c0 	adr	x0, 4000b525 <panic_msg+0x2c>
+    4000064c:	10057700 	adr	x0, 4000b52c <panic_msg+0x2c>
     40000650:	d2801181 	mov	x1, #0x8c                  	// #140
     40000654:	17ffff4c 	b	40000384 <asm_assert>
     40000658:	7100281f 	cmp	w0, #0xa
@@ -1244,7 +1244,7 @@ Disassembly of section .text:
 0000000040000690 <console_16550_flush>:
     40000690:	f100001f 	cmp	x0, #0x0
     40000694:	54000081 	b.ne	400006a4 <console_16550_flush+0x14>  // b.any
-    40000698:	30057460 	adr	x0, 4000b525 <panic_msg+0x2c>
+    40000698:	100574a0 	adr	x0, 4000b52c <panic_msg+0x2c>
     4000069c:	d28020e1 	mov	x1, #0x107                 	// #263
     400006a0:	17ffff39 	b	40000384 <asm_assert>
     400006a4:	f9401400 	ldr	x0, [x0, #40]
@@ -1253,7 +1253,7 @@ Disassembly of section .text:
 00000000400006ac <console_16550_getc>:
     400006ac:	f100003f 	cmp	x1, #0x0
     400006b0:	54000081 	b.ne	400006c0 <console_16550_getc+0x14>  // b.any
-    400006b4:	30057380 	adr	x0, 4000b525 <panic_msg+0x2c>
+    400006b4:	100573c0 	adr	x0, 4000b52c <panic_msg+0x2c>
     400006b8:	d2801ba1 	mov	x1, #0xdd                  	// #221
     400006bc:	17ffff32 	b	40000384 <asm_assert>
     400006c0:	f9401400 	ldr	x0, [x0, #40]
@@ -1262,7 +1262,7 @@ Disassembly of section .text:
 00000000400006c8 <console_16550_putc>:
     400006c8:	f100003f 	cmp	x1, #0x0
     400006cc:	54000081 	b.ne	400006dc <console_16550_putc+0x14>  // b.any
-    400006d0:	300572a0 	adr	x0, 4000b525 <panic_msg+0x2c>
+    400006d0:	100572e0 	adr	x0, 4000b52c <panic_msg+0x2c>
     400006d4:	d2801601 	mov	x1, #0xb0                  	// #176
     400006d8:	17ffff2b 	b	40000384 <asm_assert>
     400006dc:	f9401421 	ldr	x1, [x1, #40]
@@ -1316,7 +1316,7 @@ Disassembly of section .text:
     40000774:	1400000c 	b	400007a4 <cortex_a53_disable_smp>
 
 0000000040000778 <cortex_a53_cpu_reg_dump>:
-    40000778:	300567a6 	adr	x6, 4000b46d <cortex_a53_regs>
+    40000778:	100567e6 	adr	x6, 4000b474 <cortex_a53_regs>
     4000077c:	d539f228 	mrs	x8, s3_1_c15_c2_1
     40000780:	d539f249 	mrs	x9, s3_1_c15_c2_2
     40000784:	d539f26a 	mrs	x10, s3_1_c15_c2_3
@@ -1346,54 +1346,54 @@ Disassembly of section .text:
     400007cc:	97ffff1d 	bl	40000440 <check_errata_819472>
     400007d0:	b4000040 	cbz	x0, 400007d8 <cortex_a53_errata_report+0x1c>
     400007d4:	d2800040 	mov	x0, #0x2                   	// #2
-    400007d8:	50056441 	adr	x1, 4000b462 <cortex_a53_cpu_str>
-    400007dc:	70056182 	adr	x2, 4000b40f <cortex_a53_errata_819472_str>
+    400007d8:	30056481 	adr	x1, 4000b469 <cortex_a53_cpu_str>
+    400007dc:	500561c2 	adr	x2, 4000b416 <cortex_a53_errata_819472_str>
     400007e0:	940007d0 	bl	40002720 <errata_print_msg>
     400007e4:	aa0803e0 	mov	x0, x8
     400007e8:	97ffff18 	bl	40000448 <check_errata_824069>
     400007ec:	b4000040 	cbz	x0, 400007f4 <cortex_a53_errata_report+0x38>
     400007f0:	d2800040 	mov	x0, #0x2                   	// #2
-    400007f4:	50056361 	adr	x1, 4000b462 <cortex_a53_cpu_str>
-    400007f8:	500560e2 	adr	x2, 4000b416 <cortex_a53_errata_824069_str>
+    400007f4:	300563a1 	adr	x1, 4000b469 <cortex_a53_cpu_str>
+    400007f8:	30056122 	adr	x2, 4000b41d <cortex_a53_errata_824069_str>
     400007fc:	940007c9 	bl	40002720 <errata_print_msg>
     40000800:	aa0803e0 	mov	x0, x8
     40000804:	97ffff13 	bl	40000450 <check_errata_826319>
     40000808:	b4000040 	cbz	x0, 40000810 <cortex_a53_errata_report+0x54>
     4000080c:	d2800040 	mov	x0, #0x2                   	// #2
-    40000810:	50056281 	adr	x1, 4000b462 <cortex_a53_cpu_str>
-    40000814:	30056042 	adr	x2, 4000b41d <cortex_a53_errata_826319_str>
+    40000810:	300562c1 	adr	x1, 4000b469 <cortex_a53_cpu_str>
+    40000814:	10056082 	adr	x2, 4000b424 <cortex_a53_errata_826319_str>
     40000818:	940007c2 	bl	40002720 <errata_print_msg>
     4000081c:	aa0803e0 	mov	x0, x8
     40000820:	97ffff0e 	bl	40000458 <check_errata_827319>
     40000824:	b4000040 	cbz	x0, 4000082c <cortex_a53_errata_report+0x70>
     40000828:	d2800040 	mov	x0, #0x2                   	// #2
-    4000082c:	500561a1 	adr	x1, 4000b462 <cortex_a53_cpu_str>
-    40000830:	10055fa2 	adr	x2, 4000b424 <cortex_a53_errata_827319_str>
+    4000082c:	300561e1 	adr	x1, 4000b469 <cortex_a53_cpu_str>
+    40000830:	70055fc2 	adr	x2, 4000b42b <cortex_a53_errata_827319_str>
     40000834:	940007bb 	bl	40002720 <errata_print_msg>
     40000838:	aa0803e0 	mov	x0, x8
     4000083c:	97ffff09 	bl	40000460 <check_errata_835769>
-    40000840:	50056101 	adr	x1, 4000b462 <cortex_a53_cpu_str>
-    40000844:	70055f22 	adr	x2, 4000b42b <cortex_a53_errata_835769_str>
+    40000840:	30056141 	adr	x1, 4000b469 <cortex_a53_cpu_str>
+    40000844:	50055f62 	adr	x2, 4000b432 <cortex_a53_errata_835769_str>
     40000848:	940007b6 	bl	40002720 <errata_print_msg>
     4000084c:	aa0803e0 	mov	x0, x8
     40000850:	97ffff18 	bl	400004b0 <check_errata_disable_non_temporal_hint>
-    40000854:	50056061 	adr	x1, 4000b462 <cortex_a53_cpu_str>
-    40000858:	50055ec2 	adr	x2, 4000b432 <cortex_a53_errata_disable_non_temporal_hint_str>
+    40000854:	300560a1 	adr	x1, 4000b469 <cortex_a53_cpu_str>
+    40000858:	30055f02 	adr	x2, 4000b439 <cortex_a53_errata_disable_non_temporal_hint_str>
     4000085c:	940007b1 	bl	40002720 <errata_print_msg>
     40000860:	aa0803e0 	mov	x0, x8
     40000864:	97ffff08 	bl	40000484 <check_errata_843419>
-    40000868:	50055fc1 	adr	x1, 4000b462 <cortex_a53_cpu_str>
-    4000086c:	10055f02 	adr	x2, 4000b44c <cortex_a53_errata_843419_str>
+    40000868:	30056001 	adr	x1, 4000b469 <cortex_a53_cpu_str>
+    4000086c:	70055f22 	adr	x2, 4000b453 <cortex_a53_errata_843419_str>
     40000870:	940007ac 	bl	40002720 <errata_print_msg>
     40000874:	aa0803e0 	mov	x0, x8
     40000878:	97ffff0c 	bl	400004a8 <check_errata_855873>
-    4000087c:	50055f21 	adr	x1, 4000b462 <cortex_a53_cpu_str>
-    40000880:	70055e82 	adr	x2, 4000b453 <cortex_a53_errata_855873_str>
+    4000087c:	30055f61 	adr	x1, 4000b469 <cortex_a53_cpu_str>
+    40000880:	50055ec2 	adr	x2, 4000b45a <cortex_a53_errata_855873_str>
     40000884:	940007a7 	bl	40002720 <errata_print_msg>
     40000888:	aa0803e0 	mov	x0, x8
     4000088c:	97fffeeb 	bl	40000438 <check_errata_1530924>
-    40000890:	50055e81 	adr	x1, 4000b462 <cortex_a53_cpu_str>
-    40000894:	50055e22 	adr	x2, 4000b45a <cortex_a53_errata_1530924_str>
+    40000890:	30055ec1 	adr	x1, 4000b469 <cortex_a53_cpu_str>
+    40000894:	30055e62 	adr	x2, 4000b461 <cortex_a53_errata_1530924_str>
     40000898:	940007a2 	bl	40002720 <errata_print_msg>
     4000089c:	a8c17be8 	ldp	x8, x30, [sp], #16
     400008a0:	d65f03c0 	ret
@@ -1559,7 +1559,7 @@ Disassembly of section .text:
     40000a70:	aa1e03e6 	mov	x6, x30
     40000a74:	94000195 	bl	400010c8 <plat_crash_console_init>
     40000a78:	b4000100 	cbz	x0, 40000a98 <_panic_handler>
-    40000a7c:	300553e4 	adr	x4, 4000b4f9 <panic_msg>
+    40000a7c:	10055424 	adr	x4, 4000b500 <panic_msg>
     40000a80:	97fffe67 	bl	4000041c <asm_print_str>
     40000a84:	aa0603e4 	mov	x4, x6
     40000a88:	d1001084 	sub	x4, x4, #0x4
@@ -1594,7 +1594,7 @@ Disassembly of section .text:
     40000aec:	910003fb 	mov	x27, sp
     40000af0:	eb1b039f 	cmp	x28, x27
     40000af4:	54000080 	b.eq	40000b04 <ea_proceed+0x64>  // b.none
-    40000af8:	100547e0 	adr	x0, 4000b3f4 <excpt_msg_el+0x1c>
+    40000af8:	70054800 	adr	x0, 4000b3fb <excpt_msg_el+0x1c>
     40000afc:	d2802481 	mov	x1, #0x124                 	// #292
     40000b00:	17fffe21 	b	40000384 <asm_assert>
     40000b04:	d50041bf 	msr	spsel, #0x1
@@ -1606,7 +1606,7 @@ Disassembly of section .text:
     40000b1c:	d51e5204 	msr	esr_el3, x4
     40000b20:	eb1f009f 	cmp	x4, xzr
     40000b24:	54000081 	b.ne	40000b34 <ea_proceed+0x94>  // b.any
-    40000b28:	10054660 	adr	x0, 4000b3f4 <excpt_msg_el+0x1c>
+    40000b28:	70054680 	adr	x0, 4000b3fb <excpt_msg_el+0x1c>
     40000b2c:	d28026c1 	mov	x1, #0x136                 	// #310
     40000b30:	17fffe15 	b	40000384 <asm_assert>
     40000b34:	f90087ff 	str	xzr, [sp, #264]
@@ -1658,7 +1658,7 @@ Disassembly of section .text:
     40000bdc:	d5384211 	mrs	x17, spsel
     40000be0:	f100023f 	cmp	x17, #0x0
     40000be4:	54000080 	b.eq	40000bf4 <el3_exit+0x18>  // b.none
-    40000be8:	500546c0 	adr	x0, 4000b4c2 <cortex_a53_regs+0x55>
+    40000be8:	30054700 	adr	x0, 4000b4c9 <cortex_a53_regs+0x55>
     40000bec:	d28074e1 	mov	x1, #0x3a7                 	// #935
     40000bf0:	17fffde5 	b	40000384 <asm_assert>
     40000bf4:	910003f1 	mov	x17, sp
@@ -1699,7 +1699,7 @@ Disassembly of section .text:
     40000c70:	f9000401 	str	x1, [x0, #8]
     40000c74:	910003e1 	mov	x1, sp
     40000c78:	f9000001 	str	x1, [x0]
-    40000c7c:	10053800 	adr	x0, 4000b37c <panic_msg>
+    40000c7c:	70053820 	adr	x0, 4000b383 <panic_msg>
     40000c80:	9100001f 	mov	sp, x0
 
 0000000040000c84 <do_crash_reporting>:
@@ -1719,7 +1719,7 @@ Disassembly of section .text:
     40000cb8:	97fffdd7 	bl	40000414 <asm_print_newline>
     40000cbc:	d53ed040 	mrs	x0, tpidr_el3
     40000cc0:	f9001c07 	str	x7, [x0, #56]
-    40000cc4:	30052446 	adr	x6, 4000b14d <gp_regs>
+    40000cc4:	10052486 	adr	x6, 4000b154 <gp_regs>
     40000cc8:	940001c9 	bl	400013ec <size_controlled_print>
     40000ccc:	94000211 	bl	40001510 <str_in_crash_buf_print>
     40000cd0:	d53ed040 	mrs	x0, tpidr_el3
@@ -1735,7 +1735,7 @@ Disassembly of section .text:
     40000cf8:	940001bd 	bl	400013ec <size_controlled_print>
 
 0000000040000cfc <print_el3_sys_regs>:
-    40000cfc:	10052606 	adr	x6, 4000b1bc <el3_sys_regs>
+    40000cfc:	70052626 	adr	x6, 4000b1c3 <el3_sys_regs>
     40000d00:	d53e1108 	mrs	x8, scr_el3
     40000d04:	d53e1009 	mrs	x9, sctlr_el3
     40000d08:	d53e114a 	mrs	x10, cptr_el3
@@ -1749,7 +1749,7 @@ Disassembly of section .text:
     40000d28:	d53e5209 	mrs	x9, esr_el3
     40000d2c:	d53e600a 	mrs	x10, far_el3
     40000d30:	940001f8 	bl	40001510 <str_in_crash_buf_print>
-    40000d34:	30052726 	adr	x6, 4000b219 <non_el3_sys_regs>
+    40000d34:	10052766 	adr	x6, 4000b220 <non_el3_sys_regs>
     40000d38:	d5384008 	mrs	x8, spsr_el1
     40000d3c:	d5384029 	mrs	x9, elr_el1
     40000d40:	d53c432a 	mrs	x10, spsr_abt
@@ -1788,7 +1788,7 @@ Disassembly of section .text:
     40000dc4:	940001d3 	bl	40001510 <str_in_crash_buf_print>
     40000dc8:	d538c108 	mrs	x8, isr_el1
     40000dcc:	940001d1 	bl	40001510 <str_in_crash_buf_print>
-    40000dd0:	30052ca6 	adr	x6, 4000b365 <aarch32_regs>
+    40000dd0:	10052ce6 	adr	x6, 4000b36c <aarch32_regs>
     40000dd4:	d53c3008 	mrs	x8, dacr32_el2
     40000dd8:	d53c5029 	mrs	x9, ifsr32_el2
     40000ddc:	940001cd 	bl	40001510 <str_in_crash_buf_print>
@@ -1805,7 +1805,7 @@ Disassembly of section .text:
     40000e08:	d53ecca8 	mrs	x8, s3_6_c12_c12_5
     40000e0c:	f240011f 	tst	x8, #0x1
     40000e10:	540000e0 	b.eq	40000e2c <print_gicv2>  // b.none
-    40000e14:	700515a6 	adr	x6, 4000b0cb <icc_regs>
+    40000e14:	500515e6 	adr	x6, 4000b0d2 <icc_regs>
     40000e18:	d538c848 	mrs	x8, s3_0_c12_c8_2
     40000e1c:	d538cc49 	mrs	x9, s3_0_c12_c12_2
     40000e20:	d53ecc8a 	mrs	x10, s3_6_c12_c12_4
@@ -1813,7 +1813,7 @@ Disassembly of section .text:
     40000e28:	14000006 	b	40000e40 <print_gic_common>
 
 0000000040000e2c <print_gicv2>:
-    40000e2c:	300513e6 	adr	x6, 4000b0a9 <gicc_regs>
+    40000e2c:	10051426 	adr	x6, 4000b0b0 <gicc_regs>
     40000e30:	b9401a28 	ldr	w8, [x17, #24]
     40000e34:	b9402a29 	ldr	w9, [x17, #40]
     40000e38:	b940022a 	ldr	w10, [x17]
@@ -1821,23 +1821,23 @@ Disassembly of section .text:
 
 0000000040000e40 <print_gic_common>:
     40000e40:	91080207 	add	x7, x16, #0x200
-    40000e44:	70051584 	adr	x4, 4000b0f7 <gicd_pend_reg>
+    40000e44:	500515c4 	adr	x4, 4000b0fe <gicd_pend_reg>
     40000e48:	97fffd75 	bl	4000041c <asm_print_str>
 
 0000000040000e4c <gicd_ispendr_loop>:
     40000e4c:	cb1000e4 	sub	x4, x7, x16
     40000e50:	f10a009f 	cmp	x4, #0x280
     40000e54:	540001a0 	b.eq	40000e88 <exit_print_gic_regs>  // b.none
-    40000e58:	10051704 	adr	x4, 4000b138 <prefix>
+    40000e58:	70051724 	adr	x4, 4000b13f <prefix>
     40000e5c:	97fffd70 	bl	4000041c <asm_print_str>
     40000e60:	cb1000e4 	sub	x4, x7, x16
     40000e64:	d2800185 	mov	x5, #0xc                   	// #12
     40000e68:	97fffd60 	bl	400003e8 <asm_print_hex_bits>
-    40000e6c:	30051624 	adr	x4, 4000b131 <spacer>
+    40000e6c:	10051664 	adr	x4, 4000b138 <spacer>
     40000e70:	97fffd6b 	bl	4000041c <asm_print_str>
     40000e74:	f84084e4 	ldr	x4, [x7], #8
     40000e78:	97fffd5b 	bl	400003e4 <asm_print_hex>
-    40000e7c:	70051584 	adr	x4, 4000b12f <newline>
+    40000e7c:	500515c4 	adr	x4, 4000b136 <newline>
     40000e80:	97fffd67 	bl	4000041c <asm_print_str>
     40000e84:	17fffff2 	b	40000e4c <gicd_ispendr_loop>
 
@@ -1850,7 +1850,7 @@ Disassembly of section .text:
     40000e94:	d53e1001 	mrs	x1, sctlr_el3
     40000e98:	f240003f 	tst	x1, #0x1
     40000e9c:	54000080 	b.eq	40000eac <enable_mmu_direct_el3+0x18>  // b.none
-    40000ea0:	30053560 	adr	x0, 4000b54d <panic_msg+0x54>
+    40000ea0:	100535a0 	adr	x0, 4000b554 <panic_msg+0x54>
     40000ea4:	d2800541 	mov	x1, #0x2a                  	// #42
     40000ea8:	17fffd37 	b	40000384 <asm_assert>
     40000eac:	d50e871f 	tlbi	alle3
@@ -1954,9 +1954,9 @@ Disassembly of section .text:
     40000ff4:	d29ffe03 	mov	x3, #0xfff0                	// #65520
     40000ff8:	f2bfe003 	movk	x3, #0xff00, lsl #16
     40000ffc:	0a030042 	and	w2, w2, w3
-    40001000:	10053285 	adr	x5, 4000b650 <__CPU_OPS_END__>
+    40001000:	100532c5 	adr	x5, 4000b658 <__CPU_OPS_END__>
     40001004:	d2800000 	mov	x0, #0x0                   	// #0
-    40001008:	10052f44 	adr	x4, 4000b5f0 <__CPU_OPS_START__>
+    40001008:	10052f84 	adr	x4, 4000b5f8 <__CPU_OPS_START__>
     4000100c:	eb05009f 	cmp	x4, x5
     40001010:	54000180 	b.eq	40001040 <search_def_ptr>  // b.none
     40001014:	f8460481 	ldr	x1, [x4], #96
@@ -1966,7 +1966,7 @@ Disassembly of section .text:
     40001024:	d1018080 	sub	x0, x4, #0x60
     40001028:	f100001f 	cmp	x0, #0x0
     4000102c:	54000081 	b.ne	4000103c <get_cpu_ops_ptr+0x4c>  // b.any
-    40001030:	70052380 	adr	x0, 4000b4a3 <cortex_a53_regs+0x36>
+    40001030:	500523c0 	adr	x0, 4000b4aa <cortex_a53_regs+0x36>
     40001034:	d28017c1 	mov	x1, #0xbe                  	// #190
     40001038:	17fffcd3 	b	40000384 <asm_assert>
     4000103c:	d65f03c0 	ret
@@ -1989,7 +1989,7 @@ Disassembly of section .text:
     40001068:	97ffffe2 	bl	40000ff0 <get_cpu_ops_ptr>
     4000106c:	f100001f 	cmp	x0, #0x0
     40001070:	54000081 	b.ne	40001080 <init_cpu_ops+0x28>  // b.any
-    40001074:	70052160 	adr	x0, 4000b4a3 <cortex_a53_regs+0x36>
+    40001074:	500521a0 	adr	x0, 4000b4aa <cortex_a53_regs+0x36>
     40001078:	d2800d01 	mov	x1, #0x68                  	// #104
     4000107c:	17fffcc2 	b	40000384 <asm_assert>
     40001080:	f8010cc0 	str	x0, [x6, #16]!
@@ -2080,7 +2080,7 @@ Disassembly of section .text:
     40001154:	f9400820 	ldr	x0, [x1, #16]
     40001158:	f100001f 	cmp	x0, #0x0
     4000115c:	54000081 	b.ne	4000116c <prepare_cpu_pwr_dwn+0x28>  // b.any
-    40001160:	70051a00 	adr	x0, 4000b4a3 <cortex_a53_regs+0x36>
+    40001160:	50051a40 	adr	x0, 4000b4aa <cortex_a53_regs+0x36>
     40001164:	d2800941 	mov	x1, #0x4a                  	// #74
     40001168:	17fffc87 	b	40000384 <asm_assert>
     4000116c:	d2800601 	mov	x1, #0x30                  	// #48
@@ -2088,7 +2088,7 @@ Disassembly of section .text:
     40001174:	f8616801 	ldr	x1, [x0, x1]
     40001178:	f100003f 	cmp	x1, #0x0
     4000117c:	54000081 	b.ne	4000118c <prepare_cpu_pwr_dwn+0x48>  // b.any
-    40001180:	70051900 	adr	x0, 4000b4a3 <cortex_a53_regs+0x36>
+    40001180:	50051940 	adr	x0, 4000b4aa <cortex_a53_regs+0x36>
     40001184:	d2800a61 	mov	x1, #0x53                  	// #83
     40001188:	17fffc7f 	b	40000384 <asm_assert>
     4000118c:	d61f0020 	br	x1
@@ -2127,7 +2127,7 @@ Disassembly of section .text:
     40001208:	d65f03c0 	ret
 
 000000004000120c <print_alignment>:
-    4000120c:	1004f964 	adr	x4, 4000b138 <prefix>
+    4000120c:	7004f984 	adr	x4, 4000b13f <prefix>
     40001210:	8b000084 	add	x4, x4, x0
     40001214:	17fffc82 	b	4000041c <asm_print_str>
 
@@ -2135,13 +2135,13 @@ Disassembly of section .text:
     40001218:	d53ed040 	mrs	x0, tpidr_el3
     4000121c:	f100001f 	cmp	x0, #0x0
     40001220:	54000081 	b.ne	40001230 <print_errata_status+0x18>  // b.any
-    40001224:	700513e0 	adr	x0, 4000b4a3 <cortex_a53_regs+0x36>
+    40001224:	50051420 	adr	x0, 4000b4aa <cortex_a53_regs+0x36>
     40001228:	d28027e1 	mov	x1, #0x13f                 	// #319
     4000122c:	17fffc56 	b	40000384 <asm_assert>
     40001230:	f9400801 	ldr	x1, [x0, #16]
     40001234:	f100003f 	cmp	x1, #0x0
     40001238:	54000081 	b.ne	40001248 <print_errata_status+0x30>  // b.any
-    4000123c:	70051320 	adr	x0, 4000b4a3 <cortex_a53_regs+0x36>
+    4000123c:	50051360 	adr	x0, 4000b4aa <cortex_a53_regs+0x36>
     40001240:	d2802881 	mov	x1, #0x144                 	// #324
     40001244:	17fffc50 	b	40000384 <asm_assert>
     40001248:	f9402020 	ldr	x0, [x1, #64]
@@ -2188,7 +2188,7 @@ Disassembly of section .text:
     400012d4:	f9000401 	str	x1, [x0, #8]
     400012d8:	910003e1 	mov	x1, sp
     400012dc:	f9000001 	str	x1, [x0]
-    400012e0:	50050560 	adr	x0, 4000b38e <excpt_msg>
+    400012e0:	300505a0 	adr	x0, 4000b395 <excpt_msg>
     400012e4:	9100001f 	mov	sp, x0
     400012e8:	17fffe67 	b	40000c84 <do_crash_reporting>
 
@@ -2200,7 +2200,7 @@ Disassembly of section .text:
     400012fc:	f9000401 	str	x1, [x0, #8]
     40001300:	910003e1 	mov	x1, sp
     40001304:	f9000001 	str	x1, [x0]
-    40001308:	50050520 	adr	x0, 4000b3ae <intr_excpt_msg>
+    40001308:	30050560 	adr	x0, 4000b3b5 <intr_excpt_msg>
     4000130c:	9100001f 	mov	sp, x0
     40001310:	17fffe5d 	b	40000c84 <do_crash_reporting>
 
@@ -2210,7 +2210,7 @@ Disassembly of section .text:
     4000131c:	97ffff35 	bl	40000ff0 <get_cpu_ops_ptr>
     40001320:	f100001f 	cmp	x0, #0x0
     40001324:	54000081 	b.ne	40001334 <reset_handler+0x20>  // b.any
-    40001328:	70050bc0 	adr	x0, 4000b4a3 <cortex_a53_regs+0x36>
+    40001328:	50050c00 	adr	x0, 4000b4aa <cortex_a53_regs+0x36>
     4000132c:	d2800461 	mov	x1, #0x23                  	// #35
     40001330:	17fffc15 	b	40000384 <asm_assert>
     40001334:	f9400402 	ldr	x2, [x0, #8]
@@ -2313,7 +2313,7 @@ Disassembly of section .text:
     40001480:	913b31ce 	add	x14, x14, #0xecc
     40001484:	387069cf 	ldrb	w15, [x14, x16]
     40001488:	373800ef 	tbnz	w15, #7, 400014a4 <smc_unknown>
-    4000148c:	100509eb 	adr	x11, 4000b5c8 <__RT_SVC_DESCS_START__+0x18>
+    4000148c:	10050a2b 	adr	x11, 4000b5d0 <__RT_SVC_DESCS_START__+0x18>
     40001490:	531b69ea 	lsl	w10, w15, #5
     40001494:	f86a496f 	ldr	x15, [x11, w10, uxtw]
     40001498:	b400022f 	cbz	x15, 400014dc <rt_svc_fw_critical_error>
@@ -2377,7 +2377,7 @@ Disassembly of section .text:
     40001530:	d53e1004 	mrs	x4, sctlr_el3
     40001534:	f240009f 	tst	x4, #0x1
     40001538:	54000081 	b.ne	40001548 <zero_normalmem+0x18>  // b.any
-    4000153c:	5004fe60 	adr	x0, 4000b50a <panic_msg+0x11>
+    4000153c:	3004fea0 	adr	x0, 4000b511 <panic_msg+0x11>
     40001540:	d28015c1 	mov	x1, #0xae                  	// #174
     40001544:	17fffb90 	b	40000384 <asm_assert>
     40001548:	8b010002 	add	x2, x0, x1
@@ -2387,7 +2387,7 @@ Disassembly of section .text:
     40001558:	9ac320a3 	lsl	x3, x5, x3
     4000155c:	f100407f 	cmp	x3, #0x10
     40001560:	54000082 	b.cs	40001570 <zero_normalmem+0x40>  // b.hs, b.nlast
-    40001564:	5004fd20 	adr	x0, 4000b50a <panic_msg+0x11>
+    40001564:	3004fd60 	adr	x0, 4000b511 <panic_msg+0x11>
     40001568:	d2801901 	mov	x1, #0xc8                  	// #200
     4000156c:	17fffb86 	b	40000384 <asm_assert>
     40001570:	eb03003f 	cmp	x1, x3
@@ -2455,12 +2455,12 @@ Disassembly of section .text:
     40001660:	528019e0 	mov	w0, #0xcf                  	// #207
     40001664:	0a000273 	and	w19, w19, w0
     40001668:	b0000040 	adrp	x0, 4000a000 <__TEXT_END__>
-    4000166c:	39590400 	ldrb	w0, [x0, #1601]
+    4000166c:	39592000 	ldrb	w0, [x0, #1608]
     40001670:	6b13001f 	cmp	w0, w19
     40001674:	54000120 	b.eq	40001698 <axp_check_id+0x54>  // b.none
     40001678:	b0000040 	adrp	x0, 4000a000 <__TEXT_END__>
     4000167c:	2a1303e1 	mov	w1, w19
-    40001680:	91190800 	add	x0, x0, #0x642
+    40001680:	91192400 	add	x0, x0, #0x649
     40001684:	94001a4e 	bl	40007fbc <tf_log>
     40001688:	2a1303e0 	mov	w0, w19
     4000168c:	f9400bf3 	ldr	x19, [sp, #16]
@@ -2519,7 +2519,7 @@ Disassembly of section .text:
     40001740:	2a0003f4 	mov	w20, w0
     40001744:	36f80140 	tbz	w0, #31, 4000176c <axp_setup_regulators+0x5c>
     40001748:	b0000040 	adrp	x0, 4000a000 <__TEXT_END__>
-    4000174c:	91198800 	add	x0, x0, #0x662
+    4000174c:	9119a400 	add	x0, x0, #0x669
     40001750:	94001a1b 	bl	40007fbc <tf_log>
     40001754:	a94153f3 	ldp	x19, x20, [sp, #16]
     40001758:	a9425bf5 	ldp	x21, x22, [sp, #32]
@@ -2530,26 +2530,26 @@ Disassembly of section .text:
     4000176c:	2a0003e1 	mov	w1, w0
     40001770:	b0000042 	adrp	x2, 4000a000 <__TEXT_END__>
     40001774:	aa1303e0 	mov	x0, x19
-    40001778:	911a2842 	add	x2, x2, #0x68a
+    40001778:	911a4442 	add	x2, x2, #0x691
     4000177c:	d2800003 	mov	x3, #0x0                   	// #0
     40001780:	9400074b 	bl	400034ac <fdt_getprop>
     40001784:	b40003c0 	cbz	x0, 400017fc <axp_setup_regulators+0xec>
     40001788:	12800001 	mov	w1, #0xffffffff            	// #-1
     4000178c:	aa1303e0 	mov	x0, x19
     40001790:	b0000042 	adrp	x2, 4000a000 <__TEXT_END__>
-    40001794:	911a8442 	add	x2, x2, #0x6a1
+    40001794:	911aa042 	add	x2, x2, #0x6a8
     40001798:	94000860 	bl	40003918 <fdt_node_offset_by_compatible>
     4000179c:	2a0003e1 	mov	w1, w0
     400017a0:	37f802e0 	tbnz	w0, #31, 400017fc <axp_setup_regulators+0xec>
     400017a4:	b0000042 	adrp	x2, 4000a000 <__TEXT_END__>
     400017a8:	910173e3 	add	x3, sp, #0x5c
-    400017ac:	911ae842 	add	x2, x2, #0x6ba
+    400017ac:	911b0442 	add	x2, x2, #0x6c1
     400017b0:	aa1303e0 	mov	x0, x19
     400017b4:	9400073e 	bl	400034ac <fdt_getprop>
     400017b8:	b4000220 	cbz	x0, 400017fc <axp_setup_regulators+0xec>
     400017bc:	b9805fe2 	ldrsw	x2, [sp, #92]
     400017c0:	b0000041 	adrp	x1, 4000a000 <__TEXT_END__>
-    400017c4:	911b0821 	add	x1, x1, #0x6c2
+    400017c4:	911b2421 	add	x1, x1, #0x6c9
     400017c8:	9400180b 	bl	400077f4 <strncmp>
     400017cc:	35000180 	cbnz	w0, 400017fc <axp_setup_regulators+0xec>
     400017d0:	52800002 	mov	w2, #0x0                   	// #0
@@ -2561,33 +2561,33 @@ Disassembly of section .text:
     400017e8:	52800600 	mov	w0, #0x30                  	// #48
     400017ec:	97ffffad 	bl	400016a0 <axp_clrsetbits>
     400017f0:	b0000040 	adrp	x0, 4000a000 <__TEXT_END__>
-    400017f4:	911b1c00 	add	x0, x0, #0x6c7
+    400017f4:	911b3800 	add	x0, x0, #0x6ce
     400017f8:	940019f1 	bl	40007fbc <tf_log>
     400017fc:	2a1403e1 	mov	w1, w20
     40001800:	aa1303e0 	mov	x0, x19
     40001804:	b0000042 	adrp	x2, 4000a000 <__TEXT_END__>
-    40001808:	911b8842 	add	x2, x2, #0x6e2
+    40001808:	911ba442 	add	x2, x2, #0x6e9
     4000180c:	94000ab5 	bl	400042e0 <fdt_subnode_offset>
     40001810:	2a0003e1 	mov	w1, w0
     40001814:	36f80080 	tbz	w0, #31, 40001824 <axp_setup_regulators+0x114>
     40001818:	b0000040 	adrp	x0, 4000a000 <__TEXT_END__>
-    4000181c:	911bb400 	add	x0, x0, #0x6ed
+    4000181c:	911bd000 	add	x0, x0, #0x6f4
     40001820:	17ffffcc 	b	40001750 <axp_setup_regulators+0x40>
     40001824:	aa1303e0 	mov	x0, x19
     40001828:	b0000057 	adrp	x23, 4000a000 <__TEXT_END__>
     4000182c:	b0000058 	adrp	x24, 4000a000 <__TEXT_END__>
     40001830:	94000611 	bl	40003074 <fdt_first_subnode>
-    40001834:	911c6ef7 	add	x23, x23, #0x71b
+    40001834:	911c8af7 	add	x23, x23, #0x722
     40001838:	2a0003f4 	mov	w20, w0
-    4000183c:	911cab18 	add	x24, x24, #0x72a
+    4000183c:	911cc718 	add	x24, x24, #0x731
     40001840:	52800019 	mov	w25, #0x0                   	// #0
     40001844:	36f801d4 	tbz	w20, #31, 4000187c <axp_setup_regulators+0x16c>
     40001848:	34fff879 	cbz	w25, 40001754 <axp_setup_regulators+0x44>
     4000184c:	b0000040 	adrp	x0, 4000a000 <__TEXT_END__>
-    40001850:	911e5800 	add	x0, x0, #0x796
+    40001850:	911e7400 	add	x0, x0, #0x79d
     40001854:	940019da 	bl	40007fbc <tf_log>
     40001858:	b0000040 	adrp	x0, 4000a000 <__TEXT_END__>
-    4000185c:	39590400 	ldrb	w0, [x0, #1601]
+    4000185c:	39592000 	ldrb	w0, [x0, #1608]
     40001860:	7101041f 	cmp	w0, #0x41
     40001864:	540010a1 	b.ne	40001a78 <axp_setup_regulators+0x368>  // b.any
     40001868:	12800fe2 	mov	w2, #0xffffff80            	// #-128
@@ -2603,14 +2603,14 @@ Disassembly of section .text:
     40001890:	b5000a40 	cbnz	x0, 400019d8 <axp_setup_regulators+0x2c8>
     40001894:	b0000042 	adrp	x2, 4000a000 <__TEXT_END__>
     40001898:	2a1403e1 	mov	w1, w20
-    4000189c:	911c8842 	add	x2, x2, #0x722
+    4000189c:	911ca442 	add	x2, x2, #0x729
     400018a0:	aa1303e0 	mov	x0, x19
     400018a4:	d2800003 	mov	x3, #0x0                   	// #0
     400018a8:	94000701 	bl	400034ac <fdt_getprop>
     400018ac:	b5000100 	cbnz	x0, 400018cc <axp_setup_regulators+0x1bc>
     400018b0:	b0000042 	adrp	x2, 4000a000 <__TEXT_END__>
     400018b4:	2a1403e1 	mov	w1, w20
-    400018b8:	911cd442 	add	x2, x2, #0x735
+    400018b8:	911cf042 	add	x2, x2, #0x73c
     400018bc:	aa1303e0 	mov	x0, x19
     400018c0:	d2800003 	mov	x3, #0x0                   	// #0
     400018c4:	940006fa 	bl	400034ac <fdt_getprop>
@@ -2622,13 +2622,13 @@ Disassembly of section .text:
     400018dc:	b9805fe2 	ldrsw	x2, [sp, #92]
     400018e0:	b0000041 	adrp	x1, 4000a000 <__TEXT_END__>
     400018e4:	aa0003f6 	mov	x22, x0
-    400018e8:	911cbc21 	add	x1, x1, #0x72f
+    400018e8:	911cd821 	add	x1, x1, #0x736
     400018ec:	940017c2 	bl	400077f4 <strncmp>
     400018f0:	34000840 	cbz	w0, 400019f8 <axp_setup_regulators+0x2e8>
     400018f4:	b9805fe2 	ldrsw	x2, [sp, #92]
     400018f8:	b0000041 	adrp	x1, 4000a000 <__TEXT_END__>
     400018fc:	aa1603e0 	mov	x0, x22
-    40001900:	911cc821 	add	x1, x1, #0x732
+    40001900:	911ce421 	add	x1, x1, #0x739
     40001904:	940017bc 	bl	400077f4 <strncmp>
     40001908:	34000780 	cbz	w0, 400019f8 <axp_setup_regulators+0x2e8>
     4000190c:	b0000055 	adrp	x21, 4000a000 <__TEXT_END__>
@@ -2641,7 +2641,7 @@ Disassembly of section .text:
     40001928:	35000a40 	cbnz	w0, 40001a70 <axp_setup_regulators+0x360>
     4000192c:	b0000042 	adrp	x2, 4000a000 <__TEXT_END__>
     40001930:	2a1403e1 	mov	w1, w20
-    40001934:	911d2442 	add	x2, x2, #0x749
+    40001934:	911d4042 	add	x2, x2, #0x750
     40001938:	aa1303e0 	mov	x0, x19
     4000193c:	d2800003 	mov	x3, #0x0                   	// #0
     40001940:	940006db 	bl	400034ac <fdt_getprop>
@@ -2677,7 +2677,7 @@ Disassembly of section .text:
     400019b8:	52807d03 	mov	w3, #0x3e8                 	// #1000
     400019bc:	b0000040 	adrp	x0, 4000a000 <__TEXT_END__>
     400019c0:	f94002a1 	ldr	x1, [x21]
-    400019c4:	911de400 	add	x0, x0, #0x779
+    400019c4:	911e0000 	add	x0, x0, #0x780
     400019c8:	1ac30ec2 	sdiv	w2, w22, w3
     400019cc:	1b03d843 	msub	w3, w2, w3, w22
     400019d0:	9400197b 	bl	40007fbc <tf_log>
@@ -2695,7 +2695,7 @@ Disassembly of section .text:
     40001a00:	b9400000 	ldr	w0, [x0]
     40001a04:	b0000042 	adrp	x2, 4000a000 <__TEXT_END__>
     40001a08:	2a1403e1 	mov	w1, w20
-    40001a0c:	911d8442 	add	x2, x2, #0x761
+    40001a0c:	911da042 	add	x2, x2, #0x768
     40001a10:	d3505c03 	ubfx	x3, x0, #16, #8
     40001a14:	d3483c16 	ubfx	x22, x0, #8, #8
     40001a18:	53185c63 	lsl	w3, w3, #8
@@ -2745,7 +2745,7 @@ Disassembly of section .text:
     40001ab8:	b50000b3 	cbnz	x19, 40001acc <bakery_lock_get+0x28>
     40001abc:	52800c81 	mov	w1, #0x64                  	// #100
     40001ac0:	b0000040 	adrp	x0, 4000a000 <__TEXT_END__>
-    40001ac4:	91269800 	add	x0, x0, #0x9a6
+    40001ac4:	9126b400 	add	x0, x0, #0x9ad
     40001ac8:	97fff9c6 	bl	400001e0 <__assert>
     40001acc:	71000c1f 	cmp	w0, #0x3
     40001ad0:	54ffff68 	b.hi	40001abc <bakery_lock_get+0x18>  // b.pmore
@@ -2806,7 +2806,7 @@ Disassembly of section .text:
     40001ba4:	b50000b3 	cbnz	x19, 40001bb8 <bakery_lock_release+0x28>
     40001ba8:	52801321 	mov	w1, #0x99                  	// #153
     40001bac:	b0000040 	adrp	x0, 4000a000 <__TEXT_END__>
-    40001bb0:	91269800 	add	x0, x0, #0x9a6
+    40001bb0:	9126b400 	add	x0, x0, #0x9ad
     40001bb4:	97fff98b 	bl	400001e0 <__assert>
     40001bb8:	71000c1f 	cmp	w0, #0x3
     40001bbc:	54ffff68 	b.hi	40001ba8 <bakery_lock_release+0x18>  // b.pmore
@@ -2855,7 +2855,7 @@ Disassembly of section .text:
     40001c58:	910003fd 	mov	x29, sp
     40001c5c:	f9000bf3 	str	x19, [sp, #16]
     40001c60:	b0000053 	adrp	x19, 4000a000 <__TEXT_END__>
-    40001c64:	9112c273 	add	x19, x19, #0x4b0
+    40001c64:	9112de73 	add	x19, x19, #0x4b7
     40001c68:	aa1303e0 	mov	x0, x19
     40001c6c:	940018d4 	bl	40007fbc <tf_log>
     40001c70:	aa1303e0 	mov	x0, x19
@@ -2866,19 +2866,19 @@ Disassembly of section .text:
     40001c84:	9400002c 	bl	40001d34 <bl31_platform_setup>
     40001c88:	94000116 	bl	400020e0 <cm_init>
     40001c8c:	b0000040 	adrp	x0, 4000a000 <__TEXT_END__>
-    40001c90:	9112ec00 	add	x0, x0, #0x4bb
+    40001c90:	91130800 	add	x0, x0, #0x4c2
     40001c94:	940018ca 	bl	40007fbc <tf_log>
     40001c98:	940015f1 	bl	4000745c <runtime_svc_init>
     40001c9c:	f945c260 	ldr	x0, [x19, #2944]
     40001ca0:	b4000140 	cbz	x0, 40001cc8 <bl31_main+0x7c>
     40001ca4:	b0000040 	adrp	x0, 4000a000 <__TEXT_END__>
-    40001ca8:	91138400 	add	x0, x0, #0x4e1
+    40001ca8:	9113a000 	add	x0, x0, #0x4e8
     40001cac:	940018c4 	bl	40007fbc <tf_log>
     40001cb0:	f945c260 	ldr	x0, [x19, #2944]
     40001cb4:	d63f0000 	blr	x0
     40001cb8:	35000080 	cbnz	w0, 40001cc8 <bl31_main+0x7c>
     40001cbc:	b0000040 	adrp	x0, 4000a000 <__TEXT_END__>
-    40001cc0:	9113ec00 	add	x0, x0, #0x4fb
+    40001cc0:	91140800 	add	x0, x0, #0x502
     40001cc4:	940018be 	bl	40007fbc <tf_log>
     40001cc8:	94000093 	bl	40001f14 <bl31_prepare_next_image_entry>
     40001ccc:	940001fa 	bl	400024b4 <console_flush>
@@ -2897,7 +2897,7 @@ Disassembly of section .text:
     40001cf0:	b0000040 	adrp	x0, 4000a000 <__TEXT_END__>
     40001cf4:	528017c1 	mov	w1, #0xbe                  	// #190
     40001cf8:	910003fd 	mov	x29, sp
-    40001cfc:	91312400 	add	x0, x0, #0xc49
+    40001cfc:	91314000 	add	x0, x0, #0xc50
     40001d00:	97fff938 	bl	400001e0 <__assert>
     40001d04:	540000e0 	b.eq	40001d20 <bl31_plat_get_next_image_ep_info+0x3c>  // b.none
     40001d08:	90000060 	adrp	x0, 4000d000 <__STACKS_START__+0xf80>
@@ -2934,14 +2934,14 @@ Disassembly of section .text:
     40001d74:	b0000040 	adrp	x0, 4000a000 <__TEXT_END__>
     40001d78:	b0000041 	adrp	x1, 4000a000 <__TEXT_END__>
     40001d7c:	5282e302 	mov	w2, #0x1718                	// #5912
-    40001d80:	912ecc00 	add	x0, x0, #0xbb3
+    40001d80:	912ee800 	add	x0, x0, #0xbba
     40001d84:	6b02027f 	cmp	w19, w2
-    40001d88:	912ec021 	add	x1, x1, #0xbb0
+    40001d88:	912edc21 	add	x1, x1, #0xbb7
     40001d8c:	9a800021 	csel	x1, x1, x0, eq  // eq = none
     40001d90:	2a1303e2 	mov	w2, w19
     40001d94:	b0000040 	adrp	x0, 4000a000 <__TEXT_END__>
     40001d98:	d2a94016 	mov	x22, #0x4a000000            	// #1241513984
-    40001d9c:	912ef800 	add	x0, x0, #0xbbe
+    40001d9c:	912f1400 	add	x0, x0, #0xbc5
     40001da0:	d2810019 	mov	x25, #0x800                 	// #2048
     40001da4:	aa1603f7 	mov	x23, x22
     40001da8:	b2406ff8 	mov	x24, #0xfffffff             	// #268435455
@@ -2956,7 +2956,7 @@ Disassembly of section .text:
     40001dcc:	54ffff61 	b.ne	40001db8 <bl31_platform_setup+0x84>  // b.any
     40001dd0:	b0000040 	adrp	x0, 4000a000 <__TEXT_END__>
     40001dd4:	d2800015 	mov	x21, #0x0                   	// #0
-    40001dd8:	9130cc00 	add	x0, x0, #0xc33
+    40001dd8:	9130e800 	add	x0, x0, #0xc3a
     40001ddc:	94001878 	bl	40007fbc <tf_log>
     40001de0:	14000029 	b	40001e84 <bl31_platform_setup+0x150>
     40001de4:	52830460 	mov	w0, #0x1823                	// #6179
@@ -2965,18 +2965,18 @@ Disassembly of section .text:
     40001df0:	b0000040 	adrp	x0, 4000a000 <__TEXT_END__>
     40001df4:	b0000041 	adrp	x1, 4000a000 <__TEXT_END__>
     40001df8:	52830a22 	mov	w2, #0x1851                	// #6225
-    40001dfc:	912ecc00 	add	x0, x0, #0xbb3
+    40001dfc:	912ee800 	add	x0, x0, #0xbba
     40001e00:	6b02027f 	cmp	w19, w2
-    40001e04:	912e9821 	add	x1, x1, #0xba6
+    40001e04:	912eb421 	add	x1, x1, #0xbad
     40001e08:	17ffffe1 	b	40001d8c <bl31_platform_setup+0x58>
     40001e0c:	b0000041 	adrp	x1, 4000a000 <__TEXT_END__>
-    40001e10:	912eec21 	add	x1, x1, #0xbbb
+    40001e10:	912f0821 	add	x1, x1, #0xbc2
     40001e14:	17ffffdf 	b	40001d90 <bl31_platform_setup+0x5c>
     40001e18:	b0000041 	adrp	x1, 4000a000 <__TEXT_END__>
-    40001e1c:	912e6821 	add	x1, x1, #0xb9a
+    40001e1c:	912e8421 	add	x1, x1, #0xba1
     40001e20:	17ffffdc 	b	40001d90 <bl31_platform_setup+0x5c>
     40001e24:	b0000041 	adrp	x1, 4000a000 <__TEXT_END__>
-    40001e28:	912eac21 	add	x1, x1, #0xbab
+    40001e28:	912ec821 	add	x1, x1, #0xbb2
     40001e2c:	17ffffd9 	b	40001d90 <bl31_platform_setup+0x5c>
     40001e30:	f94006d5 	ldr	x21, [x22, #8]
     40001e34:	eb1802bf 	cmp	x21, x24
@@ -2986,7 +2986,7 @@ Disassembly of section .text:
     40001e44:	940003f8 	bl	40002e24 <fdt_check_header>
     40001e48:	35fffbe0 	cbnz	w0, 40001dc4 <bl31_platform_setup+0x90>
     40001e4c:	b0000042 	adrp	x2, 4000a000 <__TEXT_END__>
-    40001e50:	9130b442 	add	x2, x2, #0xc2d
+    40001e50:	9130d042 	add	x2, x2, #0xc34
     40001e54:	910173e3 	add	x3, sp, #0x5c
     40001e58:	aa1503e0 	mov	x0, x21
     40001e5c:	52800001 	mov	w1, #0x0                   	// #0
@@ -2994,10 +2994,10 @@ Disassembly of section .text:
     40001e64:	aa0003e2 	mov	x2, x0
     40001e68:	b5000060 	cbnz	x0, 40001e74 <bl31_platform_setup+0x140>
     40001e6c:	b0000042 	adrp	x2, 4000a000 <__TEXT_END__>
-    40001e70:	912ecc42 	add	x2, x2, #0xbb3
+    40001e70:	912ee842 	add	x2, x2, #0xbba
     40001e74:	b0000040 	adrp	x0, 4000a000 <__TEXT_END__>
     40001e78:	aa1503e1 	mov	x1, x21
-    40001e7c:	912f9c00 	add	x0, x0, #0xbe7
+    40001e7c:	912fb800 	add	x0, x0, #0xbee
     40001e80:	9400184f 	bl	40007fbc <tf_log>
     40001e84:	b0000040 	adrp	x0, 4000a000 <__TEXT_END__>
     40001e88:	9106c000 	add	x0, x0, #0x1b0
@@ -3027,7 +3027,7 @@ Disassembly of section .text:
     40001ee8:	aa1503e0 	mov	x0, x21
     40001eec:	9400178d 	bl	40007d20 <sunxi_prepare_dtb>
     40001ef0:	b0000040 	adrp	x0, 4000a000 <__TEXT_END__>
-    40001ef4:	91304400 	add	x0, x0, #0xc11
+    40001ef4:	91306000 	add	x0, x0, #0xc18
     40001ef8:	94001831 	bl	40007fbc <tf_log>
     40001efc:	a94153f3 	ldp	x19, x20, [sp, #16]
     40001f00:	a9425bf5 	ldp	x21, x22, [sp, #32]
@@ -3046,7 +3046,7 @@ Disassembly of section .text:
     40001f2c:	f100041f 	cmp	x0, #0x1
     40001f30:	540000c1 	b.ne	40001f48 <bl31_prepare_next_image_entry+0x34>  // b.any
     40001f34:	b0000040 	adrp	x0, 4000a000 <__TEXT_END__>
-    40001f38:	9110d400 	add	x0, x0, #0x435
+    40001f38:	9110f000 	add	x0, x0, #0x43c
     40001f3c:	94001820 	bl	40007fbc <tf_log>
     40001f40:	9400015d 	bl	400024b4 <console_flush>
     40001f44:	97fffac5 	bl	40000a58 <do_panic>
@@ -3058,7 +3058,7 @@ Disassembly of section .text:
     40001f5c:	b50000a0 	cbnz	x0, 40001f70 <bl31_prepare_next_image_entry+0x5c>
     40001f60:	52801f21 	mov	w1, #0xf9                  	// #249
     40001f64:	b0000040 	adrp	x0, 4000a000 <__TEXT_END__>
-    40001f68:	91105800 	add	x0, x0, #0x416
+    40001f68:	91107400 	add	x0, x0, #0x41d
     40001f6c:	97fff89d 	bl	400001e0 <__assert>
     40001f70:	b9400674 	ldr	w20, [x19, #4]
     40001f74:	52800420 	mov	w0, #0x21                  	// #33
@@ -3070,11 +3070,11 @@ Disassembly of section .text:
     40001f8c:	7100029f 	cmp	w20, #0x0
     40001f90:	b0000040 	adrp	x0, 4000a000 <__TEXT_END__>
     40001f94:	b0000041 	adrp	x1, 4000a000 <__TEXT_END__>
-    40001f98:	9110b800 	add	x0, x0, #0x42e
-    40001f9c:	91109c21 	add	x1, x1, #0x427
+    40001f98:	9110d400 	add	x0, x0, #0x435
+    40001f9c:	9110b821 	add	x1, x1, #0x42e
     40001fa0:	9a800021 	csel	x1, x1, x0, eq  // eq = none
     40001fa4:	b0000040 	adrp	x0, 4000a000 <__TEXT_END__>
-    40001fa8:	91121400 	add	x0, x0, #0x485
+    40001fa8:	91123000 	add	x0, x0, #0x48c
     40001fac:	94001804 	bl	40007fbc <tf_log>
     40001fb0:	aa1303e0 	mov	x0, x19
     40001fb4:	94000d34 	bl	40005484 <print_entry_point_info>
@@ -3102,15 +3102,15 @@ Disassembly of section .text:
     40001ffc:	b50000a0 	cbnz	x0, 40002010 <cm_el1_sysregs_context_restore+0x28>
     40002000:	90000040 	adrp	x0, 4000a000 <__TEXT_END__>
     40002004:	52805fe1 	mov	w1, #0x2ff                 	// #767
-    40002008:	9124d400 	add	x0, x0, #0x935
+    40002008:	9124f000 	add	x0, x0, #0x93c
     4000200c:	97fff875 	bl	400001e0 <__assert>
     40002010:	91054000 	add	x0, x0, #0x150
     40002014:	97fffaca 	bl	40000b3c <el1_sysregs_context_restore>
     40002018:	34000273 	cbz	w19, 40002064 <cm_el1_sysregs_context_restore+0x7c>
-    4000201c:	b0000053 	adrp	x19, 4000b000 <plat_power_domain_tree_desc+0x315>
-    40002020:	b0000054 	adrp	x20, 4000b000 <plat_power_domain_tree_desc+0x315>
-    40002024:	91194273 	add	x19, x19, #0x650
-    40002028:	91194294 	add	x20, x20, #0x650
+    4000201c:	b0000053 	adrp	x19, 4000b000 <plat_power_domain_tree_desc+0x30e>
+    40002020:	b0000054 	adrp	x20, 4000b000 <plat_power_domain_tree_desc+0x30e>
+    40002024:	91196273 	add	x19, x19, #0x658
+    40002028:	91196294 	add	x20, x20, #0x658
     4000202c:	eb14027f 	cmp	x19, x20
     40002030:	54000142 	b.cs	40002058 <cm_el1_sysregs_context_restore+0x70>  // b.hs, b.nlast
     40002034:	f8408661 	ldr	x1, [x19], #8
@@ -3125,10 +3125,10 @@ Disassembly of section .text:
     40002058:	a94153f3 	ldp	x19, x20, [sp, #16]
     4000205c:	a8c27bfd 	ldp	x29, x30, [sp], #32
     40002060:	d65f03c0 	ret
-    40002064:	b0000053 	adrp	x19, 4000b000 <plat_power_domain_tree_desc+0x315>
-    40002068:	b0000054 	adrp	x20, 4000b000 <plat_power_domain_tree_desc+0x315>
-    4000206c:	91194273 	add	x19, x19, #0x650
-    40002070:	91194294 	add	x20, x20, #0x650
+    40002064:	b0000053 	adrp	x19, 4000b000 <plat_power_domain_tree_desc+0x30e>
+    40002068:	b0000054 	adrp	x20, 4000b000 <plat_power_domain_tree_desc+0x30e>
+    4000206c:	91196273 	add	x19, x19, #0x658
+    40002070:	91196294 	add	x20, x20, #0x658
     40002074:	17fffff7 	b	40002050 <cm_el1_sysregs_context_restore+0x68>
 
 0000000040002078 <cm_get_context>:
@@ -3138,7 +3138,7 @@ Disassembly of section .text:
     40002084:	90000040 	adrp	x0, 4000a000 <__TEXT_END__>
     40002088:	528002c1 	mov	w1, #0x16                  	// #22
     4000208c:	910003fd 	mov	x29, sp
-    40002090:	910ff400 	add	x0, x0, #0x3fd
+    40002090:	91101000 	add	x0, x0, #0x404
     40002094:	97fff853 	bl	400001e0 <__assert>
     40002098:	d53ed041 	mrs	x1, tpidr_el3
     4000209c:	f8605820 	ldr	x0, [x1, w0, uxtw #3]
@@ -3152,7 +3152,7 @@ Disassembly of section .text:
     400020b4:	540000a9 	b.ls	400020c8 <cm_get_context_by_index+0x24>  // b.plast
     400020b8:	90000040 	adrp	x0, 4000a000 <__TEXT_END__>
     400020bc:	52800601 	mov	w1, #0x30                  	// #48
-    400020c0:	910ff400 	add	x0, x0, #0x3fd
+    400020c0:	91101000 	add	x0, x0, #0x404
     400020c4:	97fff847 	bl	400001e0 <__assert>
     400020c8:	2a0103f3 	mov	w19, w1
     400020cc:	97fff8a1 	bl	40000350 <_cpu_data_by_index>
@@ -3201,7 +3201,7 @@ Disassembly of section .text:
     40002158:	b50000a0 	cbnz	x0, 4000216c <cm_prepare_el3_exit+0x28>
     4000215c:	90000040 	adrp	x0, 4000a000 <__TEXT_END__>
     40002160:	52803ca1 	mov	w1, #0x1e5                 	// #485
-    40002164:	9124d400 	add	x0, x0, #0x935
+    40002164:	9124f000 	add	x0, x0, #0x93c
     40002168:	97fff81e 	bl	400001e0 <__assert>
     4000216c:	7100067f 	cmp	w19, #0x1
     40002170:	54000141 	b.ne	40002198 <cm_prepare_el3_exit+0x54>  // b.any
@@ -3255,7 +3255,7 @@ Disassembly of section .text:
     40002228:	540000a9 	b.ls	4000223c <cm_set_context_by_index+0x24>  // b.plast
     4000222c:	90000040 	adrp	x0, 4000a000 <__TEXT_END__>
     40002230:	528007a1 	mov	w1, #0x3d                  	// #61
-    40002234:	910ff400 	add	x0, x0, #0x3fd
+    40002234:	91101000 	add	x0, x0, #0x404
     40002238:	97fff7ea 	bl	400001e0 <__assert>
     4000223c:	2a0203f3 	mov	w19, w2
     40002240:	aa0103f4 	mov	x20, x1
@@ -3271,14 +3271,14 @@ Disassembly of section .text:
     40002260:	97ffff86 	bl	40002078 <cm_get_context>
     40002264:	b50000a0 	cbnz	x0, 40002278 <cm_set_next_eret_context+0x20>
     40002268:	90000040 	adrp	x0, 4000a000 <__TEXT_END__>
-    4000226c:	9124d400 	add	x0, x0, #0x935
+    4000226c:	9124f000 	add	x0, x0, #0x93c
     40002270:	52806d61 	mov	w1, #0x36b                 	// #875
     40002274:	97fff7db 	bl	400001e0 <__assert>
     40002278:	d5384201 	mrs	x1, spsel
     4000227c:	b40000a1 	cbz	x1, 40002290 <cm_set_next_eret_context+0x38>
     40002280:	90000040 	adrp	x0, 4000a000 <__TEXT_END__>
     40002284:	52800941 	mov	w1, #0x4a                  	// #74
-    40002288:	9125fc00 	add	x0, x0, #0x97f
+    40002288:	91261800 	add	x0, x0, #0x986
     4000228c:	17fffffa 	b	40002274 <cm_set_next_eret_context+0x1c>
     40002290:	d50041bf 	msr	spsel, #0x1
     40002294:	9100001f 	mov	sp, x0
@@ -3294,7 +3294,7 @@ Disassembly of section .text:
     400022b4:	b50000a0 	cbnz	x0, 400022c8 <cm_setup_context+0x24>
     400022b8:	528009c1 	mov	w1, #0x4e                  	// #78
     400022bc:	90000040 	adrp	x0, 4000a000 <__TEXT_END__>
-    400022c0:	9124d400 	add	x0, x0, #0x935
+    400022c0:	9124f000 	add	x0, x0, #0x93c
     400022c4:	97fff7c7 	bl	400001e0 <__assert>
     400022c8:	aa0103f5 	mov	x21, x1
     400022cc:	52800421 	mov	w1, #0x21                  	// #33
@@ -3366,7 +3366,7 @@ Disassembly of section .text:
     400023d4:	b26e0273 	orr	x19, x19, #0x40000
     400023d8:	340000c3 	cbz	w3, 400023f0 <cm_setup_context+0x14c>
     400023dc:	90000040 	adrp	x0, 4000a000 <__TEXT_END__>
-    400023e0:	91257000 	add	x0, x0, #0x95c
+    400023e0:	91258c00 	add	x0, x0, #0x963
     400023e4:	940016f6 	bl	40007fbc <tf_log>
     400023e8:	94000033 	bl	400024b4 <console_flush>
     400023ec:	97fff99b 	bl	40000a58 <do_panic>
@@ -3449,7 +3449,7 @@ Disassembly of section .text:
     40002510:	90000040 	adrp	x0, 4000a000 <__TEXT_END__>
     40002514:	52800681 	mov	w1, #0x34                  	// #52
     40002518:	910003fd 	mov	x29, sp
-    4000251c:	913b2000 	add	x0, x0, #0xec8
+    4000251c:	913b3c00 	add	x0, x0, #0xecf
     40002520:	97fff730 	bl	400001e0 <__assert>
     40002524:	f0000041 	adrp	x1, 4000d000 <__STACKS_START__+0xf80>
     40002528:	f9469c21 	ldr	x1, [x1, #3384]
@@ -3519,7 +3519,7 @@ Disassembly of section .text:
     40002618:	540000a2 	b.cs	4000262c <console_register+0x40>  // b.hs, b.nlast
     4000261c:	90000040 	adrp	x0, 4000a000 <__TEXT_END__>
     40002620:	52800281 	mov	w1, #0x14                  	// #20
-    40002624:	913b2000 	add	x0, x0, #0xec8
+    40002624:	913b3c00 	add	x0, x0, #0xecf
     40002628:	97fff6ee 	bl	400001e0 <__assert>
     4000262c:	aa1303e0 	mov	x0, x19
     40002630:	97ffffb6 	bl	40002508 <console_is_registered>
@@ -3600,7 +3600,7 @@ Disassembly of section .text:
     4000272c:	540000a9 	b.ls	40002740 <errata_print_msg+0x20>  // b.plast
     40002730:	528009c1 	mov	w1, #0x4e                  	// #78
     40002734:	90000040 	adrp	x0, 4000a000 <__TEXT_END__>
-    40002738:	9122e000 	add	x0, x0, #0x8b8
+    40002738:	9122fc00 	add	x0, x0, #0x8bf
     4000273c:	97fff6a9 	bl	400001e0 <__assert>
     40002740:	b5000061 	cbnz	x1, 4000274c <errata_print_msg+0x2c>
     40002744:	528009e1 	mov	w1, #0x4f                  	// #79
@@ -3619,18 +3619,18 @@ Disassembly of section .text:
     40002778:	90000044 	adrp	x4, 4000a000 <__TEXT_END__>
     4000277c:	90000041 	adrp	x1, 4000a000 <__TEXT_END__>
     40002780:	90000040 	adrp	x0, 4000a000 <__TEXT_END__>
-    40002784:	91234484 	add	x4, x4, #0x8d1
-    40002788:	91236421 	add	x1, x1, #0x8d9
-    4000278c:	91237800 	add	x0, x0, #0x8de
+    40002784:	91236084 	add	x4, x4, #0x8d8
+    40002788:	91238021 	add	x1, x1, #0x8e0
+    4000278c:	91239400 	add	x0, x0, #0x8e5
     40002790:	a8c17bfd 	ldp	x29, x30, [sp], #16
     40002794:	1400160a 	b	40007fbc <tf_log>
     40002798:	aa0103e2 	mov	x2, x1
     4000279c:	90000044 	adrp	x4, 4000a000 <__TEXT_END__>
     400027a0:	90000041 	adrp	x1, 4000a000 <__TEXT_END__>
     400027a4:	90000040 	adrp	x0, 4000a000 <__TEXT_END__>
-    400027a8:	91241484 	add	x4, x4, #0x905
-    400027ac:	91236421 	add	x1, x1, #0x8d9
-    400027b0:	91243800 	add	x0, x0, #0x90e
+    400027a8:	91243084 	add	x4, x4, #0x90c
+    400027ac:	91238021 	add	x1, x1, #0x8e0
+    400027b0:	91245400 	add	x0, x0, #0x915
     400027b4:	17fffff7 	b	40002790 <errata_print_msg+0x70>
 
 00000000400027b8 <fdt32_ld>:
@@ -3805,7 +3805,7 @@ Disassembly of section .text:
     40002a30:	f90023f9 	str	x25, [sp, #64]
     40002a34:	aa0103f9 	mov	x25, x1
     40002a38:	90000041 	adrp	x1, 4000a000 <__TEXT_END__>
-    40002a3c:	9114d021 	add	x1, x1, #0x534
+    40002a3c:	9114ec21 	add	x1, x1, #0x53b
     40002a40:	940004cb 	bl	40003d6c <fdt_path_offset>
     40002a44:	2a0003f3 	mov	w19, w0
     40002a48:	52800001 	mov	w1, #0x0                   	// #0
@@ -3820,7 +3820,7 @@ Disassembly of section .text:
     40002a6c:	aa1403e0 	mov	x0, x20
     40002a70:	90000042 	adrp	x2, 4000a000 <__TEXT_END__>
     40002a74:	52800001 	mov	w1, #0x0                   	// #0
-    40002a78:	9114d442 	add	x2, x2, #0x535
+    40002a78:	9114f042 	add	x2, x2, #0x53c
     40002a7c:	9400004a 	bl	40002ba4 <fdt_add_subnode>
     40002a80:	2a0003f3 	mov	w19, w0
     40002a84:	37f807e0 	tbnz	w0, #31, 40002b80 <fdt_add_reserved_memory+0x170>
@@ -3828,17 +3828,17 @@ Disassembly of section .text:
     40002a8c:	2a1603e3 	mov	w3, w22
     40002a90:	aa1403e0 	mov	x0, x20
     40002a94:	90000042 	adrp	x2, 4000a000 <__TEXT_END__>
-    40002a98:	91151442 	add	x2, x2, #0x545
+    40002a98:	91153042 	add	x2, x2, #0x54c
     40002a9c:	94000591 	bl	400040e0 <fdt_setprop_u32>
     40002aa0:	2a1803e3 	mov	w3, w24
     40002aa4:	2a1303e1 	mov	w1, w19
     40002aa8:	aa1403e0 	mov	x0, x20
     40002aac:	90000042 	adrp	x2, 4000a000 <__TEXT_END__>
-    40002ab0:	91155042 	add	x2, x2, #0x554
+    40002ab0:	91156c42 	add	x2, x2, #0x55b
     40002ab4:	9400058b 	bl	400040e0 <fdt_setprop_u32>
     40002ab8:	90000042 	adrp	x2, 4000a000 <__TEXT_END__>
     40002abc:	2a1303e1 	mov	w1, w19
-    40002ac0:	91158042 	add	x2, x2, #0x560
+    40002ac0:	91159c42 	add	x2, x2, #0x567
     40002ac4:	aa1403e0 	mov	x0, x20
     40002ac8:	52800004 	mov	w4, #0x0                   	// #0
     40002acc:	d2800003 	mov	x3, #0x0                   	// #0
@@ -3875,7 +3875,7 @@ Disassembly of section .text:
     40002b48:	d2800003 	mov	x3, #0x0                   	// #0
     40002b4c:	aa1403e0 	mov	x0, x20
     40002b50:	90000042 	adrp	x2, 4000a000 <__TEXT_END__>
-    40002b54:	91159c42 	add	x2, x2, #0x567
+    40002b54:	9115b842 	add	x2, x2, #0x56e
     40002b58:	94000516 	bl	40003fb0 <fdt_setprop>
     40002b5c:	2a1303e1 	mov	w1, w19
     40002b60:	110006a4 	add	w4, w21, #0x1
@@ -3884,7 +3884,7 @@ Disassembly of section .text:
     40002b6c:	531e7484 	lsl	w4, w4, #2
     40002b70:	aa1403e0 	mov	x0, x20
     40002b74:	90000042 	adrp	x2, 4000a000 <__TEXT_END__>
-    40002b78:	9115b842 	add	x2, x2, #0x56e
+    40002b78:	9115d442 	add	x2, x2, #0x575
     40002b7c:	9400050d 	bl	40003fb0 <fdt_setprop>
     40002b80:	2a1303e0 	mov	w0, w19
     40002b84:	a94153f3 	ldp	x19, x20, [sp, #16]
@@ -3992,7 +3992,7 @@ Disassembly of section .text:
 0000000040002d08 <fdt_address_cells>:
     40002d08:	a9bf7bfd 	stp	x29, x30, [sp, #-16]!
     40002d0c:	90000042 	adrp	x2, 4000a000 <__TEXT_END__>
-    40002d10:	91151442 	add	x2, x2, #0x545
+    40002d10:	91153042 	add	x2, x2, #0x54c
     40002d14:	910003fd 	mov	x29, sp
     40002d18:	9400002b 	bl	40002dc4 <fdt_cells>
     40002d1c:	340000c0 	cbz	w0, 40002d34 <fdt_address_cells+0x2c>
@@ -4245,8 +4245,8 @@ Disassembly of section .text:
     400030b0:	a90153f3 	stp	x19, x20, [sp, #16]
     400030b4:	aa0103f4 	mov	x20, x1
     400030b8:	aa0003f3 	mov	x19, x0
-    400030bc:	90000041 	adrp	x1, 4000b000 <plat_power_domain_tree_desc+0x315>
-    400030c0:	9115d421 	add	x1, x1, #0x575
+    400030bc:	90000041 	adrp	x1, 4000b000 <plat_power_domain_tree_desc+0x30e>
+    400030c0:	9115f021 	add	x1, x1, #0x57c
     400030c4:	f90013f5 	str	x21, [sp, #32]
     400030c8:	2a0203f5 	mov	w21, w2
     400030cc:	94000328 	bl	40003d6c <fdt_path_offset>
@@ -4800,8 +4800,8 @@ Disassembly of section .text:
     400038d4:	9100b3e3 	add	x3, sp, #0x2c
     400038d8:	f9000bf3 	str	x19, [sp, #16]
     400038dc:	aa0203f3 	mov	x19, x2
-    400038e0:	90000042 	adrp	x2, 4000b000 <plat_power_domain_tree_desc+0x315>
-    400038e4:	9115f842 	add	x2, x2, #0x57e
+    400038e0:	90000042 	adrp	x2, 4000b000 <plat_power_domain_tree_desc+0x30e>
+    400038e4:	91161442 	add	x2, x2, #0x585
     400038e8:	97fffef1 	bl	400034ac <fdt_getprop>
     400038ec:	b50000a0 	cbnz	x0, 40003900 <fdt_node_check_compatible+0x34>
     400038f0:	b9402fe0 	ldr	w0, [sp, #44]
@@ -5354,7 +5354,7 @@ Disassembly of section .text:
 0000000040004110 <fdt_size_cells>:
     40004110:	a9bf7bfd 	stp	x29, x30, [sp, #-16]!
     40004114:	d0000022 	adrp	x2, 4000a000 <__TEXT_END__>
-    40004118:	91155042 	add	x2, x2, #0x554
+    40004118:	91156c42 	add	x2, x2, #0x55b
     4000411c:	910003fd 	mov	x29, sp
     40004120:	97fffb29 	bl	40002dc4 <fdt_cells>
     40004124:	3100041f 	cmn	w0, #0x1
@@ -5591,7 +5591,7 @@ Disassembly of section .text:
     40004480:	d0000020 	adrp	x0, 4000a000 <__TEXT_END__>
     40004484:	528008c1 	mov	w1, #0x46                  	// #70
     40004488:	910003fd 	mov	x29, sp
-    4000448c:	91105800 	add	x0, x0, #0x416
+    4000448c:	91107400 	add	x0, x0, #0x41d
     40004490:	97ffef54 	bl	400001e0 <__assert>
     40004494:	d0000020 	adrp	x0, 4000a000 <__TEXT_END__>
     40004498:	91000000 	add	x0, x0, #0x0
@@ -5615,7 +5615,7 @@ Disassembly of section .text:
     400044d0:	d0000020 	adrp	x0, 4000a000 <__TEXT_END__>
     400044d4:	52800aa1 	mov	w1, #0x55                  	// #85
     400044d8:	910003fd 	mov	x29, sp
-    400044dc:	91147800 	add	x0, x0, #0x51e
+    400044dc:	91149400 	add	x0, x0, #0x525
     400044e0:	97ffef40 	bl	400001e0 <__assert>
     400044e4:	b0000041 	adrp	x1, 4000d000 <__STACKS_START__+0xf80>
     400044e8:	912e2022 	add	x2, x1, #0xb88
@@ -5735,7 +5735,7 @@ Disassembly of section .text:
     40004648:	b50000a0 	cbnz	x0, 4000465c <gicv2_cpuif_disable+0x24>
     4000464c:	528007a1 	mov	w1, #0x3d                  	// #61
     40004650:	d0000020 	adrp	x0, 4000a000 <__TEXT_END__>
-    40004654:	91215c00 	add	x0, x0, #0x857
+    40004654:	91217800 	add	x0, x0, #0x85e
     40004658:	97ffeee2 	bl	400001e0 <__assert>
     4000465c:	f9400401 	ldr	x1, [x0, #8]
     40004660:	b5000061 	cbnz	x1, 4000466c <gicv2_cpuif_disable+0x34>
@@ -5756,7 +5756,7 @@ Disassembly of section .text:
     40004694:	b50000a0 	cbnz	x0, 400046a8 <gicv2_cpuif_enable+0x24>
     40004698:	528004c1 	mov	w1, #0x26                  	// #38
     4000469c:	d0000020 	adrp	x0, 4000a000 <__TEXT_END__>
-    400046a0:	91215c00 	add	x0, x0, #0x857
+    400046a0:	91217800 	add	x0, x0, #0x85e
     400046a4:	97ffeecf 	bl	400001e0 <__assert>
     400046a8:	f9400400 	ldr	x0, [x0, #8]
     400046ac:	b5000060 	cbnz	x0, 400046b8 <gicv2_cpuif_enable+0x34>
@@ -5778,7 +5778,7 @@ Disassembly of section .text:
     400046e4:	b50000a0 	cbnz	x0, 400046f8 <gicv2_distif_init+0x28>
     400046e8:	52800d01 	mov	w1, #0x68                  	// #104
     400046ec:	d0000020 	adrp	x0, 4000a000 <__TEXT_END__>
-    400046f0:	91215c00 	add	x0, x0, #0x857
+    400046f0:	91217800 	add	x0, x0, #0x85e
     400046f4:	97ffeebb 	bl	400001e0 <__assert>
     400046f8:	f9400000 	ldr	x0, [x0]
     400046fc:	b5000060 	cbnz	x0, 40004708 <gicv2_distif_init+0x38>
@@ -5807,7 +5807,7 @@ Disassembly of section .text:
     40004750:	b50000a0 	cbnz	x0, 40004764 <gicv2_driver_init+0x1c>
     40004754:	52801061 	mov	w1, #0x83                  	// #131
     40004758:	d0000020 	adrp	x0, 4000a000 <__TEXT_END__>
-    4000475c:	91215c00 	add	x0, x0, #0x857
+    4000475c:	91217800 	add	x0, x0, #0x85e
     40004760:	97ffeea0 	bl	400001e0 <__assert>
     40004764:	f9400001 	ldr	x1, [x0]
     40004768:	b5000061 	cbnz	x1, 40004774 <gicv2_driver_init+0x2c>
@@ -5834,7 +5834,7 @@ Disassembly of section .text:
     400047bc:	b0000041 	adrp	x1, 4000d000 <__STACKS_START__+0xf80>
     400047c0:	f905f420 	str	x0, [x1, #3048]
     400047c4:	d0000020 	adrp	x0, 4000a000 <__TEXT_END__>
-    400047c8:	9121dc00 	add	x0, x0, #0x877
+    400047c8:	9121f800 	add	x0, x0, #0x87e
     400047cc:	14000dfc 	b	40007fbc <tf_log>
 
 00000000400047d0 <gicv2_get_pending_interrupt_type>:
@@ -5845,7 +5845,7 @@ Disassembly of section .text:
     400047e0:	b50000a0 	cbnz	x0, 400047f4 <gicv2_get_pending_interrupt_type+0x24>
     400047e4:	528018c1 	mov	w1, #0xc6                  	// #198
     400047e8:	d0000020 	adrp	x0, 4000a000 <__TEXT_END__>
-    400047ec:	91215c00 	add	x0, x0, #0x857
+    400047ec:	91217800 	add	x0, x0, #0x85e
     400047f0:	97ffee7c 	bl	400001e0 <__assert>
     400047f4:	f9400400 	ldr	x0, [x0, #8]
     400047f8:	b5000060 	cbnz	x0, 40004804 <gicv2_get_pending_interrupt_type+0x34>
@@ -5865,7 +5865,7 @@ Disassembly of section .text:
     40004828:	b50000a1 	cbnz	x1, 4000483c <gicv2_pcpu_distif_init+0x28>
     4000482c:	52800a01 	mov	w1, #0x50                  	// #80
     40004830:	d0000020 	adrp	x0, 4000a000 <__TEXT_END__>
-    40004834:	91215c00 	add	x0, x0, #0x857
+    40004834:	91217800 	add	x0, x0, #0x85e
     40004838:	97ffee6a 	bl	400001e0 <__assert>
     4000483c:	f9400020 	ldr	x0, [x1]
     40004840:	b5000060 	cbnz	x0, 4000484c <gicv2_pcpu_distif_init+0x38>
@@ -5897,7 +5897,7 @@ Disassembly of section .text:
     400048a0:	b50000a1 	cbnz	x1, 400048b4 <gicv2_secure_ppi_sgi_setup_props+0x38>
     400048a4:	52801581 	mov	w1, #0xac                  	// #172
     400048a8:	d0000020 	adrp	x0, 4000a000 <__TEXT_END__>
-    400048ac:	9120d000 	add	x0, x0, #0x834
+    400048ac:	9120ec00 	add	x0, x0, #0x83b
     400048b0:	97ffee4c 	bl	400001e0 <__assert>
     400048b4:	52800016 	mov	w22, #0x0                   	// #0
     400048b8:	aa1403e0 	mov	x0, x20
@@ -5974,7 +5974,7 @@ Disassembly of section .text:
     400049cc:	d65f03c0 	ret
     400049d0:	d0000020 	adrp	x0, 4000a000 <__TEXT_END__>
     400049d4:	52801041 	mov	w1, #0x82                  	// #130
-    400049d8:	9120d000 	add	x0, x0, #0x834
+    400049d8:	9120ec00 	add	x0, x0, #0x83b
     400049dc:	97ffee01 	bl	400001e0 <__assert>
     400049e0:	79400261 	ldrh	w1, [x19]
     400049e4:	12002421 	and	w1, w1, #0x3ff
@@ -5985,7 +5985,7 @@ Disassembly of section .text:
     400049f8:	540000a0 	b.eq	40004a0c <gicv2_secure_spis_configure_props+0x7c>  // b.none
     400049fc:	d0000020 	adrp	x0, 4000a000 <__TEXT_END__>
     40004a00:	52801161 	mov	w1, #0x8b                  	// #139
-    40004a04:	9120d000 	add	x0, x0, #0x834
+    40004a04:	9120ec00 	add	x0, x0, #0x83b
     40004a08:	97ffedf6 	bl	400001e0 <__assert>
     40004a0c:	aa1403e0 	mov	x0, x20
     40004a10:	97fffec4 	bl	40004520 <gicd_clr_igroupr>
@@ -6066,7 +6066,7 @@ Disassembly of section .text:
     40004b2c:	540000a0 	b.eq	40004b40 <init_xlat_tables+0x30>  // b.none
     40004b30:	52800c21 	mov	w1, #0x61                  	// #97
     40004b34:	d0000020 	adrp	x0, 4000a000 <__TEXT_END__>
-    40004b38:	913ec000 	add	x0, x0, #0xfb0
+    40004b38:	913edc00 	add	x0, x0, #0xfb7
     40004b3c:	97ffeda9 	bl	400001e0 <__assert>
     40004b40:	94000edc 	bl	400086b0 <xlat_arch_current_el>
     40004b44:	7100041f 	cmp	w0, #0x1
@@ -6091,7 +6091,7 @@ Disassembly of section .text:
     40004b88:	b50000a0 	cbnz	x0, 40004b9c <init_xlat_tables_ctx+0x24>
     40004b8c:	528094c1 	mov	w1, #0x4a6                 	// #1190
     40004b90:	d0000020 	adrp	x0, 4000a000 <__TEXT_END__>
-    40004b94:	913f6400 	add	x0, x0, #0xfd9
+    40004b94:	913f8000 	add	x0, x0, #0xfe0
     40004b98:	97ffed92 	bl	400001e0 <__assert>
     40004b9c:	39415001 	ldrb	w1, [x0, #84]
     40004ba0:	aa0003f3 	mov	x19, x0
@@ -6171,9 +6171,9 @@ Disassembly of section .text:
     40004cc8:	eb00005f 	cmp	x2, x0
     40004ccc:	54000100 	b.eq	40004cec <init_xlat_tables_ctx+0x174>  // b.none
     40004cd0:	b9401a84 	ldr	w4, [x20, #24]
-    40004cd4:	f0000020 	adrp	x0, 4000b000 <plat_power_domain_tree_desc+0x315>
+    40004cd4:	f0000020 	adrp	x0, 4000b000 <plat_power_domain_tree_desc+0x30e>
     40004cd8:	f9400282 	ldr	x2, [x20]
-    40004cdc:	9100a800 	add	x0, x0, #0x2a
+    40004cdc:	9100c400 	add	x0, x0, #0x31
     40004ce0:	94000cb7 	bl	40007fbc <tf_log>
     40004ce4:	97fff5f4 	bl	400024b4 <console_flush>
     40004ce8:	97ffef5c 	bl	40000a58 <do_panic>
@@ -6209,7 +6209,7 @@ Disassembly of section .text:
     40004d58:	350000a0 	cbnz	w0, 40004d6c <is_mmu_enabled_ctx+0x2c>
     40004d5c:	528012e1 	mov	w1, #0x97                  	// #151
     40004d60:	d0000020 	adrp	x0, 4000a000 <__TEXT_END__>
-    40004d64:	913e0800 	add	x0, x0, #0xf82
+    40004d64:	913e2400 	add	x0, x0, #0xf89
     40004d68:	97ffed1e 	bl	400001e0 <__assert>
     40004d6c:	d5381000 	mrs	x0, sctlr_el1
     40004d70:	12000000 	and	w0, w0, #0x1
@@ -6246,7 +6246,7 @@ Disassembly of section .text:
     40004de4:	d0000020 	adrp	x0, 4000a000 <__TEXT_END__>
     40004de8:	52800841 	mov	w1, #0x42                  	// #66
     40004dec:	910003fd 	mov	x29, sp
-    40004df0:	91225800 	add	x0, x0, #0x896
+    40004df0:	91227400 	add	x0, x0, #0x89d
     40004df4:	97ffecfb 	bl	400001e0 <__assert>
     40004df8:	1b017c00 	mul	w0, w0, w1
     40004dfc:	14000cca 	b	40008124 <udelay>
@@ -6388,7 +6388,7 @@ Disassembly of section .text:
     40004fd4:	340000a0 	cbz	w0, 40004fe8 <mmap_add_region_ctx+0x3c>
     40004fd8:	52806281 	mov	w1, #0x314                 	// #788
     40004fdc:	d0000020 	adrp	x0, 4000a000 <__TEXT_END__>
-    40004fe0:	913f6400 	add	x0, x0, #0xfd9
+    40004fe0:	913f8000 	add	x0, x0, #0xfe0
     40004fe4:	97ffec7f 	bl	400001e0 <__assert>
     40004fe8:	a94002e5 	ldp	x5, x0, [x23]
     40004fec:	f94012e2 	ldr	x2, [x23, #32]
@@ -6482,8 +6482,8 @@ Disassembly of section .text:
     4000514c:	52800024 	mov	w4, #0x1                   	// #1
     40005150:	17fffff0 	b	40005110 <mmap_add_region_ctx+0x164>
     40005154:	128002a1 	mov	w1, #0xffffffea            	// #-22
-    40005158:	b0000020 	adrp	x0, 4000a000 <__TEXT_END__>
-    4000515c:	913ffc00 	add	x0, x0, #0xfff
+    40005158:	d0000020 	adrp	x0, 4000b000 <plat_power_domain_tree_desc+0x30e>
+    4000515c:	91001800 	add	x0, x0, #0x6
     40005160:	94000b97 	bl	40007fbc <tf_log>
     40005164:	52806321 	mov	w1, #0x319                 	// #793
     40005168:	17ffff9d 	b	40004fdc <mmap_add_region_ctx+0x30>
@@ -6583,7 +6583,7 @@ Disassembly of section .text:
     400052c0:	d53e4013 	mrs	x19, spsr_el3
     400052c4:	b0000020 	adrp	x0, 4000a000 <__TEXT_END__>
     400052c8:	53020e73 	ubfx	w19, w19, #2, #2
-    400052cc:	91395000 	add	x0, x0, #0xe54
+    400052cc:	91396c00 	add	x0, x0, #0xe5b
     400052d0:	94000b6d 	bl	40008084 <tf_log_newline>
     400052d4:	d53800a1 	mrs	x1, mpidr_el1
     400052d8:	71000e7f 	cmp	w19, #0x3
@@ -6591,26 +6591,26 @@ Disassembly of section .text:
     400052e0:	71000a7f 	cmp	w19, #0x2
     400052e4:	b0000020 	adrp	x0, 4000a000 <__TEXT_END__>
     400052e8:	b0000022 	adrp	x2, 4000a000 <__TEXT_END__>
-    400052ec:	913c9000 	add	x0, x0, #0xf24
-    400052f0:	913c7842 	add	x2, x2, #0xf1e
+    400052ec:	913cac00 	add	x0, x0, #0xf2b
+    400052f0:	913c9442 	add	x2, x2, #0xf25
     400052f4:	9a801042 	csel	x2, x2, x0, ne  // ne = any
     400052f8:	b0000020 	adrp	x0, 4000a000 <__TEXT_END__>
-    400052fc:	913ca000 	add	x0, x0, #0xf28
+    400052fc:	913cbc00 	add	x0, x0, #0xf2f
     40005300:	94000b2f 	bl	40007fbc <tf_log>
     40005304:	aa1503e2 	mov	x2, x21
     40005308:	2a1403e1 	mov	w1, w20
     4000530c:	b0000020 	adrp	x0, 4000a000 <__TEXT_END__>
-    40005310:	913d7400 	add	x0, x0, #0xf5d
+    40005310:	913d9000 	add	x0, x0, #0xf64
     40005314:	94000b2a 	bl	40007fbc <tf_log>
     40005318:	97fff467 	bl	400024b4 <console_flush>
     4000531c:	97ffedcf 	bl	40000a58 <do_panic>
     40005320:	b0000022 	adrp	x2, 4000a000 <__TEXT_END__>
-    40005324:	913c6842 	add	x2, x2, #0xf1a
+    40005324:	913c8442 	add	x2, x2, #0xf21
     40005328:	17fffff4 	b	400052f8 <plat_default_ea_handler+0x50>
 
 000000004000532c <plat_get_power_domain_tree_desc>:
     4000532c:	b0000020 	adrp	x0, 4000a000 <__TEXT_END__>
-    40005330:	9133ac00 	add	x0, x0, #0xceb
+    40005330:	9133c800 	add	x0, x0, #0xcf2
     40005334:	d65f03c0 	ret
 
 0000000040005338 <plat_get_soc_revision>:
@@ -6632,7 +6632,7 @@ Disassembly of section .text:
     4000535c:	b0000020 	adrp	x0, 4000a000 <__TEXT_END__>
     40005360:	52801381 	mov	w1, #0x9c                  	// #156
     40005364:	910003fd 	mov	x29, sp
-    40005368:	91380800 	add	x0, x0, #0xe02
+    40005368:	91382400 	add	x0, x0, #0xe09
     4000536c:	97ffeb9d 	bl	400001e0 <__assert>
     40005370:	d2800003 	mov	x3, #0x0                   	// #0
     40005374:	52800040 	mov	w0, #0x2                   	// #2
@@ -6684,7 +6684,7 @@ Disassembly of section .text:
     4000540c:	b50000a1 	cbnz	x1, 40005420 <plat_setup_psci_ops+0x20>
     40005410:	b0000020 	adrp	x0, 4000a000 <__TEXT_END__>
     40005414:	528003e1 	mov	w1, #0x1f                  	// #31
-    40005418:	9132b400 	add	x0, x0, #0xcad
+    40005418:	9132d000 	add	x0, x0, #0xcb4
     4000541c:	97ffeb71 	bl	400001e0 <__assert>
     40005420:	aa0103f3 	mov	x19, x1
     40005424:	d2800801 	mov	x1, #0x40                  	// #64
@@ -6703,7 +6703,7 @@ Disassembly of section .text:
     40005458:	f2a12020 	movk	x0, #0x901, lsl #16
     4000545c:	b9000001 	str	w1, [x0]
     40005460:	b0000020 	adrp	x0, 4000a000 <__TEXT_END__>
-    40005464:	91323800 	add	x0, x0, #0xc8e
+    40005464:	91325400 	add	x0, x0, #0xc95
     40005468:	94000ad5 	bl	40007fbc <tf_log>
     4000546c:	aa1303e0 	mov	x0, x19
     40005470:	94000a99 	bl	40007ed4 <sunxi_set_native_psci_ops>
@@ -6718,13 +6718,13 @@ Disassembly of section .text:
     4000548c:	f9000bf3 	str	x19, [sp, #16]
     40005490:	aa0003f3 	mov	x19, x0
     40005494:	b0000020 	adrp	x0, 4000a000 <__TEXT_END__>
-    40005498:	913a3000 	add	x0, x0, #0xe8c
+    40005498:	913a4c00 	add	x0, x0, #0xe93
     4000549c:	f9400661 	ldr	x1, [x19, #8]
     400054a0:	94000ac7 	bl	40007fbc <tf_log>
     400054a4:	b9401261 	ldr	w1, [x19, #16]
     400054a8:	b0000020 	adrp	x0, 4000a000 <__TEXT_END__>
     400054ac:	f9400bf3 	ldr	x19, [sp, #16]
-    400054b0:	913aa800 	add	x0, x0, #0xeaa
+    400054b0:	913ac400 	add	x0, x0, #0xeb1
     400054b4:	a8c27bfd 	ldp	x29, x30, [sp], #32
     400054b8:	14000ac1 	b	40007fbc <tf_log>
 
@@ -6823,7 +6823,7 @@ Disassembly of section .text:
     40005608:	540000a0 	b.eq	4000561c <psci_cpu_off+0x28>  // b.none
     4000560c:	b0000020 	adrp	x0, 4000a000 <__TEXT_END__>
     40005610:	52801ac1 	mov	w1, #0xd6                  	// #214
-    40005614:	912a9800 	add	x0, x0, #0xaa6
+    40005614:	912ab400 	add	x0, x0, #0xaad
     40005618:	97ffeaf2 	bl	400001e0 <__assert>
     4000561c:	a8c17bfd 	ldp	x29, x30, [sp], #16
     40005620:	d65f03c0 	ret
@@ -6886,7 +6886,7 @@ Disassembly of section .text:
     400056f4:	540000a0 	b.eq	40005708 <psci_cpu_on_finish+0x88>  // b.none
     400056f8:	b0000020 	adrp	x0, 4000a000 <__TEXT_END__>
     400056fc:	52801a61 	mov	w1, #0xd3                  	// #211
-    40005700:	912cf800 	add	x0, x0, #0xb3e
+    40005700:	912d1400 	add	x0, x0, #0xb45
     40005704:	97ffeab7 	bl	400001e0 <__assert>
     40005708:	90000040 	adrp	x0, 4000d000 <__STACKS_START__+0xf80>
     4000570c:	f9462800 	ldr	x0, [x0, #3152]
@@ -6895,10 +6895,10 @@ Disassembly of section .text:
     40005718:	b4000061 	cbz	x1, 40005724 <psci_cpu_on_finish+0xa4>
     4000571c:	d2800000 	mov	x0, #0x0                   	// #0
     40005720:	d63f0020 	blr	x1
-    40005724:	d0000034 	adrp	x20, 4000b000 <plat_power_domain_tree_desc+0x315>
-    40005728:	d0000036 	adrp	x22, 4000b000 <plat_power_domain_tree_desc+0x315>
-    4000572c:	91194294 	add	x20, x20, #0x650
-    40005730:	911942d6 	add	x22, x22, #0x650
+    40005724:	d0000034 	adrp	x20, 4000b000 <plat_power_domain_tree_desc+0x30e>
+    40005728:	d0000036 	adrp	x22, 4000b000 <plat_power_domain_tree_desc+0x30e>
+    4000572c:	91196294 	add	x20, x20, #0x658
+    40005730:	911962d6 	add	x22, x22, #0x658
     40005734:	eb16029f 	cmp	x20, x22
     40005738:	54000163 	b.cc	40005764 <psci_cpu_on_finish+0xe4>  // b.lo, b.ul, b.last
     4000573c:	d53800a1 	mrs	x1, mpidr_el1
@@ -6928,7 +6928,7 @@ Disassembly of section .text:
     40005794:	36f800a0 	tbz	w0, #31, 400057a8 <psci_cpu_on_start+0x34>
     40005798:	52800881 	mov	w1, #0x44                  	// #68
     4000579c:	b0000020 	adrp	x0, 4000a000 <__TEXT_END__>
-    400057a0:	912cf800 	add	x0, x0, #0xb3e
+    400057a0:	912d1400 	add	x0, x0, #0xb45
     400057a4:	97ffea8f 	bl	400001e0 <__assert>
     400057a8:	b5000076 	cbnz	x22, 400057b4 <psci_cpu_on_start+0x40>
     400057ac:	528008a1 	mov	w1, #0x45                  	// #69
@@ -7066,7 +7066,7 @@ Disassembly of section .text:
     400059b4:	d65f03c0 	ret
     400059b8:	52800861 	mov	w1, #0x43                  	// #67
     400059bc:	b0000020 	adrp	x0, 4000a000 <__TEXT_END__>
-    400059c0:	912a9800 	add	x0, x0, #0xaa6
+    400059c0:	912ab400 	add	x0, x0, #0xaad
     400059c4:	97ffea07 	bl	400001e0 <__assert>
     400059c8:	d3504273 	ubfx	x19, x19, #16, #1
     400059cc:	910103e0 	add	x0, sp, #0x40
@@ -7082,7 +7082,7 @@ Disassembly of section .text:
     400059f4:	71000c1f 	cmp	w0, #0x3
     400059f8:	540000c1 	b.ne	40005a10 <psci_cpu_suspend+0xb0>  // b.any
     400059fc:	b0000020 	adrp	x0, 4000a000 <__TEXT_END__>
-    40005a00:	912aec00 	add	x0, x0, #0xabb
+    40005a00:	912b0800 	add	x0, x0, #0xac2
     40005a04:	9400096e 	bl	40007fbc <tf_log>
     40005a08:	97fff2ab 	bl	400024b4 <console_flush>
     40005a0c:	97ffec13 	bl	40000a58 <do_panic>
@@ -7127,7 +7127,7 @@ Disassembly of section .text:
     40005aa0:	540000a0 	b.eq	40005ab4 <psci_cpu_suspend_finish+0x38>  // b.none
     40005aa4:	528023a1 	mov	w1, #0x11d                 	// #285
     40005aa8:	b0000020 	adrp	x0, 4000a000 <__TEXT_END__>
-    40005aac:	912d9c00 	add	x0, x0, #0xb67
+    40005aac:	912db800 	add	x0, x0, #0xb6e
     40005ab0:	97ffe9cc 	bl	400001e0 <__assert>
     40005ab4:	90000040 	adrp	x0, 4000d000 <__STACKS_START__+0xf80>
     40005ab8:	f9462400 	ldr	x0, [x0, #3144]
@@ -7153,10 +7153,10 @@ Disassembly of section .text:
     40005b08:	f9401021 	ldr	x1, [x1, #32]
     40005b0c:	d63f0020 	blr	x1
     40005b10:	d53ed040 	mrs	x0, tpidr_el3
-    40005b14:	d0000033 	adrp	x19, 4000b000 <plat_power_domain_tree_desc+0x315>
-    40005b18:	d0000034 	adrp	x20, 4000b000 <plat_power_domain_tree_desc+0x315>
-    40005b1c:	91194273 	add	x19, x19, #0x650
-    40005b20:	91194294 	add	x20, x20, #0x650
+    40005b14:	d0000033 	adrp	x19, 4000b000 <plat_power_domain_tree_desc+0x30e>
+    40005b18:	d0000034 	adrp	x20, 4000b000 <plat_power_domain_tree_desc+0x30e>
+    40005b1c:	91196273 	add	x19, x19, #0x658
+    40005b20:	91196294 	add	x20, x20, #0x658
     40005b24:	52800061 	mov	w1, #0x3                   	// #3
     40005b28:	b9001c01 	str	w1, [x0, #28]
     40005b2c:	eb14027f 	cmp	x19, x20
@@ -7192,7 +7192,7 @@ Disassembly of section .text:
     40005b9c:	b50000a1 	cbnz	x1, 40005bb0 <psci_cpu_suspend_start+0x5c>
     40005ba0:	b0000020 	adrp	x0, 4000a000 <__TEXT_END__>
     40005ba4:	528014e1 	mov	w1, #0xa7                  	// #167
-    40005ba8:	912d9c00 	add	x0, x0, #0xb67
+    40005ba8:	912db800 	add	x0, x0, #0xb6e
     40005bac:	97ffe98d 	bl	400001e0 <__assert>
     40005bb0:	9101c3e2 	add	x2, sp, #0x70
     40005bb4:	2a0003f9 	mov	w25, w0
@@ -7208,12 +7208,12 @@ Disassembly of section .text:
     40005bdc:	9400009d 	bl	40005e50 <psci_do_state_coordination>
     40005be0:	34000417 	cbz	w23, 40005c60 <psci_cpu_suspend_start+0x10c>
     40005be4:	aa1503e0 	mov	x0, x21
-    40005be8:	d0000036 	adrp	x22, 4000b000 <plat_power_domain_tree_desc+0x315>
-    40005bec:	d000003b 	adrp	x27, 4000b000 <plat_power_domain_tree_desc+0x315>
+    40005be8:	d0000036 	adrp	x22, 4000b000 <plat_power_domain_tree_desc+0x30e>
+    40005bec:	d000003b 	adrp	x27, 4000b000 <plat_power_domain_tree_desc+0x30e>
     40005bf0:	94000111 	bl	40006034 <psci_find_max_off_lvl>
-    40005bf4:	911942d6 	add	x22, x22, #0x650
+    40005bf4:	911962d6 	add	x22, x22, #0x658
     40005bf8:	2a0003f8 	mov	w24, w0
-    40005bfc:	9119437b 	add	x27, x27, #0x650
+    40005bfc:	9119637b 	add	x27, x27, #0x658
     40005c00:	eb1b02df 	cmp	x22, x27
     40005c04:	540004c3 	b.cc	40005c9c <psci_cpu_suspend_start+0x148>  // b.lo, b.ul, b.last
     40005c08:	d53ed040 	mrs	x0, tpidr_el3
@@ -7348,7 +7348,7 @@ Disassembly of section .text:
     40005e04:	d63f0020 	blr	x1
     40005e08:	b0000020 	adrp	x0, 4000a000 <__TEXT_END__>
     40005e0c:	528006c1 	mov	w1, #0x36                  	// #54
-    40005e10:	912ca800 	add	x0, x0, #0xb2a
+    40005e10:	912cc400 	add	x0, x0, #0xb31
     40005e14:	97ffe8f3 	bl	400001e0 <__assert>
     40005e18:	f9400401 	ldr	x1, [x0, #8]
     40005e1c:	b4fffb61 	cbz	x1, 40005d88 <psci_do_cpu_off+0x60>
@@ -7382,7 +7382,7 @@ Disassembly of section .text:
     40005e7c:	540000a9 	b.ls	40005e90 <psci_do_state_coordination+0x40>  // b.plast
     40005e80:	b0000020 	adrp	x0, 4000a000 <__TEXT_END__>
     40005e84:	52803581 	mov	w1, #0x1ac                 	// #428
-    40005e88:	91273800 	add	x0, x0, #0x9ce
+    40005e88:	91275400 	add	x0, x0, #0x9d5
     40005e8c:	97ffe8d5 	bl	400001e0 <__assert>
     40005e90:	2a0003f7 	mov	w23, w0
     40005e94:	90000056 	adrp	x22, 4000d000 <__STACKS_START__+0xf80>
@@ -7633,7 +7633,7 @@ Disassembly of section .text:
     40006230:	17fffff2 	b	400061f8 <psci_is_last_on_cpu+0x24>
     40006234:	90000020 	adrp	x0, 4000a000 <__TEXT_END__>
     40006238:	52801521 	mov	w1, #0xa9                  	// #169
-    4000623c:	91273800 	add	x0, x0, #0x9ce
+    4000623c:	91275400 	add	x0, x0, #0x9d5
     40006240:	97ffe7e8 	bl	400001e0 <__assert>
     40006244:	2a1303e0 	mov	w0, w19
     40006248:	97ffe842 	bl	40000350 <_cpu_data_by_index>
@@ -7652,7 +7652,7 @@ Disassembly of section .text:
     40006274:	b50000a4 	cbnz	x4, 40006288 <psci_mem_chk_range+0x28>
     40006278:	90000020 	adrp	x0, 4000a000 <__TEXT_END__>
     4000627c:	52800421 	mov	w1, #0x21                  	// #33
-    40006280:	912c3800 	add	x0, x0, #0xb0e
+    40006280:	912c5400 	add	x0, x0, #0xb15
     40006284:	97ffe7d7 	bl	400001e0 <__assert>
     40006288:	b5000081 	cbnz	x1, 40006298 <psci_mem_chk_range+0x38>
     4000628c:	92800040 	mov	x0, #0xfffffffffffffffd    	// #-3
@@ -7677,7 +7677,7 @@ Disassembly of section .text:
     400062d0:	b50000a1 	cbnz	x1, 400062e4 <psci_mem_protect+0x30>
     400062d4:	52800241 	mov	w1, #0x12                  	// #18
     400062d8:	90000020 	adrp	x0, 4000a000 <__TEXT_END__>
-    400062dc:	912c3800 	add	x0, x0, #0xb0e
+    400062dc:	912c5400 	add	x0, x0, #0xb15
     400062e0:	97ffe7c0 	bl	400001e0 <__assert>
     400062e4:	f9404c00 	ldr	x0, [x0, #152]
     400062e8:	b5000060 	cbnz	x0, 400062f4 <psci_mem_protect+0x40>
@@ -7728,7 +7728,7 @@ Disassembly of section .text:
     40006394:	b50000a2 	cbnz	x2, 400063a8 <psci_migrate+0x74>
     40006398:	528022e1 	mov	w1, #0x117                 	// #279
     4000639c:	90000020 	adrp	x0, 4000a000 <__TEXT_END__>
-    400063a0:	912a9800 	add	x0, x0, #0xaa6
+    400063a0:	912ab400 	add	x0, x0, #0xaad
     400063a4:	97ffe78f 	bl	400001e0 <__assert>
     400063a8:	d53800a0 	mrs	x0, mpidr_el1
     400063ac:	aa1303e1 	mov	x1, x19
@@ -7779,7 +7779,7 @@ Disassembly of section .text:
     40006448:	b50000a2 	cbnz	x2, 4000645c <psci_node_hw_state+0x44>
     4000644c:	52802901 	mov	w1, #0x148                 	// #328
     40006450:	90000020 	adrp	x0, 4000a000 <__TEXT_END__>
-    40006454:	912a9800 	add	x0, x0, #0xaa6
+    40006454:	912ab400 	add	x0, x0, #0xaad
     40006458:	97ffe762 	bl	400001e0 <__assert>
     4000645c:	2a1303e1 	mov	w1, w19
     40006460:	aa1403e0 	mov	x0, x20
@@ -7799,7 +7799,7 @@ Disassembly of section .text:
 0000000040006494 <psci_print_power_domain_map>:
     40006494:	a9bb7bfd 	stp	x29, x30, [sp, #-80]!
     40006498:	90000020 	adrp	x0, 4000a000 <__TEXT_END__>
-    4000649c:	91281c00 	add	x0, x0, #0xa07
+    4000649c:	91283800 	add	x0, x0, #0xa0e
     400064a0:	910003fd 	mov	x29, sp
     400064a4:	a90153f3 	stp	x19, x20, [sp, #16]
     400064a8:	90000073 	adrp	x19, 40012000 <psci_locks>
@@ -7823,7 +7823,7 @@ Disassembly of section .text:
     400064f0:	90000037 	adrp	x23, 4000a000 <__TEXT_END__>
     400064f4:	91302273 	add	x19, x19, #0xc08
     400064f8:	910662d6 	add	x22, x22, #0x198
-    400064fc:	912972f7 	add	x23, x23, #0xa5c
+    400064fc:	91298ef7 	add	x23, x23, #0xa63
     40006500:	52800015 	mov	w21, #0x0                   	// #0
     40006504:	b9400280 	ldr	w0, [x20]
     40006508:	6b15001f 	cmp	w0, w21
@@ -7845,7 +7845,7 @@ Disassembly of section .text:
     40006548:	91004273 	add	x19, x19, #0x10
     4000654c:	f8607ac3 	ldr	x3, [x22, x0, lsl #3]
     40006550:	90000020 	adrp	x0, 4000a000 <__TEXT_END__>
-    40006554:	91288000 	add	x0, x0, #0xa20
+    40006554:	91289c00 	add	x0, x0, #0xa27
     40006558:	94000699 	bl	40007fbc <tf_log>
     4000655c:	17ffffdf 	b	400064d8 <psci_print_power_domain_map+0x44>
     40006560:	d2800000 	mov	x0, #0x0                   	// #0
@@ -7883,7 +7883,7 @@ Disassembly of section .text:
     400065d8:	90000020 	adrp	x0, 4000a000 <__TEXT_END__>
     400065dc:	52801281 	mov	w1, #0x94                  	// #148
     400065e0:	910003fd 	mov	x29, sp
-    400065e4:	91273800 	add	x0, x0, #0x9ce
+    400065e4:	91275400 	add	x0, x0, #0x9d5
     400065e8:	97ffe6fe 	bl	400001e0 <__assert>
     400065ec:	aa0103f0 	mov	x16, x1
     400065f0:	d61f0200 	br	x16
@@ -7960,7 +7960,7 @@ Disassembly of section .text:
     400066f4:	90000020 	adrp	x0, 4000a000 <__TEXT_END__>
     400066f8:	52801a61 	mov	w1, #0xd3                  	// #211
     400066fc:	910003fd 	mov	x29, sp
-    40006700:	91273800 	add	x0, x0, #0x9ce
+    40006700:	91275400 	add	x0, x0, #0x9d5
     40006704:	97ffe6b7 	bl	400001e0 <__assert>
     40006708:	51000400 	sub	w0, w0, #0x1
     4000670c:	7100041f 	cmp	w0, #0x1
@@ -7997,7 +7997,7 @@ Disassembly of section .text:
     40006780:	b50000a0 	cbnz	x0, 40006794 <psci_setup+0x58>
     40006784:	528019c1 	mov	w1, #0xce                  	// #206
     40006788:	90000020 	adrp	x0, 4000a000 <__TEXT_END__>
-    4000678c:	912d4400 	add	x0, x0, #0xb51
+    4000678c:	912d6000 	add	x0, x0, #0xb58
     40006790:	97ffe694 	bl	400001e0 <__assert>
     40006794:	97fffb90 	bl	400055d4 <psci_arch_setup>
     40006798:	f000003b 	adrp	x27, 4000d000 <__STACKS_START__+0xf80>
@@ -8294,7 +8294,7 @@ Disassembly of section .text:
     40006c1c:	14000057 	b	40006d78 <psci_system_reset2>
     40006c20:	2a0403e1 	mov	w1, w4
     40006c24:	90000020 	adrp	x0, 4000a000 <__TEXT_END__>
-    40006c28:	912bb800 	add	x0, x0, #0xaee
+    40006c28:	912bd400 	add	x0, x0, #0xaf5
     40006c2c:	940004e4 	bl	40007fbc <tf_log>
     40006c30:	92800000 	mov	x0, #0xffffffffffffffff    	// #-1
     40006c34:	a8c17bfd 	ldp	x29, x30, [sp], #16
@@ -8328,7 +8328,7 @@ Disassembly of section .text:
     40006c9c:	540000e9 	b.ls	40006cb8 <psci_spd_migrate_info+0x44>  // b.plast
     40006ca0:	90000020 	adrp	x0, 4000a000 <__TEXT_END__>
     40006ca4:	52806e21 	mov	w1, #0x371                 	// #881
-    40006ca8:	91273800 	add	x0, x0, #0x9ce
+    40006ca8:	91275400 	add	x0, x0, #0x9d5
     40006cac:	97ffe54d 	bl	400001e0 <__assert>
     40006cb0:	12800000 	mov	w0, #0xffffffff            	// #-1
     40006cb4:	d65f03c0 	ret
@@ -8346,7 +8346,7 @@ Disassembly of section .text:
     40006cdc:	b50000a1 	cbnz	x1, 40006cf0 <psci_system_off+0x30>
     40006ce0:	90000020 	adrp	x0, 4000a000 <__TEXT_END__>
     40006ce4:	528002a1 	mov	w1, #0x15                  	// #21
-    40006ce8:	912dfc00 	add	x0, x0, #0xb7f
+    40006ce8:	912e1800 	add	x0, x0, #0xb86
     40006cec:	97ffe53d 	bl	400001e0 <__assert>
     40006cf0:	aa0003f3 	mov	x19, x0
     40006cf4:	f0000020 	adrp	x0, 4000d000 <__STACKS_START__+0xf80>
@@ -8371,7 +8371,7 @@ Disassembly of section .text:
     40006d38:	b50000a1 	cbnz	x1, 40006d4c <psci_system_reset+0x30>
     40006d3c:	90000020 	adrp	x0, 4000a000 <__TEXT_END__>
     40006d40:	52800501 	mov	w1, #0x28                  	// #40
-    40006d44:	912dfc00 	add	x0, x0, #0xb7f
+    40006d44:	912e1800 	add	x0, x0, #0xb86
     40006d48:	97ffe526 	bl	400001e0 <__assert>
     40006d4c:	aa0003f3 	mov	x19, x0
     40006d50:	f0000020 	adrp	x0, 4000d000 <__STACKS_START__+0xf80>
@@ -8399,7 +8399,7 @@ Disassembly of section .text:
     40006da0:	b50000a1 	cbnz	x1, 40006db4 <psci_system_reset2+0x3c>
     40006da4:	90000020 	adrp	x0, 4000a000 <__TEXT_END__>
     40006da8:	528007a1 	mov	w1, #0x3d                  	// #61
-    40006dac:	912dfc00 	add	x0, x0, #0xb7f
+    40006dac:	912e1800 	add	x0, x0, #0xb86
     40006db0:	97ffe50c 	bl	400001e0 <__assert>
     40006db4:	aa0203f4 	mov	x20, x2
     40006db8:	531f7e76 	lsr	w22, w19, #31
@@ -8466,7 +8466,7 @@ Disassembly of section .text:
     40006ea4:	340000a0 	cbz	w0, 40006eb8 <psci_system_suspend+0x84>
     40006ea8:	52801681 	mov	w1, #0xb4                  	// #180
     40006eac:	90000020 	adrp	x0, 4000a000 <__TEXT_END__>
-    40006eb0:	912a9800 	add	x0, x0, #0xaa6
+    40006eb0:	912ab400 	add	x0, x0, #0xaad
     40006eb4:	97ffe4cb 	bl	400001e0 <__assert>
     40006eb8:	39408be1 	ldrb	w1, [sp, #34]
     40006ebc:	7100083f 	cmp	w1, #0x2
@@ -8564,7 +8564,7 @@ Disassembly of section .text:
     40007014:	f0000000 	adrp	x0, 4000a000 <__TEXT_END__>
     40007018:	52801081 	mov	w1, #0x84                  	// #132
     4000701c:	910003fd 	mov	x29, sp
-    40007020:	91273800 	add	x0, x0, #0x9ce
+    40007020:	91275400 	add	x0, x0, #0x9d5
     40007024:	97ffe46f 	bl	400001e0 <__assert>
     40007028:	aa0203f0 	mov	x16, x2
     4000702c:	d61f0200 	br	x16
@@ -8627,7 +8627,7 @@ Disassembly of section .text:
     40007100:	7100041f 	cmp	w0, #0x1
     40007104:	540000c1 	b.ne	4000711c <psci_warmboot_entrypoint+0x44>  // b.any
     40007108:	f0000000 	adrp	x0, 4000a000 <__TEXT_END__>
-    4000710c:	91279400 	add	x0, x0, #0x9e5
+    4000710c:	9127b000 	add	x0, x0, #0x9ec
     40007110:	940003ab 	bl	40007fbc <tf_log>
     40007114:	97ffece8 	bl	400024b4 <console_flush>
     40007118:	97ffe650 	bl	40000a58 <do_panic>
@@ -8639,7 +8639,7 @@ Disassembly of section .text:
     40007130:	540000c9 	b.ls	40007148 <psci_warmboot_entrypoint+0x70>  // b.plast
     40007134:	f0000000 	adrp	x0, 4000a000 <__TEXT_END__>
     40007138:	528018c1 	mov	w1, #0xc6                  	// #198
-    4000713c:	91273800 	add	x0, x0, #0x9ce
+    4000713c:	91275400 	add	x0, x0, #0x9d5
     40007140:	97ffe428 	bl	400001e0 <__assert>
     40007144:	52800053 	mov	w19, #0x2                   	// #2
     40007148:	9100a3e2 	add	x2, sp, #0x28
@@ -8699,7 +8699,7 @@ Disassembly of section .text:
     40007210:	52801001 	mov	w1, #0x80                  	// #128
     40007214:	b9000001 	str	w1, [x0]
     40007218:	f0000000 	adrp	x0, 4000a000 <__TEXT_END__>
-    4000721c:	91206800 	add	x0, x0, #0x81a
+    4000721c:	91208400 	add	x0, x0, #0x821
     40007220:	14000066 	b	400073b8 <rsb_wait_stat>
 
 0000000040007224 <rsb_init>:
@@ -8733,7 +8733,7 @@ Disassembly of section .text:
     40007288:	52800001 	mov	w1, #0x0                   	// #0
     4000728c:	b9000002 	str	w2, [x0]
     40007290:	f0000000 	adrp	x0, 4000a000 <__TEXT_END__>
-    40007294:	911f2000 	add	x0, x0, #0x7c8
+    40007294:	911f3c00 	add	x0, x0, #0x7cf
     40007298:	14000033 	b	40007364 <rsb_wait_bit>
 
 000000004000729c <rsb_read>:
@@ -8754,7 +8754,7 @@ Disassembly of section .text:
     400072d4:	52801001 	mov	w1, #0x80                  	// #128
     400072d8:	b9000001 	str	w1, [x0]
     400072dc:	f0000000 	adrp	x0, 4000a000 <__TEXT_END__>
-    400072e0:	911f7800 	add	x0, x0, #0x7de
+    400072e0:	911f9400 	add	x0, x0, #0x7e5
     400072e4:	94000035 	bl	400073b8 <rsb_wait_stat>
     400072e8:	350000a0 	cbnz	w0, 400072fc <rsb_read+0x60>
     400072ec:	d2860380 	mov	x0, #0x301c                	// #12316
@@ -8789,7 +8789,7 @@ Disassembly of section .text:
     40007350:	b9000020 	str	w0, [x1]
     40007354:	52800501 	mov	w1, #0x28                  	// #40
     40007358:	f0000000 	adrp	x0, 4000a000 <__TEXT_END__>
-    4000735c:	91200c00 	add	x0, x0, #0x803
+    4000735c:	91202800 	add	x0, x0, #0x80a
     40007360:	14000001 	b	40007364 <rsb_wait_bit>
 
 0000000040007364 <rsb_wait_bit>:
@@ -8807,7 +8807,7 @@ Disassembly of section .text:
     40007390:	aa0003e1 	mov	x1, x0
     40007394:	f0000000 	adrp	x0, 4000a000 <__TEXT_END__>
     40007398:	910003fd 	mov	x29, sp
-    4000739c:	911eb400 	add	x0, x0, #0x7ad
+    4000739c:	911ed000 	add	x0, x0, #0x7b4
     400073a0:	94000307 	bl	40007fbc <tf_log>
     400073a4:	12800760 	mov	w0, #0xffffffc4            	// #-60
     400073a8:	a8c17bfd 	ldp	x29, x30, [sp], #16
@@ -8832,7 +8832,7 @@ Disassembly of section .text:
     400073ec:	2a1303e2 	mov	w2, w19
     400073f0:	aa1403e1 	mov	x1, x20
     400073f4:	f0000000 	adrp	x0, 4000a000 <__TEXT_END__>
-    400073f8:	911ef400 	add	x0, x0, #0x7bd
+    400073f8:	911f1000 	add	x0, x0, #0x7c4
     400073fc:	940002f0 	bl	40007fbc <tf_log>
     40007400:	4b1303e0 	neg	w0, w19
     40007404:	a94153f3 	ldp	x19, x20, [sp, #16]
@@ -8857,19 +8857,19 @@ Disassembly of section .text:
     40007448:	f2a0e100 	movk	x0, #0x708, lsl #16
     4000744c:	b9000001 	str	w1, [x0]
     40007450:	f0000000 	adrp	x0, 4000a000 <__TEXT_END__>
-    40007454:	911fc000 	add	x0, x0, #0x7f0
+    40007454:	911fdc00 	add	x0, x0, #0x7f7
     40007458:	17ffffd8 	b	400073b8 <rsb_wait_stat>
 
 000000004000745c <runtime_svc_init>:
     4000745c:	a9bb7bfd 	stp	x29, x30, [sp, #-80]!
     40007460:	910003fd 	mov	x29, sp
     40007464:	a90153f3 	stp	x19, x20, [sp, #16]
-    40007468:	90000033 	adrp	x19, 4000b000 <plat_power_domain_tree_desc+0x315>
-    4000746c:	9117c273 	add	x19, x19, #0x5f0
+    40007468:	90000033 	adrp	x19, 4000b000 <plat_power_domain_tree_desc+0x30e>
+    4000746c:	9117e273 	add	x19, x19, #0x5f8
     40007470:	a9025bf5 	stp	x21, x22, [sp, #32]
     40007474:	a90363f7 	stp	x23, x24, [sp, #48]
-    40007478:	90000038 	adrp	x24, 4000b000 <plat_power_domain_tree_desc+0x315>
-    4000747c:	9116c318 	add	x24, x24, #0x5b0
+    40007478:	90000038 	adrp	x24, 4000b000 <plat_power_domain_tree_desc+0x30e>
+    4000747c:	9116e318 	add	x24, x24, #0x5b8
     40007480:	f90023f9 	str	x25, [sp, #64]
     40007484:	eb18027f 	cmp	x19, x24
     40007488:	54000083 	b.cc	40007498 <runtime_svc_init+0x3c>  // b.lo, b.ul, b.last
@@ -8878,13 +8878,13 @@ Disassembly of section .text:
     40007494:	540000a9 	b.ls	400074a8 <runtime_svc_init+0x4c>  // b.plast
     40007498:	52800c21 	mov	w1, #0x61                  	// #97
     4000749c:	f0000000 	adrp	x0, 4000a000 <__TEXT_END__>
-    400074a0:	9115c800 	add	x0, x0, #0x572
+    400074a0:	9115e400 	add	x0, x0, #0x579
     400074a4:	97ffe34f 	bl	400001e0 <__assert>
     400074a8:	f1007e7f 	cmp	x19, #0x1f
     400074ac:	540001a9 	b.ls	400074e0 <runtime_svc_init+0x84>  // b.plast
     400074b0:	f0000017 	adrp	x23, 4000a000 <__TEXT_END__>
     400074b4:	d345fe74 	lsr	x20, x19, #5
-    400074b8:	9116bef7 	add	x23, x23, #0x5af
+    400074b8:	9116daf7 	add	x23, x23, #0x5b6
     400074bc:	52800015 	mov	w21, #0x0                   	// #0
     400074c0:	d0000036 	adrp	x22, 4000d000 <__STACKS_START__+0xf80>
     400074c4:	913b32d6 	add	x22, x22, #0xecc
@@ -8917,7 +8917,7 @@ Disassembly of section .text:
     40007530:	b50001e0 	cbnz	x0, 4000756c <runtime_svc_init+0x110>
     40007534:	aa1303e1 	mov	x1, x19
     40007538:	f0000000 	adrp	x0, 4000a000 <__TEXT_END__>
-    4000753c:	91161c00 	add	x0, x0, #0x587
+    4000753c:	91163800 	add	x0, x0, #0x58e
     40007540:	9400029f 	bl	40007fbc <tf_log>
     40007544:	97ffebdc 	bl	400024b4 <console_flush>
     40007548:	97ffe544 	bl	40000a58 <do_panic>
@@ -8957,7 +8957,7 @@ Disassembly of section .text:
     400075c8:	540000a1 	b.ne	400075dc <setup_mmu_cfg+0x28>  // b.any
     400075cc:	528020e1 	mov	w1, #0x107                 	// #263
     400075d0:	f0000000 	adrp	x0, 4000a000 <__TEXT_END__>
-    400075d4:	913e0800 	add	x0, x0, #0xf82
+    400075d4:	913e2400 	add	x0, x0, #0xf89
     400075d8:	97ffe302 	bl	400001e0 <__assert>
     400075dc:	2a0103e6 	mov	w6, w1
     400075e0:	91000493 	add	x19, x4, #0x1
@@ -9024,7 +9024,7 @@ Disassembly of section .text:
     400076cc:	b50000a0 	cbnz	x0, 400076e0 <std_svc_setup+0x24>
     400076d0:	f0000000 	adrp	x0, 4000a000 <__TEXT_END__>
     400076d4:	52800581 	mov	w1, #0x2c                  	// #44
-    400076d8:	91398c00 	add	x0, x0, #0xe63
+    400076d8:	9139a800 	add	x0, x0, #0xe6a
     400076dc:	97ffe2c1 	bl	400001e0 <__assert>
     400076e0:	97fffc17 	bl	4000673c <psci_setup>
     400076e4:	7100001f 	cmp	w0, #0x0
@@ -9312,9 +9312,9 @@ Disassembly of section .text:
     40007afc:	54000960 	b.eq	40007c28 <sunxi_init_platform_r_twi+0x14c>  // b.none
     40007b00:	a9bf7bfd 	stp	x29, x30, [sp, #-16]!
     40007b04:	2a0003e1 	mov	w1, w0
-    40007b08:	90000020 	adrp	x0, 4000b000 <plat_power_domain_tree_desc+0x315>
+    40007b08:	90000020 	adrp	x0, 4000b000 <plat_power_domain_tree_desc+0x30e>
     40007b0c:	910003fd 	mov	x29, sp
-    40007b10:	9101e400 	add	x0, x0, #0x79
+    40007b10:	91020000 	add	x0, x0, #0x80
     40007b14:	9400012a 	bl	40007fbc <tf_log>
     40007b18:	12800240 	mov	w0, #0xffffffed            	// #-19
     40007b1c:	a8c17bfd 	ldp	x29, x30, [sp], #16
@@ -9404,7 +9404,7 @@ Disassembly of section .text:
     40007c64:	12003c13 	and	w19, w0, #0xffff
     40007c68:	aa0103f4 	mov	x20, x1
     40007c6c:	f0000000 	adrp	x0, 4000a000 <__TEXT_END__>
-    40007c70:	9136a400 	add	x0, x0, #0xda9
+    40007c70:	9136c000 	add	x0, x0, #0xdb0
     40007c74:	940000d2 	bl	40007fbc <tf_log>
     40007c78:	2a1303e0 	mov	w0, w19
     40007c7c:	52800021 	mov	w1, #0x1                   	// #1
@@ -9413,7 +9413,7 @@ Disassembly of section .text:
     40007c88:	2a0003f3 	mov	w19, w0
     40007c8c:	2a0003e1 	mov	w1, w0
     40007c90:	f0000000 	adrp	x0, 4000a000 <__TEXT_END__>
-    40007c94:	91371c00 	add	x0, x0, #0xdc7
+    40007c94:	91373800 	add	x0, x0, #0xdce
     40007c98:	940000c9 	bl	40007fbc <tf_log>
     40007c9c:	2a1303e0 	mov	w0, w19
     40007ca0:	a94153f3 	ldp	x19, x20, [sp, #16]
@@ -9424,7 +9424,7 @@ Disassembly of section .text:
     40007cb4:	340000a0 	cbz	w0, 40007cc8 <sunxi_pmic_setup+0x70>
     40007cb8:	2a0003e1 	mov	w1, w0
     40007cbc:	f0000000 	adrp	x0, 4000a000 <__TEXT_END__>
-    40007cc0:	9137a400 	add	x0, x0, #0xde9
+    40007cc0:	9137c000 	add	x0, x0, #0xdf0
     40007cc4:	17fffff5 	b	40007c98 <sunxi_pmic_setup+0x40>
     40007cc8:	52800021 	mov	w1, #0x1                   	// #1
     40007ccc:	d0000020 	adrp	x0, 4000d000 <__STACKS_START__+0xf80>
@@ -9467,19 +9467,19 @@ Disassembly of section .text:
     40007d50:	36f800e0 	tbz	w0, #31, 40007d6c <sunxi_prepare_dtb+0x4c>
     40007d54:	f0000000 	adrp	x0, 4000a000 <__TEXT_END__>
     40007d58:	aa1303e1 	mov	x1, x19
-    40007d5c:	9133b800 	add	x0, x0, #0xcee
+    40007d5c:	9133d400 	add	x0, x0, #0xcf5
     40007d60:	f9400bf3 	ldr	x19, [sp, #16]
     40007d64:	a8c27bfd 	ldp	x29, x30, [sp], #32
     40007d68:	14000095 	b	40007fbc <tf_log>
     40007d6c:	f0000001 	adrp	x1, 4000a000 <__TEXT_END__>
     40007d70:	aa1303e0 	mov	x0, x19
-    40007d74:	91345421 	add	x1, x1, #0xd15
+    40007d74:	91347021 	add	x1, x1, #0xd1c
     40007d78:	d2a00083 	mov	x3, #0x40000               	// #262144
     40007d7c:	d2a80002 	mov	x2, #0x40000000            	// #1073741824
     40007d80:	97ffeb24 	bl	40002a10 <fdt_add_reserved_memory>
     40007d84:	340000c0 	cbz	w0, 40007d9c <sunxi_prepare_dtb+0x7c>
     40007d88:	f0000000 	adrp	x0, 4000a000 <__TEXT_END__>
-    40007d8c:	91348c00 	add	x0, x0, #0xd23
+    40007d8c:	9134a800 	add	x0, x0, #0xd2a
     40007d90:	f9400bf3 	ldr	x19, [sp, #16]
     40007d94:	a8c27bfd 	ldp	x29, x30, [sp], #32
     40007d98:	14000089 	b	40007fbc <tf_log>
@@ -9489,7 +9489,7 @@ Disassembly of section .text:
     40007da8:	36f800a0 	tbz	w0, #31, 40007dbc <sunxi_prepare_dtb+0x9c>
     40007dac:	f0000000 	adrp	x0, 4000a000 <__TEXT_END__>
     40007db0:	aa1303e1 	mov	x1, x19
-    40007db4:	91354000 	add	x0, x0, #0xd50
+    40007db4:	91355c00 	add	x0, x0, #0xd57
     40007db8:	17ffffea 	b	40007d60 <sunxi_prepare_dtb+0x40>
     40007dbc:	b9400660 	ldr	w0, [x19, #4]
     40007dc0:	d3505c02 	ubfx	x2, x0, #16, #8
@@ -9502,7 +9502,7 @@ Disassembly of section .text:
     40007ddc:	aa1303e0 	mov	x0, x19
     40007de0:	97ffe1da 	bl	40000548 <clean_dcache_range>
     40007de4:	f0000000 	adrp	x0, 4000a000 <__TEXT_END__>
-    40007de8:	9135f000 	add	x0, x0, #0xd7c
+    40007de8:	91360c00 	add	x0, x0, #0xd83
     40007dec:	17ffffe9 	b	40007d90 <sunxi_prepare_dtb+0x70>
     40007df0:	f9400bf3 	ldr	x19, [sp, #16]
     40007df4:	a8c27bfd 	ldp	x29, x30, [sp], #32
@@ -9546,7 +9546,7 @@ Disassembly of section .text:
 0000000040007e68 <sunxi_security_setup>:
     40007e68:	a9bf7bfd 	stp	x29, x30, [sp, #-16]!
     40007e6c:	f0000000 	adrp	x0, 4000a000 <__TEXT_END__>
-    40007e70:	91333800 	add	x0, x0, #0xcce
+    40007e70:	91335400 	add	x0, x0, #0xcd5
     40007e74:	910003fd 	mov	x29, sp
     40007e78:	94000051 	bl	40007fbc <tf_log>
     40007e7c:	d2900080 	mov	x0, #0x8004                	// #32772
@@ -9599,7 +9599,7 @@ Disassembly of section .text:
     40007f20:	52807d00 	mov	w0, #0x3e8                 	// #1000
     40007f24:	97fff3aa 	bl	40004dcc <mdelay>
     40007f28:	f0000000 	adrp	x0, 4000a000 <__TEXT_END__>
-    40007f2c:	9131c800 	add	x0, x0, #0xc72
+    40007f2c:	9131e400 	add	x0, x0, #0xc79
     40007f30:	94000023 	bl	40007fbc <tf_log>
     40007f34:	97ffe960 	bl	400024b4 <console_flush>
     40007f38:	97ffe2c8 	bl	40000a58 <do_panic>
@@ -9618,7 +9618,7 @@ Disassembly of section .text:
     40007f5c:	f0000000 	adrp	x0, 4000a000 <__TEXT_END__>
     40007f60:	52800ac1 	mov	w1, #0x56                  	// #86
     40007f64:	910003fd 	mov	x29, sp
-    40007f68:	913e0800 	add	x0, x0, #0xf82
+    40007f68:	913e2400 	add	x0, x0, #0xf89
     40007f6c:	97ffe09d 	bl	400001e0 <__assert>
     40007f70:	f2540c1f 	tst	x0, #0xf00000000000
     40007f74:	54000141 	b.ne	40007f9c <tcr_physical_addr_size_bits+0x4c>  // b.any
@@ -9655,7 +9655,7 @@ Disassembly of section .text:
     40007fe8:	540000a9 	b.ls	40007ffc <tf_log+0x40>  // b.plast
     40007fec:	52800441 	mov	w1, #0x22                  	// #34
     40007ff0:	f0000000 	adrp	x0, 4000a000 <__TEXT_END__>
-    40007ff4:	913ae000 	add	x0, x0, #0xeb8
+    40007ff4:	913afc00 	add	x0, x0, #0xebf
     40007ff8:	97ffe07a 	bl	400001e0 <__assert>
     40007ffc:	52800142 	mov	w2, #0xa                   	// #10
     40008000:	1ac20801 	udiv	w1, w0, w2
@@ -9701,7 +9701,7 @@ Disassembly of section .text:
     40008098:	540000a9 	b.ls	400080ac <tf_log_newline+0x28>  // b.plast
     4000809c:	52800721 	mov	w1, #0x39                  	// #57
     400080a0:	d0000000 	adrp	x0, 4000a000 <__TEXT_END__>
-    400080a4:	913ae000 	add	x0, x0, #0xeb8
+    400080a4:	913afc00 	add	x0, x0, #0xebf
     400080a8:	97ffe04e 	bl	400001e0 <__assert>
     400080ac:	52800140 	mov	w0, #0xa                   	// #10
     400080b0:	1ac00822 	udiv	w2, w1, w0
@@ -9730,7 +9730,7 @@ Disassembly of section .text:
     40008104:	d0000000 	adrp	x0, 4000a000 <__TEXT_END__>
     40008108:	52800981 	mov	w1, #0x4c                  	// #76
     4000810c:	910003fd 	mov	x29, sp
-    40008110:	91225800 	add	x0, x0, #0x896
+    40008110:	91227400 	add	x0, x0, #0x89d
     40008114:	97ffe033 	bl	400001e0 <__assert>
     40008118:	b0000021 	adrp	x1, 4000d000 <__STACKS_START__+0xf80>
     4000811c:	f905f820 	str	x0, [x1, #3056]
@@ -9753,7 +9753,7 @@ Disassembly of section .text:
     40008158:	b50000a0 	cbnz	x0, 4000816c <udelay+0x48>
     4000815c:	52800321 	mov	w1, #0x19                  	// #25
     40008160:	d0000000 	adrp	x0, 4000a000 <__TEXT_END__>
-    40008164:	91225800 	add	x0, x0, #0x896
+    40008164:	91227400 	add	x0, x0, #0x89d
     40008168:	97ffe01e 	bl	400001e0 <__assert>
     4000816c:	d63f0000 	blr	x0
     40008170:	2a0003f4 	mov	w20, w0
@@ -9938,9 +9938,9 @@ Disassembly of section .text:
     4000842c:	927df318 	and	x24, x24, #0xfffffffffffffff8
     40008430:	f9400260 	ldr	x0, [x19]
     40008434:	b50002e0 	cbnz	x0, 40008490 <vprintf+0x1f4>
-    40008438:	f0000000 	adrp	x0, 4000b000 <plat_power_domain_tree_desc+0x315>
+    40008438:	f0000000 	adrp	x0, 4000b000 <plat_power_domain_tree_desc+0x30e>
     4000843c:	52800381 	mov	w1, #0x1c                  	// #28
-    40008440:	91166000 	add	x0, x0, #0x598
+    40008440:	91167c00 	add	x0, x0, #0x59f
     40008444:	97ffdf67 	bl	400001e0 <__assert>
     40008448:	1100229c 	add	w28, w20, #0x8
     4000844c:	7100039f 	cmp	w28, #0x0
@@ -9997,9 +9997,9 @@ Disassembly of section .text:
     40008518:	0b0102b5 	add	w21, w21, w1
     4000851c:	51000b18 	sub	w24, w24, #0x2
     40008520:	17ffffe5 	b	400084b4 <vprintf+0x218>
-    40008524:	f0000014 	adrp	x20, 4000b000 <plat_power_domain_tree_desc+0x315>
+    40008524:	f0000014 	adrp	x20, 4000b000 <plat_power_domain_tree_desc+0x30e>
     40008528:	d2800013 	mov	x19, #0x0                   	// #0
-    4000852c:	9116a694 	add	x20, x20, #0x5a9
+    4000852c:	9116c294 	add	x20, x20, #0x5b0
     40008530:	17fffff6 	b	40008508 <vprintf+0x26c>
     40008534:	7100043f 	cmp	w1, #0x1
     40008538:	540001cd 	b.le	40008570 <vprintf+0x2d4>
@@ -10106,7 +10106,7 @@ Disassembly of section .text:
     400086c4:	d0000000 	adrp	x0, 4000a000 <__TEXT_END__>
     400086c8:	52801e41 	mov	w1, #0xf2                  	// #242
     400086cc:	910003fd 	mov	x29, sp
-    400086d0:	913e0800 	add	x0, x0, #0xf82
+    400086d0:	913e2400 	add	x0, x0, #0xf89
     400086d4:	97ffdec3 	bl	400001e0 <__assert>
     400086d8:	d65f03c0 	ret
 
@@ -10119,7 +10119,7 @@ Disassembly of section .text:
     400086f0:	d0000000 	adrp	x0, 4000a000 <__TEXT_END__>
     400086f4:	52800fe1 	mov	w1, #0x7f                  	// #127
     400086f8:	910003fd 	mov	x29, sp
-    400086fc:	913e0800 	add	x0, x0, #0xf82
+    400086fc:	913e2400 	add	x0, x0, #0xf89
     40008700:	97ffdeb8 	bl	400001e0 <__assert>
     40008704:	d0000001 	adrp	x1, 4000a000 <__TEXT_END__>
     40008708:	910df021 	add	x1, x1, #0x37c
@@ -10147,7 +10147,7 @@ Disassembly of section .text:
     40008750:	d0000000 	adrp	x0, 4000a000 <__TEXT_END__>
     40008754:	528016a1 	mov	w1, #0xb5                  	// #181
     40008758:	910003fd 	mov	x29, sp
-    4000875c:	913e0800 	add	x0, x0, #0xf82
+    4000875c:	913e2400 	add	x0, x0, #0xf89
     40008760:	97ffdea0 	bl	400001e0 <__assert>
     40008764:	d2e00c00 	mov	x0, #0x60000000000000      	// #27021597764222976
     40008768:	d65f03c0 	ret
@@ -10168,7 +10168,7 @@ Disassembly of section .text:
     4000879c:	540000a0 	b.eq	400087b0 <xlat_desc+0x44>  // b.none
     400087a0:	52800e61 	mov	w1, #0x73                  	// #115
     400087a4:	d0000000 	adrp	x0, 4000a000 <__TEXT_END__>
-    400087a8:	913f6400 	add	x0, x0, #0xfd9
+    400087a8:	913f8000 	add	x0, x0, #0xfe0
     400087ac:	97ffde8d 	bl	400001e0 <__assert>
     400087b0:	71000c7f 	cmp	w3, #0x3
     400087b4:	d2800073 	mov	x19, #0x3                   	// #3
@@ -10261,7 +10261,7 @@ Disassembly of section .text:
     400088f8:	540000a9 	b.ls	4000890c <xlat_tables_map_region+0x4c>  // b.plast
     400088fc:	52804801 	mov	w1, #0x240                 	// #576
     40008900:	d0000000 	adrp	x0, 4000a000 <__TEXT_END__>
-    40008904:	913f6400 	add	x0, x0, #0xfd9
+    40008904:	913f8000 	add	x0, x0, #0xfe0
     40008908:	97ffde36 	bl	400001e0 <__assert>
     4000890c:	aa0103fc 	mov	x28, x1
     40008910:	12800114 	mov	w20, #0xfffffff7            	// #-9

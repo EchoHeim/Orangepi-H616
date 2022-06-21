@@ -171,6 +171,14 @@ create_board_package()
 		\tOption \t"AccelMethod" "none"
 		EndSection' >> /etc/X11/xorg.conf.d/01-orangepi-defaults.conf
 		EOF
+	elif [[ $RELEASE == bionic && $BOARD == orangepi4 ]]; then
+		cat <<-EOF >> "${destination}"/DEBIAN/postinst
+		# temporally disable acceleration on some arch in Bionic due to broken mesa packages
+		echo 'Section "Device"
+		\tIdentifier \t"Default Device"
+		\tOption \t"AccelMethod" "glamor"
+		EndSection' >> /etc/X11/xorg.conf.d/01-orangepi-defaults.conf
+		EOF
 	fi
 
 	# install bootscripts if they are not present. Fix upgrades from old images

@@ -1,4 +1,4 @@
-/home/lodge/Allwinner/Orangepi-H616/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/bl31.ld: \
+/home/lodge/Allwinner/orangepi-build/external/cache/sources/arm-trusted-firmware-sunxi-mainline/master/build/sun50i_h616/debug/bl31/bl31.ld: \
  bl31/bl31.ld.S include/common/bl_common.ld.h \
  plat/allwinner/common/include/platform_def.h \
  include/common/tbbr/tbbr_img_def.h \

@@ -6,9 +6,12 @@
 # License version 2. This program is licensed "as is" without any
 # warranty of any kind, whether express or implied.
 
+
 # Main program
+#
 
 if [[ $(basename "$0") == main.sh ]]; then
+
 	echo "Please use build.sh to start the build process"
 	exit 255
 fi
@@ -32,7 +35,7 @@ if [[ $BUILD_ALL != "yes" ]]; then
 fi
 
 # We'll use this title on all menus
-
+backtitle="Orange Pi building script, http://www.orangepi.org" 
 titlestr="Choose an option"
 
 # if language not set, set to english
@@ -44,15 +47,25 @@ titlestr="Choose an option"
 [[ -z $FORCE_CHECKOUT ]] && FORCE_CHECKOUT=yes
 
 # Load libraries
-
+# shellcheck source=debootstrap.sh
 source "${SRC}"/scripts/debootstrap.sh	# system specific install
+# shellcheck source=image-helpers.sh
 source "${SRC}"/scripts/image-helpers.sh	# helpers for OS image building
+# shellcheck source=distributions.sh
 source "${SRC}"/scripts/distributions.sh	# system specific install
-# source "${SRC}"/scripts/desktop.sh		# desktop specific install
+# shellcheck source=desktop.sh
+source "${SRC}"/scripts/desktop.sh		# desktop specific install
+# shellcheck source=compilation.sh
 source "${SRC}"/scripts/compilation.sh	# patching and compilation of kernel, uboot, ATF
+# shellcheck source=compilation-prepare.sh
+#source "${SRC}"/scripts/compilation-prepare.sh	# kernel plugins - 3rd party drivers that are not upstreamed. Like WG, AUFS, various Wifi
+# shellcheck source=makeboarddeb.sh
 source "${SRC}"/scripts/makeboarddeb.sh	# create board support package
+# shellcheck source=general.sh
 source "${SRC}"/scripts/general.sh		# general functions
+# shellcheck source=chroot-buildpackages.sh
 source "${SRC}"/scripts/chroot-buildpackages.sh	# building packages in chroot
+# shellcheck source=pack.sh
 source "${SRC}"/scripts/pack-uboot.sh
 
 # compress and remove old logs
@@ -108,9 +121,11 @@ if [[ -z $BUILD_OPT ]]; then
 
 	options+=("u-boot"	 "U-boot package")
 	options+=("kernel"	 "Kernel package")
+	options+=("rootfs"	 "Rootfs and all deb packages")
+	options+=("image"	 "Full OS image for flashing")
 
 	menustr="Compile image | rootfs | kernel | u-boot"
-	BUILD_OPT=$(whiptail --title "${titlestr}" --notags \
+	BUILD_OPT=$(whiptail --title "${titlestr}" --backtitle "${backtitle}" --notags \
 			  --menu "${menustr}" "${TTY_Y}" "${TTY_X}" $((TTY_Y - 8))  \
 			  --cancel-button Exit --ok-button Select "${options[@]}" \
 			  3>&1 1>&2 2>&3)
@@ -119,24 +134,193 @@ if [[ -z $BUILD_OPT ]]; then
 	[[ -z $BUILD_OPT ]] && exit_with_error "No option selected"
 fi
 
-BOARD="orangepizero2"
-BOARD_TYPE="conf"
+if [[ -z $BOARD ]]; then
 
+	# options+=("orangepir1"			"Allwinner H2+ quad core 256MB RAM WiFi SPI 2xETH")
+	# options+=("orangepizero"		"Allwinner H2+ quad core 256MB/512MB RAM WiFi SPI")
+	# options+=("orangepipc"			"Allwinner H3 quad core 1GB RAM")
+	# options+=("orangepipcplus"		"Allwinner H3 quad core 1GB RAM WiFi eMMC")
+	# options+=("orangepione"			"Allwinner H3 quad core 512MB/1GB RAM")
+	# options+=("orangepilite"		"Allwinner H3 quad core 512MB/1GB RAM WiFi")
+	# options+=("orangepiplus"		"Allwinner H3 quad core 1GB/2GB RAM WiFi GBE eMMC")
+	# options+=("orangepiplus2e"		"Allwinner H3 quad core 2GB RAM WiFi GBE eMMC")
+	# options+=("orangepizeroplus2h3" 	"Allwinner H3 quad core 512MB RAM WiFi/BT eMMC")
+	# options+=("orangepipch5"		"Allwinner H5 quad core 1GB RAM")
+	# options+=("orangepipc2"			"Allwinner H5 quad core 1GB RAM GBE SPI")
+	# options+=("orangepioneh5"		"Allwinner H5 quad core 512MB/1GB RAM")
+	# options+=("orangepiprime"		"Allwinner H5 quad core 2GB RAM GBE WiFi/BT")
+	# options+=("orangepizeroplus"		"Allwinner H5 quad core 512MB RAM GBE WiFi SPI")
+	# options+=("orangepizeroplus2h5"		"Allwinner H5 quad core 512MB RAM WiFi/BT eMMC")
+	# options+=("orangepi3"                   "Allwinner H6 quad core 1GB/2GB RAM GBE WiFi/BT-AP6256 eMMC USB3")
+	# options+=("orangepi3-lts"               "Allwinner H6 quad core 2GB RAM GBE WiFi/BT-AW859A eMMC USB3")
+	# options+=("orangepilite2"		"Allwinner H6 quad core 1GB RAM WiFi/BT USB3")
+	# options+=("orangepioneplus"		"Allwinner H6 quad core 1GB RAM GBE")
+	options+=("orangepizero2"		"Allwinner H616 quad core 512MB/1GB RAM WiFi/BT GBE SPI")
+	#options+=("orangepizero2-b"		"Allwinner H616 quad core 1GB RAM WiFi/BT GBE SPI")
+	#options+=("orangepizero2-lts"		"Allwinner H616 quad core 1.5GB RAM WiFi/BT GBE SPI")
+	# options+=("orangepi4"                   "Rockchip  RK3399 hexa core 4GB RAM GBE eMMc USB3 USB-C WiFi/BT")
+	# options+=("orangepir1plus"              "Rockchip  RK3328 quad core 1GB RAM 2xGBE 8211E USB2 SPI")
+	# options+=("orangepir1plus-lts"          "Rockchip  RK3328 quad core 1GB RAM 2xGBE YT8531C USB2 SPI")
+
+	menustr="Please choose a Board."
+	BOARD=$(whiptail --title "${titlestr}" --backtitle "${backtitle}" \
+			  --menu "${menustr}" "${TTY_Y}" "${TTY_X}" $((TTY_Y - 8))  \
+			  --cancel-button Exit --ok-button Select "${options[@]}" \
+			  3>&1 1>&2 2>&3)
+
+	unset options
+	[[ -z $BOARD ]] && exit_with_error "No option selected"
+fi
+
+BOARD_TYPE="conf"
 # shellcheck source=/dev/null
-source "${SRC}/scripts/config/orangepizero2.conf"
+source "${EXTER}/config/boards/${BOARD}.${BOARD_TYPE}"
 LINUXFAMILY="${BOARDFAMILY}"
 
-BRANCH="current"
+[[ -z $KERNEL_TARGET ]] && exit_with_error "Board configuration does not define valid kernel config"
+
+if [[ -z $BRANCH ]]; then
+
+    options=()
+    [[ $KERNEL_TARGET == *current* ]] && options+=("current" "Mainline")
+    [[ $KERNEL_TARGET == *legacy* ]] && options+=("legacy" "Old stable")
+    [[ $KERNEL_TARGET == *dev* && $EXPERT = yes ]] && options+=("dev" "\Z1Development version (@kernel.org)\Zn")
+
+    menustr="Select the target kernel branch\nExact kernel versions depend on selected board"
+    # do not display selection dialog if only one kernel branch is available
+    if [[ "${#options[@]}" == 2 ]]; then
+        BRANCH="${options[0]}"
+    else
+		BRANCH=$(whiptail --title "${titlestr}" --backtitle "${backtitle}" \
+				  --menu "${menustr}" "${TTY_Y}" "${TTY_X}" $((TTY_Y - 8))  \
+				  --cancel-button Exit --ok-button Select "${options[@]}" \
+				  3>&1 1>&2 2>&3)
+    fi
+
+    unset options
+    [[ -z $BRANCH ]] && exit_with_error "No kernel branch selected"
+
+else
+
+    [[ $KERNEL_TARGET != *$BRANCH* ]] && exit_with_error "Kernel branch not defined for this board" "$BRANCH"
+
+fi
+
+if [[ ${BUILD_OPT} == image || ${BUILD_OPT} == kernel ]]; then
+
+	if [[ -z $KERNEL_CONFIGURE ]]; then
+
+		options+=("no" "Do not change the kernel configuration")
+		options+=("yes" "Show a kernel configuration menu before compilation")
+
+		menustr="Select the kernel configuration."
+		KERNEL_CONFIGURE=$(whiptail --title "${titlestr}" --backtitle "$backtitle" --notags \
+						 --menu "${menustr}" $TTY_Y $TTY_X $((TTY_Y - 8)) \
+						 --cancel-button Exit --ok-button Select "${options[@]}" \
+						 3>&1 1>&2 2>&3)
+
+		unset options
+		[[ -z $KERNEL_CONFIGURE ]] && exit_with_error "No option selected"
+	fi
+fi
 
 # define distribution support status
 declare -A distro_name
+distro_name['stretch']="Debian 9 Stretch"
+distro_name['buster']="Debian 10 Buster"
+distro_name['bullseye']="Debian 11 Bullseye"
+distro_name['xenial']="Ubuntu Xenial 16.04 LTS"
+distro_name['bionic']="Ubuntu Bionic 18.04 LTS"
+distro_name['focal']="Ubuntu Focal 20.04 LTS"
+distro_name['eoan']="Ubuntu Eoan 19.10"
+
+if [[ ${BUILD_OPT} == image || ${BUILD_OPT} == rootfs ]]; then
+
+	RELEASE_TARGET="stretch buster bullseye xenial bionic eoan focal"
+
+	if [[ -z $RELEASE ]]; then
+
+		if [[ $BRANCH == legacy ]]; then
+		
+			if [[ $LINUXFAMILY == sun50iw9 || $LINUXFAMILY == sun50iw6 ]]; then
+		
+				RELEASE_TARGET="buster bionic focal"
+			elif [[ $LINUXFAMILY == rk3399 ]]; then
+
+				RELEASE_TARGET="xenial bionic buster"
+			else
+	       	 		RELEASE_TARGET="xenial"
+			fi
+
+		elif [[ $BRANCH == current ]]; then
+
+	        	RELEASE_TARGET="buster bionic focal"
+			[[ $LINUXFAMILY == sun50iw6 ]] && RELEASE_TARGET="buster focal"
+		else
+
+			[[ -z $BRANCH ]] && exit_with_error "No kernel branch selected"
+		fi
+
+                distro_menu "stretch"
+                distro_menu "buster"
+                distro_menu "bullseye"
+                distro_menu "xenial"
+                distro_menu "bionic"
+                distro_menu "eoan"
+                distro_menu "focal"
+
+		menustr="Select the target OS release package base"
+		RELEASE=$(whiptail --title "${titlestr}" --backtitle "${backtitle}" \
+				  --menu "${menustr}" "${TTY_Y}" "${TTY_X}" $((TTY_Y - 8))  \
+				  --cancel-button Exit --ok-button Select "${options[@]}" \
+				  3>&1 1>&2 2>&3)
+
+		unset options
+		[[ -z $RELEASE ]] && exit_with_error "No option selected"
+	fi
+
+	# don't show desktop option if we choose minimal build
+	[[ $BUILD_MINIMAL == yes ]] && BUILD_DESKTOP="no"
+
+	if [[ -z $BUILD_DESKTOP ]]; then
+
+		options+=("no"		"Image with console interface (server)")
+		options+=("yes"		"Image with desktop environment")
+
+		menustr="Select the target image type."
+		BUILD_DESKTOP=$(whiptail --title "${titlestr}" --backtitle "${backtitle}" --notags \
+				  --menu "${menustr}" "${TTY_Y}" "${TTY_X}" $((TTY_Y - 8))  \
+				  --cancel-button Exit --ok-button Select "${options[@]}" \
+				  3>&1 1>&2 2>&3)
+
+		unset options
+		[[ -z $BUILD_DESKTOP ]] && exit_with_error "No option selected"
+		[[ $BUILD_DESKTOP == yes ]] && BUILD_MINIMAL="no"
+	fi
+
+	if [[ $BUILD_DESKTOP == "no" && -z $BUILD_MINIMAL ]]; then
+	
+	    options+=("no" "Standard image with console interface")
+	    options+=("yes" "Minimal image with console interface")
+		
+		menustr="Select the target image type."
+	    BUILD_MINIMAL=$(whiptail --title "${titlestr}" --backtitle "${backtitle}" --notags \
+				  --menu "${menustr}" "${TTY_Y}" "${TTY_X}" $((TTY_Y - 8))  \
+				  --cancel-button Exit --ok-button Select "${options[@]}" \
+				  3>&1 1>&2 2>&3)
+
+	    unset options
+	    [[ -z $BUILD_MINIMAL ]] && exit_with_error "No option selected"
+	fi
+fi
 
 #prevent conflicting setup
+[[ $BUILD_DESKTOP == yes ]] && BUILD_MINIMAL=no
+[[ $BUILD_DESKTOP == yes ]] && IMAGETYPE="desktop"
+[[ $BUILD_DESKTOP == no ]] && IMAGETYPE="server"
+[[ $BUILD_MINIMAL == yes ]] && EXTERNAL_NEW=no
 
-IMAGETYPE="server"
-EXTERNAL_NEW=no
 CONTAINER_COMPAT="no"
-
 [[ -z $COMPRESS_OUTPUTIMAGE ]] && COMPRESS_OUTPUTIMAGE="yes"
 
 #shellcheck source=configuration.sh
@@ -149,7 +333,9 @@ if [[ $USEALLCORES != no ]]; then
 	CTHREADS="-j$((CPUS + CPUS/2))"
 
 else
+
 	CTHREADS="-j1"
+
 fi
 
 if [[ $BUILD_ALL == yes && -n $GPG_PASS ]]; then

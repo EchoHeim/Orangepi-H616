@@ -69,7 +69,7 @@ compile_atf()
 		'make ENABLE_BACKTRACE="0" $target_make $CTHREADS \
 		CROSS_COMPILE="$CCACHE $ATF_COMPILER"' 2>> "${DEST}"/debug/compilation.log \
 		${PROGRESS_LOG_TO_FILE:+' | tee -a $DEST/debug/compilation.log'} \
-		${OUTPUT_DIALOG:+' | dialog  --progressbox "Compiling ATF..." $TTY_Y $TTY_X'} \
+		${OUTPUT_DIALOG:+' | dialog --backtitle "$backtitle" --progressbox "Compiling ATF..." $TTY_Y $TTY_X'} \
 		${OUTPUT_VERYSILENT:+' >/dev/null 2>/dev/null'}
 
 	[[ ${PIPESTATUS[0]} -ne 0 ]] && exit_with_error "ATF compilation failed"
@@ -97,6 +97,9 @@ compile_atf()
 	# copy license file to pack it to u-boot package later
 	[[ -f license.md ]] && cp license.md "${atftempdir}"/
 }
+
+
+
 
 compile_uboot()
 {
@@ -207,10 +210,10 @@ compile_uboot()
 			'make $target_make $CTHREADS \
 			"${cross_compile}"' 2>>"${DEST}"/debug/compilation.log \
 			${PROGRESS_LOG_TO_FILE:+' | tee -a "${DEST}"/debug/compilation.log'} \
-			${OUTPUT_DIALOG:+' | dialog --progressbox "Compiling u-boot..." $TTY_Y $TTY_X'} \
+			${OUTPUT_DIALOG:+' | dialog --backtitle "$backtitle" --progressbox "Compiling u-boot..." $TTY_Y $TTY_X'} \
 			${OUTPUT_VERYSILENT:+' >/dev/null 2>/dev/null'}
 
-		# [[ ${PIPESTATUS[0]} -ne 0 ]] && exit_with_error "U-boot compilation failed"
+		[[ ${PIPESTATUS[0]} -ne 0 ]] && exit_with_error "U-boot compilation failed"
 
 		[[ $(type -t uboot_custom_postprocess) == function ]] && uboot_custom_postprocess
 
@@ -218,7 +221,6 @@ compile_uboot()
 		for f in $target_files; do
 			local f_src
 			f_src=$(cut -d':' -f1 <<< "${f}")
-
 			if [[ $f == *:* ]]; then
 				local f_dst
 				f_dst=$(cut -d':' -f2 <<< "${f}")
@@ -226,7 +228,6 @@ compile_uboot()
 				local f_dst
 				f_dst=$(basename "${f_src}")
 			fi
-    
 			[[ ! -f $f_src ]] && exit_with_error "U-boot file not found" "$(basename "${f_src}")"
 			if [[ "${version}" =~ 2014.07|2011.09 ]]; then
 				cp "${f_src}" "${SRC}/.tmp/packout/${f_dst}"
@@ -324,12 +325,12 @@ compile_kernel()
 
 	advanced_patch "kernel" "$KERNELPATCHDIR" "$BOARD" "" "$BRANCH" "$LINUXFAMILY-$BRANCH"
 
-    # create patch for manual source changes in debug mode
-    [[ $CREATE_PATCHES == yes ]] && userpatch_create "kernel"
+        # create patch for manual source changes in debug mode
+        [[ $CREATE_PATCHES == yes ]] && userpatch_create "kernel"
 
-    # re-read kernel version after patching
-    local version
-    version=$(grab_version "$kerneldir")
+        # re-read kernel version after patching
+        local version
+        version=$(grab_version "$kerneldir")
 
 	# create linux-source package - with already patched sources
 	local sources_pkg_dir=$SRC/.tmp/${CHOSEN_KSRC}_${REVISION}_all
@@ -411,7 +412,7 @@ compile_kernel()
 		LOCALVERSION="-$LINUXFAMILY" \
 		$KERNEL_IMAGE_TYPE modules dtbs 2>>$DEST/debug/compilation.log' \
 		${PROGRESS_LOG_TO_FILE:+' | tee -a $DEST/debug/compilation.log'} \
-		${OUTPUT_DIALOG:+' | dialog  \
+		${OUTPUT_DIALOG:+' | dialog --backtitle "$backtitle" \
 		--progressbox "Compiling kernel..." $TTY_Y $TTY_X'} \
 		${OUTPUT_VERYSILENT:+' >/dev/null 2>/dev/null'}
 
@@ -424,6 +425,10 @@ compile_kernel()
 		local kernel_packing="bindeb-pkg"
 	else
 		local kernel_packing="deb-pkg"
+	fi
+
+	if [[ $BRANCH == legacy && $LINUXFAMILY =~ sun50iw2|sun50iw6|sun50iw9 ]]; then
+		make -C modules/gpu LICHEE_MOD_DIR=${SRC}/.tmp/gpu_modules_${LINUXFAMILY} LICHEE_KDIR=${kerneldir} CROSS_COMPILE=$toolchain/$KERNEL_COMPILER ARCH=$ARCHITECTURE
 	fi
 
 	display_alert "Creating packages"
@@ -441,7 +446,7 @@ compile_kernel()
 		DEBEMAIL="$MAINTAINERMAIL" \
 		CROSS_COMPILE="$CCACHE $KERNEL_COMPILER" 2>>$DEST/debug/compilation.log' \
 		${PROGRESS_LOG_TO_FILE:+' | tee -a $DEST/debug/compilation.log'} \
-		${OUTPUT_DIALOG:+' | dialog --progressbox "Creating kernel packages..." $TTY_Y $TTY_X'} \
+		${OUTPUT_DIALOG:+' | dialog --backtitle "$backtitle" --progressbox "Creating kernel packages..." $TTY_Y $TTY_X'} \
 		${OUTPUT_VERYSILENT:+' >/dev/null 2>/dev/null'}
 
 	cat <<-EOF > "${sources_pkg_dir}"/DEBIAN/control
@@ -476,6 +481,9 @@ compile_kernel()
 	hash_watch_2=$(cat "${EXTER}/config/kernel/${LINUXCONFIG}.config")
 	echo "${hash_watch_1}${hash_watch_2}" | git hash-object --stdin >> "${EXTER}/cache/hash/linux-image-${BRANCH}-${LINUXFAMILY}.githash"
 }
+
+
+
 
 compile_firmware()
 {
@@ -532,11 +540,15 @@ compile_firmware()
         mv "orangepi-firmware${FULL}_${REVISION}_all.deb" "${DEB_STORAGE}/"
 }
 
+
+
+
 compile_orangepi-config()
 {
 	local tmpdir=${SRC}/.tmp/orangepi-config_${REVISION}_all
 
 	display_alert "Building deb" "orangepi-config" "info"
+
 
 	mkdir -p "${tmpdir}"/{DEBIAN,usr/bin/,usr/sbin/,usr/lib/orangepi-config/}
 
@@ -553,7 +565,7 @@ compile_orangepi-config()
 	Suggests: libpam-google-authenticator, qrencode, network-manager, sunxi-tools
 	Section: utils
 	Priority: optional
-	Description: BIQU-Hurakan configuration utility
+	Description: Orange Pi configuration utility
 	END
 
 	install -m 755 $EXTER/cache/sources/orangepi-config/scripts/tv_grab_file $tmpdir/usr/bin/tv_grab_file
@@ -571,6 +583,9 @@ compile_orangepi-config()
 	mv "${tmpdir}.deb" "${DEB_STORAGE}/"
 	rm -rf "${tmpdir}"
 }
+
+
+
 
 compile_sunxi_tools()
 {
@@ -747,7 +762,7 @@ userpatch_create()
 {
 	# create commit to start from clean source
 	git add .
-	git -c user.name='BIQU-Hurakan User' -c user.email='user@example.org' commit -q -m "Cleaning working copy"
+	git -c user.name='Orange Pi User' -c user.email='user@example.org' commit -q -m "Cleaning working copy"
 
 	local patch="$DEST/patch/$1-$LINUXFAMILY-$BRANCH.patch"
 
