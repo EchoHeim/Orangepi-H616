@@ -141,34 +141,7 @@ BOARD_TYPE="conf"
 source "${EXTER}/config/boards/${BOARD}.${BOARD_TYPE}"
 LINUXFAMILY="${BOARDFAMILY}"
 
-[[ -z $KERNEL_TARGET ]] && exit_with_error "Board configuration does not define valid kernel config"
-
-if [[ -z $BRANCH ]]; then
-
-    options=()
-    [[ $KERNEL_TARGET == *current* ]] && options+=("current" "Mainline")
-    [[ $KERNEL_TARGET == *legacy* ]] && options+=("legacy" "Old stable")
-    [[ $KERNEL_TARGET == *dev* && $EXPERT = yes ]] && options+=("dev" "\Z1Development version (@kernel.org)\Zn")
-
-    menustr="Select the target kernel branch\nExact kernel versions depend on selected board"
-    # do not display selection dialog if only one kernel branch is available
-    if [[ "${#options[@]}" == 2 ]]; then
-        BRANCH="${options[0]}"
-    else
-		BRANCH=$(whiptail --title "${titlestr}" --backtitle "${backtitle}" \
-				  --menu "${menustr}" "${TTY_Y}" "${TTY_X}" $((TTY_Y - 8))  \
-				  --cancel-button Exit --ok-button Select "${options[@]}" \
-				  3>&1 1>&2 2>&3)
-    fi
-
-    unset options
-    [[ -z $BRANCH ]] && exit_with_error "No kernel branch selected"
-
-else
-
-    [[ $KERNEL_TARGET != *$BRANCH* ]] && exit_with_error "Kernel branch not defined for this board" "$BRANCH"
-
-fi
+BRANCH="current"
 
 if [[ ${BUILD_OPT} == image || ${BUILD_OPT} == kernel ]]; then
 
