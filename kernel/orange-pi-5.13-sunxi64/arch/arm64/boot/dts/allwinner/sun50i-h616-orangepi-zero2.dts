@@ -6,7 +6,6 @@
 /dts-v1/;
 
 #include "sun50i-h616.dtsi"
-
 #include <dt-bindings/gpio/gpio.h>
 #include <dt-bindings/interrupt-controller/arm-gic.h>
 #include <dt-bindings/leds/common.h>
@@ -17,11 +16,8 @@
 
 	aliases {
 		ethernet0 = &emac0;
-		// ethernet0 = &emac1;
 		serial0 = &uart0;
-		serial5 = &uart5;
-
-		// ac200 = &ac200;
+		// serial1 = &uart1;
 	};
 
 	chosen {
@@ -51,7 +47,8 @@
 		led-1 {
 			function = LED_FUNCTION_STATUS;
 			color = <LED_COLOR_ID_GREEN>;
-			gpios = <&pio 2 13 GPIO_ACTIVE_HIGH>; /* PC13 */
+			// gpios = <&pio 2 13 GPIO_ACTIVE_HIGH>; /* PC13 */
+            gpios = <&pio 7 5 GPIO_ACTIVE_LOW>; /* PH5 */
 			default-state = "on";
 		};
 	};
@@ -159,38 +156,6 @@
 	};
 };
 
-/*
-&emac1 {
-	pinctrl-names = "default";
-	pinctrl-0 = <&rmii_pins>;
-	phy-mode = "rmii";
-	phy-handle = <&rmii_phy>;
-	phy-supply = <&reg_dldo1>;
-	allwinner,rx-delay-ps = <3100>;
-	allwinner,tx-delay-ps = <700>;
-	status = "disabled";
-	// status = "okay";
-};
-
-&ac200 {
-	tv_used = <1>;
-	tv_twi_used = <1>;
-	tv_twi_id = <3>;
-	tv_twi_addr = <16>;
-	tv_pwm_ch = <5>;
-	status = "disabled";
-	// status = "okay";
-};
-
-&mdio1 {
-	rmii_phy: ethernet-phy@1 {
-		compatible = "ethernet-phy-ieee802.3-c22";
-		reg = <1>;
-	};
-};
-*/
-
-
 &mmc0 {
 	// vmmc-supply = <&reg_dcdce>;
 	// cd-gpios = <&pio 5 6 GPIO_ACTIVE_LOW>;	/* PF6 */
@@ -236,10 +201,6 @@
 	keep-power-in-suspend;
 	// mmc-ddr-1_8v;
 	status = "okay";
-
-	// rtl8189ftv: sdio_wifi@1 {
-	// 	reg = <1>;
-	// };
 };
 
 &ohci1 {
@@ -450,6 +411,12 @@
 	status = "okay";
 };
 
+// &uart1 {
+// 	pinctrl-names = "default";
+// 	pinctrl-0 = <&uart1_pins>;
+// 	status = "okay";
+// };
+
 &usbotg {
 	/*
 	 * PHY0 pins are connected to a USB-C socket, but a role switch
@@ -479,17 +446,7 @@
 	status = "okay";
 };
 
-&uart5 {
-	pinctrl-names = "default";
-	pinctrl-0 = <&uart5_ph_pins>;
-	status = "okay";
-};
 
-&ir {
-	pinctrl-names = "default";
-	pinctrl-0 = <&ir_rx_pin>;
-	status = "okay";
-};
 
 &spi1 {
 	#address-cells = <1>;
@@ -502,6 +459,13 @@
 		reg = <0>;
 		spi-max-frequency = <1000000>;
 	};
+};
+
+/*
+&ir {
+	pinctrl-names = "default";
+	pinctrl-0 = <&ir_rx_pin>;
+	status = "okay";
 };
 
 &codec {
@@ -537,3 +501,4 @@
 &hdmi_audio {
 	status = "okay";
 };
+*/

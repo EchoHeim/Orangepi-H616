@@ -365,15 +365,15 @@
 				function = "uart1";
 			};
 
-			uart1_rts_cts_pins: uart1-rts-cts-pins {
-				pins = "PG8", "PG9";
-				function = "uart1";
-			};
+			// uart1_rts_cts_pins: uart1-rts-cts-pins {
+			// 	pins = "PG8", "PG9";
+			// 	function = "uart1";
+			// };
 
-			uart5_ph_pins: uart5-ph-pins {
-				pins = "PH2", "PH3";
-				function = "uart5";
-			};
+			// uart5_ph_pins: uart5-ph-pins {
+			// 	pins = "PH2", "PH3";
+			// 	function = "uart5";
+			// };
 		};
 
 		gic: interrupt-controller@3021000 {
