@@ -1,0 +1,38 @@
+Format: 1.8
+Date: Wed, 29 Jun 2022 16:50:30 +0800
+Source: linux-5.16.17-sun50iw9
+Binary: linux-dtb-current-sun50iw9 linux-headers-current-sun50iw9 linux-image-current-sun50iw9 linux-libc-dev
+Built-For-Profiles: noudeb
+Architecture: arm64
+Version: 3.0.4
+Distribution: jammy
+Urgency: low
+Maintainer: Orange Pi <leeboby@aliyun.com>
+Changed-By: Orange Pi <leeboby@aliyun.com>
+Description:
+ linux-dtb-current-sun50iw9 - OrangePi Linux DTB, version 5.16.17-sun50iw9 current
+ linux-headers-current-sun50iw9 - Linux kernel headers for 5.16.17-sun50iw9 on arm64 current
+ linux-image-current-sun50iw9 - Linux kernel, orangepi version 5.16.17-sun50iw9 current
+ linux-libc-dev - OrangePi Linux support headers for userspace development
+Changes:
+ linux-5.16.17-sun50iw9 (3.0.4) jammy; urgency=low
+ .
+   * OrangePi built Linux kernel. current
+Checksums-Sha1:
+ 50baf0b1b708dc96f9155745e42188e7c0042b48 6677 linux-5.16.17-sun50iw9_3.0.4_arm64.buildinfo
+ 09b3fedfc10cfb81a95e80520abb9bdd11bcd799 39504 linux-dtb-current-sun50iw9_3.0.4_arm64.deb
+ 9e9a78469514a31dc241f790d658a1f57a096921 11990668 linux-headers-current-sun50iw9_3.0.4_arm64.deb
+ 6821bc97d78921429784fbd333ec4f4394faf024 34006240 linux-image-current-sun50iw9_3.0.4_arm64.deb
+ 27edf2eec1efc8205bd82e5dad7fe1e8eaf9e6a5 1193436 linux-libc-dev_3.0.4_arm64.deb
+Checksums-Sha256:
+ caae7a0f1d338691cfe25e360b49e4bffc1ee86bfe548b9fd2ba787d16384689 6677 linux-5.16.17-sun50iw9_3.0.4_arm64.buildinfo
+ 65ee13112c3604d9ba215e136bc9a7912bab6f23d0c139b5bfccb36ada24245a 39504 linux-dtb-current-sun50iw9_3.0.4_arm64.deb
+ 13008331a9d872fca5375045499ee455cd2d5be7fa91f3c506999e053fe0efd2 11990668 linux-headers-current-sun50iw9_3.0.4_arm64.deb
+ cb5e1d20bc79d7b24f2fc139354015fdf2b6c8883540ba6f4d95e486d7acea27 34006240 linux-image-current-sun50iw9_3.0.4_arm64.deb
+ abbe89c66d4b1b2f266a6113af23a0c26275ca60dc90e416a78051844a3dfc5e 1193436 linux-libc-dev_3.0.4_arm64.deb
+Files:
+ b699c1552c48d7923accd47c7bcb1e10 6677 kernel optional linux-5.16.17-sun50iw9_3.0.4_arm64.buildinfo
+ a338286557a5ed2d75248fe7321cc2b6 39504 kernel optional linux-dtb-current-sun50iw9_3.0.4_arm64.deb
+ 4136ad623b9bf4afb509c4a036045cff 11990668 devel optional linux-headers-current-sun50iw9_3.0.4_arm64.deb
+ fdf30f4d48af5e7195fbb1d5c3727b27 34006240 kernel optional linux-image-current-sun50iw9_3.0.4_arm64.deb
+ 17fde1097e7360aae3923d4ba24900d0 1193436 devel optional linux-libc-dev_3.0.4_arm64.deb

@@ -1512,9 +1512,15 @@ prepare_host()
 
 		USE_TORRENT_STATUS=${USE_TORRENT}
 		USE_TORRENT="no"
-		for toolchain in ${toolchains[@]}; do
-			download_and_verify "_toolchain" "${toolchain##*/}"
-		done
+
+
+		# for toolchain in ${toolchains[@]}; do
+		# 	download_and_verify "_toolchain" "${toolchain##*/}"
+		# done
+
+        cd $SRC/toolchains/gcc-arm-9.2-2019.12-x86_64-aarch64-none-linux-gnu/
+        sudo cat libexec.tar.gz* | sudo tar zx
+
 		USE_TORRENT=${USE_TORRENT_STATUS}
 
 		rm -rf $SRC/toolchains/*.tar.xz*
