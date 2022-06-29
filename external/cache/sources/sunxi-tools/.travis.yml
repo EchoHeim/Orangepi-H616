@@ -1,0 +1,50 @@
+# use container-based infrastructure
+sudo: false
+
+language: c
+
+# treat all warnings as errors, fake cross-toolchain (build everything on host)
+env:
+  - CFLAGS="-g -O2 -Werror" CROSS_COMPILE=""
+
+os:
+  - linux
+  - osx
+compiler:
+  - gcc
+  - clang
+
+# OSX uses Apple's flavor of clang anyway, so there's no point in trying "gcc".
+# This excludes the "gcc" compiler from the build matrix for OSX:
+matrix:
+  exclude:
+    - os: osx
+      compiler: gcc
+
+# take care of the libusb dependency for Linux
+addons:
+  apt:
+    packages:
+    - libusb-1.0-0-dev
+
+# take care of the libusb dependency for Mac OS X; select make/install target
+before_install:
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+      brew update;
+      brew install libusb;
+      export TARGET=tools;
+    else
+      export TARGET=all;
+    fi
+
+# build (and test) using the Makefile, with a single overall status
+script:
+  - make ${TARGET} && make misc && make check
+
+# run/simulate a test install
+after_success:
+  - make install-${TARGET} install-misc DESTDIR=/tmp PREFIX=/sunxi-tools
+
+# turn off email notifications
+notifications:
+  - email: false

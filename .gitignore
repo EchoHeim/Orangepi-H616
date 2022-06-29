@@ -16,26 +16,9 @@
 
 .tmp
 output
-toolchains
-userpatches
 
-mkimage.sh
-
-!external/patch/u-boot
-!external/patch/kernel
-!external/config/kernel
+toolchains/gcc-arm-9.2-2019.12-x86_64-aarch64-none-linux-gnu/libexec/
 
 external/cache/.gpg
 external/cache/hash
 external/cache/rootfs
-external/cache/sources/extra
-external/cache/sources/evalcache
-external/cache/sources/oh-my-zsh
-external/cache/sources/sunxi-tools
-external/cache/sources/rkbin-tools
-external/cache/sources/rk-rootfs-build*
-external/cache/sources/orangepi-firmware
-external/cache/sources/orangepi-firmware-git
-external/cache/sources/ffmpeg_kodi_debian11
-external/cache/sources/rk3399_gst_xserver_libs
-external/cache/sources/arm-trusted-firmware-sunxi-mainline
