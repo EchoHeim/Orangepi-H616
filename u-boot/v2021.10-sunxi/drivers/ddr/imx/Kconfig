@@ -1,2 +1,0 @@
-source "drivers/ddr/imx/imx8m/Kconfig"
-source "drivers/ddr/imx/imx8ulp/Kconfig"

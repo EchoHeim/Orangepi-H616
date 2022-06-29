@@ -200,8 +200,6 @@ if [[ ${BUILD_OPT} =~ kernel|image ]]; then
 fi
 
 
-
-
 if [[ -z $BOARD ]]; then
 
 	options+=("orangepizero2"		"Allwinner H616 quad core 512MB/1GB RAM WiFi/BT GBE SPI")
@@ -245,8 +243,6 @@ if [[ -z $BRANCH ]]; then
 	[[ $BRANCH == dev && $SHOW_WARNING == yes ]] && show_developer_warning
 
 fi
-
-
 
 if [[ $BUILD_OPT =~ rootfs|image && -z $RELEASE ]]; then
 
