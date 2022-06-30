@@ -1,0 +1,477 @@
+			    _______________
+
+			     README-RT-ASP
+
+				 haich
+			    _______________
+
+
+Table of Contents
+_________________
+
+1 Introduction
+2 wpa_supplicant configuration
+3 wpa_supplicant implementation
+.. 3.1 DHCP
+4 wpa_cli commands
+.. 4.1 Advertisement primitives
+..... 4.1.1 asp_seek
+..... 4.1.2 asp_cancel_seek
+..... 4.1.3 asp_advertise
+..... 4.1.4 asp_cancel_advertise
+.. 4.2 Session primitives
+..... 4.2.1 asp_connect_session
+..... 4.2.2 asp_remove_session
+..... 4.2.3 asp_bound_port
+..... 4.2.4 asp_release_port
+5 rt_wfds_send
+.. 5.1 Usage
+..... 5.1.1 Seeker
+..... 5.1.2 Advertiser
+.. 5.2 rt_wfds_send implementation
+..... 5.2.1 SSH/SCP
+.. 5.3 Troublshooting
+..... 5.3.1 Make sure network manager for Wi-Fi is diabled
+..... 5.3.2 Make sure script files has proper permission
+..... 5.3.3 Make sure SSH is insalled
+..... 5.3.4 Make sure DHCP server is installed
+..... 5.3.5 Make sure not to use a key generated on other machine
+.. 5.4 Example log
+..... 5.4.1 Seeker
+..... 5.4.2 Advertiser
+6 Future work
+7 Known issue
+
+
+
+
+
+1 Introduction
+==============
+
+  This document describes how the Wi-Fi Direct Services (p2ps)
+  implementation in wpa_supplicant an be configured and used and how to
+  use the sample send service to send files between devices.
+
+
+2 wpa_supplicant configuration
+==============================
+
+  In addition to items required by Wi-fi P2P, also turn on
+
+  CONFIG_ASP
+
+  in the .config file so ASP related source files could be compiled and
+  linked.
+
+
+3 wpa_supplicant implementation
+===============================
+
+3.1 DHCP
+~~~~~~~~
+
+  Via p2p-action.sh in wpa_supplicant/examples
+
+
+4 wpa_cli commands
+==================
+
+4.1 Advertisement primitives
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+4.1.1 asp_seek
+--------------
+
+* 4.1.1.1 Usage
+
+  asp_seek [timeout in seconds] [type=<social|progressive>]
+           [dev_id=<addr>] \ [dev_type=<device type>] [delay=<search
+           delay in ms>] \ [seek=<service name>] [freq=<MHz>]
+
+
+* 4.1.1.2 Return
+
+  search_id
+
+
+* 4.1.1.3 Description
+
+  This command extends the old p2p_find command by callling p2p_find
+  internally and return a search ID as the result (e.g., ASP_SEEK
+  search_id=1), therefore its parameters are exactly the same as
+  p2p_find.
+
+
+4.1.2 asp_cancel_seek
+---------------------
+
+* 4.1.2.1 Usage
+
+  asp_cancel_seek <search_id=search id returned by asp_seek>
+
+
+* 4.1.2.2 Return
+
+  NULL
+
+
+* 4.1.2.3 Description
+
+  This primitive stops a specific search initiated by invoking asp_seek
+  primitive.
+
+
+4.1.3 asp_advertise
+-------------------
+
+* 4.1.3.1 Usage
+
+  asp_advertise <auto accept> <status 0/1> <Config Methods> <Service
+                name> \ [svc_info='<Service Information>'] [Response
+                Info]
+
+
+* 4.1.3.2 Return
+
+  adv_id
+
+
+* 4.1.3.3 Description
+
+  This primitive provides information to create a response for a service
+  so that a service seeker on another device may search for, find, and
+  initiate an ASP session with the service advertiser ASP.
+
+
+4.1.4 asp_cancel_advertise
+--------------------------
+
+* 4.1.4.1 Usage
+
+  asp_cancel_advertise <adv_id=advertisement ID>
+
+
+* 4.1.4.2 Return
+
+  NULL
+
+
+* 4.1.4.3 Description
+
+  This primitive cancels an advertisement of the service identified by
+  the adv_id.  The service name and associated information shall no
+  longer be advertised.
+
+
+4.2 Session primitives
+~~~~~~~~~~~~~~~~~~~~~~
+
+4.2.1 asp_connect_session
+-------------------------
+
+* 4.2.1.1 Usage
+
+  asp_connect_session <peer MAC address> <adv_id=peer adv id> \
+                      <adv_mac=peer MAC address> [info='service info']
+
+
+* 4.2.1.2 Return
+
+  session_mac
+
+  session_id
+
+
+* 4.2.1.3 Description
+
+  This primitive initiates an ASP session with a remote ASP.
+
+
+4.2.2 asp_remove_session
+------------------------
+
+* 4.2.2.1 Usage
+
+  asp_remove_session <peer MAC address> <session_mac=session MAC> \
+                     <session_id=session ID> <reason=reason code>
+
+
+* 4.2.2.2 Return
+
+  NULL
+
+
+* 4.2.2.3 Description
+
+  This primitive is invoked to end an ASP session and releases
+  associated resources.  Note that this only closes the ASP sessions in
+  open state and does not terminates the underlying P2P connection.
+
+
+4.2.3 asp_bound_port
+--------------------
+
+* 4.2.3.1 Usage
+
+  asp_bound_port <session_mac> <session_id> <port> <prot>
+
+
+* 4.2.3.2 Return
+
+  NULL
+
+
+* 4.2.3.3 Description
+
+  This primitive is used to reques that incoming connections be allowed
+  on a given port.  This primitive is called after the service binds the
+  indicated port on one of the IP addresses associated with this ASP
+  session.
+
+
+4.2.4 asp_release_port
+----------------------
+
+* 4.2.4.1 Usage
+
+  asp_release_port <session_mac> <session_id> <port> <prot>
+
+
+* 4.2.4.2 Return
+
+  NULL
+
+
+* 4.2.4.3 Description
+
+  This primitive is used to indicate that the service is no longer
+  utlizing the port in the ASP session.
+
+
+5 rt_wfds_send
+==============
+
+  A sample program to demonstrate how ASP could be used.  It could be
+  used to send a file from the seeker side to the advertiser side.
+  SSH/SCP is used to transfer/receive file when connection is
+  established.
+
+  When acting as a seeker, it searches the device specified and try to
+  connect with it once the device is found.  When session status becomes
+  open, it authorizes the public key advertised by the advertiser and
+  wait session to be closed.
+
+  When acting as an advertised, it advertises the service and wait for
+  seeker connection.  When session becomes open, it fetches the file the
+  seeker tries to send using SCP and removes the session once the file
+  transfer is done.
+
+  For the advertiser to be able to login to the seeker to fetch the file
+  without entering the password everytime, the user name to login and a
+  pair of private/public key is required.
+
+  The advertiser advertises its public key as its service information,
+  the seeker retrieves that information from the service discovery
+  response.  That public key is then authorized by the seeker so that
+  the advertiser will not have to enter the password when it fetches the
+  file.
+
+  The seeker tells the advertised the user name to use for SSH login and
+  the file to fetch in the session information.
+
+  P2P group is removed when all session is closed.
+
+
+5.1 Usage
+~~~~~~~~~
+
+5.1.1 Seeker
+------------
+
+  rt_wfds_send <-d advertiser device name> <-i interface> <-r seeker>
+               <-f file to transfer> <-t file|folder> <-u user name>
+
+
+* 5.1.1.1 Advertiser device name
+
+  Could be specified in the run-time configuration file
+  (wpa_supplicant.conf) as:
+
+  device_name=My Device
+
+
+* 5.1.1.2 File to transfer
+
+  Specifies the file to be transfered. This may be a relative path to
+  the home directory of the user.
+
+
+* 5.1.1.3 Example
+
+  rt_wfds_send -i wlan7 -d x201 -r seeker -f
+  /home/parallels/Documents/temp -t folder -u user
+
+
+5.1.2 Advertiser
+----------------
+
+  rt_wfds_send <-i interface> <-r advertiser>
+
+
+* 5.1.2.1 Note
+
+  The received file is put under the current directory.
+
+
+* 5.1.2.2 Example
+
+  rt_wfds_send -i wlan7 -r advertiser
+
+
+5.2 rt_wfds_send implementation
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+5.2.1 SSH/SCP
+-------------
+
+  Actual SSH/SCP command is implemented in
+  wpa_supplicant/examples/asp-action.sh.
+
+
+5.3 Troublshooting
+~~~~~~~~~~~~~~~~~~
+
+5.3.1 Make sure network manager for Wi-Fi is diabled
+----------------------------------------------------
+
+
+5.3.2 Make sure script files has proper permission
+--------------------------------------------------
+
+  wpa_supplicant/examples/p2p-action.sh
+  wpa_supplicant/examples/asp-action.sh
+
+
+5.3.3 Make sure SSH is insalled
+-------------------------------
+
+
+5.3.4 Make sure DHCP server is installed
+----------------------------------------
+
+
+5.3.5 Make sure not to use a key generated on other machine
+-----------------------------------------------------------
+
+
+5.4 Example log
+~~~~~~~~~~~~~~~
+
+5.4.1 Seeker
+------------
+
+  ,----
+  | root@ubuntu:/home/parallels/Documents/code/hostap-l7/wpa_supplicant# ./rt_wfds_send -iwlan7 -dx201 -rseeker -f /home/parallels/Documents/code/hostap-l7 -tfolder -uparallels
+  | authorized key file: /home/parallels/.ssh/authorized_keys
+  | Connection established.
+  | FAIL
+  | ASP_SEEK search_id=1
+  | seek started with search_id: 1
+  | <3>ASP-SEARCH-RESULT search_id=1 service_mac=82:1f:02:c3:72:52 service_device_name='x201i' adv_id=1 service_name='org.wi-fi.wfds.send.rx'
+  | 1fcfbb0
+  | <3>P2P-SERV-ASP-RESP 82:1f:02:c3:72:52 1 1 1 1108 org.wi-fi.wfds.send.rx 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDBFg+i3jS88utR+ZMr7gEqmRs5xWxMGhLHexqD5JZg2jAfPgJWeTnYhS3GI8olYZnB0daksl+OyMxDlOp+m0HgFhbE1n+dGyGKLoqrzsWzT6T2Ha3hvF8BOk1moAGtsMKQD+q8l1DvhA66kxf7RjpuL3T5aZI14YNxA3U2oJTsGICbnoO6Qd0ySwwacHNL5dY8yNr3Z5SqXFYyTy2NttdNPxr1ch0mFfFXYEya7n0/Ocqhw0Z/MQAyYBuX7P64cB3Hw2y5OyE01G45sw+eHtqgesY3dC6yRAl3GJ/C34Vb0jiwVXO6si6UHrpx8REA113MOXLguXXERA8UGx5mcP+X root@realtek-ThinkPad-X201
+  | '
+  | service_info: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDBFg+i3jS88utR+ZMr7gEqmRs5xWxMGhLHexqD5JZg2jAfPgJWeTnYhS3GI8olYZnB0daksl+OyMxDlOp+m0HgFhbE1n+dGyGKLoqrzsWzT6T2Ha3hvF8BOk1moAGtsMKQD+q8l1DvhA66kxf7RjpuL3T5aZI14YNxA3U2oJTsGICbnoO6Qd0ySwwacHNL5dY8yNr3Z5SqXFYyTy2NttdNPxr1ch0mFfFXYEya7n0/Ocqhw0Z/MQAyYBuX7P64cB3Hw2y5OyE01G45sw+eHtqgesY3dC6yRAl3GJ/C34Vb0jiwVXO6si6UHrpx8REA113MOXLguXXERA8UGx5mcP+X root@realtek-ThinkPad-X201
+  | '
+  | ASP_CONNECT_SESSION session_mac=00:e0:4c:02:80:74 session_id=1
+  | connect session started with (00:e0:4c:02:80:74, 1)
+  | <3>ASP-SESSION-STATUS session_mac=00:e0:4c:02:80:74 session_id=1 state=Initiated status=OK
+  | <3>ASP-CONNECT-STATUS session_mac=00:e0:4c:02:80:74 session_id=1 status=SessionRequestSent
+  | <3>ASP-CONNECT-STATUS session_mac=00:e0:4c:02:80:74 session_id=1 status=SessionRequestAccepted
+  | <3>ASP-SEARCH-TERMINATED 1
+  | <3>ASP-CONNECT-STATUS session_mac=00:e0:4c:02:80:74 session_id=1 status=GroupFormationStarted
+  | <3>ASP-CONNECT-STATUS session_mac=00:e0:4c:02:80:74 session_id=1 status=GroupFormationComplete
+  | <3>ASP-SESSION-STATUS session_mac=00:e0:4c:02:80:74 session_id=1 state=Open status=OK local_ip=192.168.42.1 remote_ip=192.168.42.54
+  | <3>ASP-SESSION-STATUS session_mac=00:e0:4c:02:80:74 session_id=1 state=Closed status=TODO
+  | <3>ASP-STATUS status=AllSessionClosed
+  | OK
+  | <3>ASP-CONNECT-STATUS session_mac=00:e0:4c:02:80:74 session_id=1 status=Disconnected
+  | root@ubuntu:/home/parallels/Documents/code/hostap-l7/wpa_supplicant#
+  `----
+
+
+5.4.2 Advertiser
+----------------
+
+  ,----
+  | ./rt_wfds_send -i wlan2 -radvertiser
+  | Connection established.
+  | Generating public/private rsa key pair.
+  | Your identification has been saved in ./wfds-send.
+  | Your public key has been saved in ./wfds-send.pub.
+  | The key fingerprint is:
+  | 9b:13:86:95:c3:2d:67:79:0f:3e:52:f3:53:25:cb:a8 root@realtek-ThinkPad-X201
+  | The key's randomart image is:
+  | +--[ RSA 2048]----+
+  | |              . .|
+  | |       . o . o o.|
+  | |        * = * o .|
+  | |       o = = = . |
+  | |      . S E o +  |
+  | |       . + . . . |
+  | |        +        |
+  | |         .       |
+  | |                 |
+  | +-----------------+
+  | Advertising org.wi-fi.wfds.send.rx with service info 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDBFg+i3jS88utR+ZMr7gEqmRs5xWxMGhLHexqD5JZg2jAfPgJWeTnYhS3GI8olYZnB0daksl+OyMxDlOp+m0HgFhbE1n+dGyGKLoqrzsWzT6T2Ha3hvF8BOk1moAGtsMKQD+q8l1DvhA66kxf7RjpuL3T5aZI14YNxA3U2oJTsGICbnoO6Qd0ySwwacHNL5dY8yNr3Z5SqXFYyTy2NttdNPxr1ch0mFfFXYEya7n0/Ocqhw0Z/MQAyYBuX7P64cB3Hw2y5OyE01G45sw+eHtqgesY3dC6yRAl3GJ/C34Vb0jiwVXO6si6UHrpx8REA113MOXLguXXERA8UGx5mcP+X root@realtek-ThinkPad-X201
+  | '
+  | ASP_ADVERTISE adv_id=1
+  | <3>ASP-ADV-STATUS adv_id=1 status=Advertised
+  | <3>ASP-SESSION-REQ adv_id=1 session_mac=00:e0:4c:02:80:74 service_device_name='Desktop1' session_id=1 session_info='parallels:/home/parallels/Documents/code/hostap-l7:folder:unauthorized'
+  | session_info: 'parallels:/home/parallels/Documents/code/hostap-l7:folder:unauthorized'
+  | <3>ASP-CONNECT-STATUS session_mac=00:e0:4c:02:80:74 session_id=1 status=SessionRequestReceived
+  | <3>ASP-SESSION-STATUS session_mac=00:e0:4c:02:80:74 session_id=1 state=Requested status=OK
+  | <3>ASP-CONNECT-STATUS session_mac=00:e0:4c:02:80:74 session_id=1 status=GroupFormationStarted
+  | <3>ASP-CONNECT-STATUS session_mac=00:e0:4c:02:80:74 session_id=1 status=GroupFormationComplete
+  | <3>ASP-SESSION-STATUS session_mac=00:e0:4c:02:80:74 session_id=1 state=Open status=OK local_ip=192.168.42.54 remote_ip=192.168.42.1
+  | ssh-copy-id -i ./wfds-send.pub parallels@192.168.42.1
+  | /usr/bin/ssh-copy-id: INFO: attempting to log in with the new key(s), to filter out any that are already installed
+  |
+  | /usr/bin/ssh-copy-id: WARNING: All keys were skipped because they already exist on the remote system.
+  |
+  | done
+  | scp -i ./wfds-send -r parallels@192.168.42.1:/home/parallels/Documents/code/hostap-l7 ./
+  | make_release                                  100% 4283     4.2KB/s   00:00
+  | wpaspy.py                                     100% 2225     2.2KB/s   00:00
+  | test.py                                       100% 1589     1.6KB/s   00:00
+  | ...
+  | testing_tools.doxygen                         100% 7855     7.7KB/s   00:00
+  | done
+  | OK
+  | <3>ASP-SESSION-STATUS session_mac=00:e0:4c:02:80:74 session_id=1 state=Closed status=TODO
+  | <3>ASP-STATUS status=AllSessionClosed
+  | OK
+  | <3>ASP-CONNECT-STATUS session_mac=00:e0:4c:02:80:74 session_id=1 status=Disconnected
+  `----
+
+
+6 Future work
+=============
+
+  - [ ] Suppots only immediate session establishment (i.e., auto_accept
+    = true case).  Deferred ession establishment is not yet
+    supported.
+  - [ ] Now we support only WFDS default conifguration method, PBC and
+    PIN is not yet supported.
+  - [ ] Only (new, new) connection capability (i.e., connection through
+    P2P GO Negotiationis) is tested.  Other combination may have
+    some issue.
+
+
+7 Known issue
+=============
+
+  - [ ] State of wpa_s may not be correct after P2P Group dissolved if
+    same interface is used for P2P Device and P2P Group, may need to
+    restart wpa_s so it works properly.

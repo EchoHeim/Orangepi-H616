@@ -1,0 +1,6 @@
+// ANT_NUMBER was wifi + BT hardware module total antenna numbers. (If not assign , default value was 2)
+ANT_NUMBER "3"
+// ANT_DISTANCE was the distance between wifi antenna and BT antenna. (If not assign , default value was 15)
+ANT_DISTANCE "45"
+// RFE_TYPE SPDT was 0 , coupler was 1. (If not assign , default value was 1) (If ANT_NUMBER=3 , this parameters don't care) 
+RFE_TYPE "1"

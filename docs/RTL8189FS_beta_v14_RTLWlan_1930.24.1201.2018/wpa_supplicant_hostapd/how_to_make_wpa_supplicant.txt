@@ -1,0 +1,31 @@
+1. Make openssl
+
+Get openssl
+> wget https://www.openssl.org/source/openssl-1.0.2j.tar.gz
+Extract
+> tar zxvf openssl-1.0.2j.tar.gz
+Make openssl install folder
+> sudo mkdir /usr/local/openssl
+Make
+> cd openssl-1.0.2j
+> export INSTALL_DIR=/usr/local/openssl
+> ./Configure linux-x86_64 shared --prefix=$INSTALL_DIR --openssldir=$INSTALL_DIR
+> make 
+> make install
+
+2. Make wpa_supplicant
+
+Extract
+> tar zxvf wpa_supplicant_2_6_r49421.tar.gz
+Make 
+> cd wpa_supplicant_2_6_r49421
+check below setting in .config
+
+CFLAGS += -I/usr/local/openssl/include
+LIBS += -L/usr/local/openssl/lib
+
+CONFIG_TLS=openssl
+
+CONFIG_LIBNL32=y   => Mask if you use libnl 1.0
+
+> make

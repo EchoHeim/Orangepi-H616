@@ -1,5 +1,5 @@
 Format: 1.8
-Date: Wed, 29 Jun 2022 17:50:11 +0800
+Date: Thu, 30 Jun 2022 19:14:47 +0800
 Source: linux-5.16.17-sun50iw9
 Binary: linux-dtb-current-sun50iw9 linux-headers-current-sun50iw9 linux-image-current-sun50iw9 linux-libc-dev
 Built-For-Profiles: noudeb
@@ -19,20 +19,20 @@ Changes:
  .
    * OrangePi built Linux kernel. current
 Checksums-Sha1:
- 829509db96b2cbe640e01187e5ee809db0bafb60 6677 linux-5.16.17-sun50iw9_3.0.4_arm64.buildinfo
- d362227660080c11e42adc2719b19bcba18a4360 16792 linux-dtb-current-sun50iw9_3.0.4_arm64.deb
- d60c8d3a0c225877b044de3e9f85c9901f19011a 11988656 linux-headers-current-sun50iw9_3.0.4_arm64.deb
- e8765861629f354032c81fcc22aec798e0685e0f 33992176 linux-image-current-sun50iw9_3.0.4_arm64.deb
- c8a2fa9d988b42a46f333deaee8274590a1d2693 1193372 linux-libc-dev_3.0.4_arm64.deb
+ d1ffaf6413d21bc8adb704b5616ce50a3500dcb9 6677 linux-5.16.17-sun50iw9_3.0.4_arm64.buildinfo
+ 514147a76243f100d0a9f4e01e633e5823459b6b 16780 linux-dtb-current-sun50iw9_3.0.4_arm64.deb
+ f7333f141bdf7b2400d355534e3c869a3bb73a25 12020276 linux-headers-current-sun50iw9_3.0.4_arm64.deb
+ 9ea833dd6e89bdc36e01c5eb5ad3e46ef05af309 33951380 linux-image-current-sun50iw9_3.0.4_arm64.deb
+ 1cf931f35f42c023aae49f125d62d5dd68017a6a 1193288 linux-libc-dev_3.0.4_arm64.deb
 Checksums-Sha256:
- 36a5f15627a06328000314c6f4ba968502925bbe426be4a3b392b92a7abce9c5 6677 linux-5.16.17-sun50iw9_3.0.4_arm64.buildinfo
- 98472a26ddecdeb7f8c2c1ef9643922a0cd270b62237d39fdd40f20923349c29 16792 linux-dtb-current-sun50iw9_3.0.4_arm64.deb
- f202f85cf5256013a88005371c316422bd70b092b3357473152b4e82e66d6595 11988656 linux-headers-current-sun50iw9_3.0.4_arm64.deb
- d8d7898a8da5fd26e78cdb6174bd98036cfd140291ebe4c71707a87a96204a20 33992176 linux-image-current-sun50iw9_3.0.4_arm64.deb
- 0e601522882ffa1ece64dfe983ec928e3d4b23bf31e6278dc833cded5b850869 1193372 linux-libc-dev_3.0.4_arm64.deb
+ 8997ab946718230ef82721bf3d845402ee07afee30d1aa0b75286b8ce029b176 6677 linux-5.16.17-sun50iw9_3.0.4_arm64.buildinfo
+ 65678b90cbf6db9578de180fb20cab1dad21151b367d3424f190dee52d7f1983 16780 linux-dtb-current-sun50iw9_3.0.4_arm64.deb
+ 34d1c4f6290782d265af1d0a0dfe8eb1209069a9d5dfa042070a5cfd1a0667a7 12020276 linux-headers-current-sun50iw9_3.0.4_arm64.deb
+ 0d932deb362320a77ea27b72ed9c62d38d171d3e576f343d7865ffd62b58f8d6 33951380 linux-image-current-sun50iw9_3.0.4_arm64.deb
+ 219c09dadeac25203d281d9a191e76c146768b1ba4bc7948c43613bfa72de2f8 1193288 linux-libc-dev_3.0.4_arm64.deb
 Files:
- 618a9462dd76645f62fe0b34decce3d0 6677 kernel optional linux-5.16.17-sun50iw9_3.0.4_arm64.buildinfo
- 542bd943cde75b5a050edcdb80c2fcd6 16792 kernel optional linux-dtb-current-sun50iw9_3.0.4_arm64.deb
- 92441f78d5d5d0d40f12c6ed5dc4b4f6 11988656 devel optional linux-headers-current-sun50iw9_3.0.4_arm64.deb
- ac03ba7d0c2edbdb3191a5cf6cd5fb0f 33992176 kernel optional linux-image-current-sun50iw9_3.0.4_arm64.deb
- 5ab46cb1d1c81acbd5b469b28068867f 1193372 devel optional linux-libc-dev_3.0.4_arm64.deb
+ 52b58d6a6c6da79da68428483e77105a 6677 kernel optional linux-5.16.17-sun50iw9_3.0.4_arm64.buildinfo
+ 22bc33cd5ebd974202e92b983ff690c3 16780 kernel optional linux-dtb-current-sun50iw9_3.0.4_arm64.deb
+ f81f8b7b921ed6eceefe90c9d2f625a6 12020276 devel optional linux-headers-current-sun50iw9_3.0.4_arm64.deb
+ 1b38155a87899e8466dab230ae939b47 33951380 kernel optional linux-image-current-sun50iw9_3.0.4_arm64.deb
+ 340985106ee657b4784a7476deca602a 1193288 devel optional linux-libc-dev_3.0.4_arm64.deb

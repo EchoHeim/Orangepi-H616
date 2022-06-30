@@ -1,0 +1,1 @@
+for Motorcomm Phy support in RK3399/3288 platform, please refer to changes to this file: phy_device.c

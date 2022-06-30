@@ -18,6 +18,9 @@
 #ifdef CONFIG_AXP305_POWER
 #include <axp305.h>
 #endif
+#ifdef CONFIG_AXP1530_POWER
+#include <axp1530.h>
+#endif
 #ifdef CONFIG_AXP809_POWER
 #include <axp809.h>
 #endif
@@ -40,5 +43,11 @@ int axp_set_fldo(int fldo_num, unsigned int mvolt);
 int axp_set_sw(bool on);
 int axp_init(void);
 int axp_get_sid(unsigned int *sid);
+
+//----------------------------------------------------------------
+// axp1530
+
+int pmu_axp1530_set_voltage(char *name, unsigned int set_vol, unsigned int onoff);
+int pmu_axp1530_get_voltage(char *name);
 
 #endif
