@@ -50,6 +50,7 @@ fit-dtb.blob*
 #
 !.gitignore
 !.mailmap
+!.config*
 
 #
 # Generated files
