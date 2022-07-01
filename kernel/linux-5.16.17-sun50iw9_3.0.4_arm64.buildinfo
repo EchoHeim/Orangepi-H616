@@ -4,23 +4,23 @@ Binary: linux-dtb-current-sun50iw9 linux-headers-current-sun50iw9 linux-image-cu
 Architecture: arm64
 Version: 3.0.4
 Checksums-Md5:
- 22bc33cd5ebd974202e92b983ff690c3 16780 linux-dtb-current-sun50iw9_3.0.4_arm64.deb
- f81f8b7b921ed6eceefe90c9d2f625a6 12020276 linux-headers-current-sun50iw9_3.0.4_arm64.deb
- 1b38155a87899e8466dab230ae939b47 33951380 linux-image-current-sun50iw9_3.0.4_arm64.deb
- 340985106ee657b4784a7476deca602a 1193288 linux-libc-dev_3.0.4_arm64.deb
+ 4718022b396dcbae631d56b24e043ff5 16712 linux-dtb-current-sun50iw9_3.0.4_arm64.deb
+ 1cc0ed9d4eecce3a8a33a2e01ed51e5e 12021096 linux-headers-current-sun50iw9_3.0.4_arm64.deb
+ 126adc9361c7cadd5db05a13b23a6d60 33946780 linux-image-current-sun50iw9_3.0.4_arm64.deb
+ 9273fafcc27aafdec1c614a681aaf834 1193364 linux-libc-dev_3.0.4_arm64.deb
 Checksums-Sha1:
- 514147a76243f100d0a9f4e01e633e5823459b6b 16780 linux-dtb-current-sun50iw9_3.0.4_arm64.deb
- f7333f141bdf7b2400d355534e3c869a3bb73a25 12020276 linux-headers-current-sun50iw9_3.0.4_arm64.deb
- 9ea833dd6e89bdc36e01c5eb5ad3e46ef05af309 33951380 linux-image-current-sun50iw9_3.0.4_arm64.deb
- 1cf931f35f42c023aae49f125d62d5dd68017a6a 1193288 linux-libc-dev_3.0.4_arm64.deb
+ ada35af5b6ece946b8f4949c5de5c164121bbd48 16712 linux-dtb-current-sun50iw9_3.0.4_arm64.deb
+ d69739c1a9cdf122366ec0e28fe8e5e8862101c7 12021096 linux-headers-current-sun50iw9_3.0.4_arm64.deb
+ 0b20dcfdffa7c261c39264115ebeeecdcb38a994 33946780 linux-image-current-sun50iw9_3.0.4_arm64.deb
+ efabbf562e2d17a68a81e3ea49a10c2bf2f7ba2c 1193364 linux-libc-dev_3.0.4_arm64.deb
 Checksums-Sha256:
- 65678b90cbf6db9578de180fb20cab1dad21151b367d3424f190dee52d7f1983 16780 linux-dtb-current-sun50iw9_3.0.4_arm64.deb
- 34d1c4f6290782d265af1d0a0dfe8eb1209069a9d5dfa042070a5cfd1a0667a7 12020276 linux-headers-current-sun50iw9_3.0.4_arm64.deb
- 0d932deb362320a77ea27b72ed9c62d38d171d3e576f343d7865ffd62b58f8d6 33951380 linux-image-current-sun50iw9_3.0.4_arm64.deb
- 219c09dadeac25203d281d9a191e76c146768b1ba4bc7948c43613bfa72de2f8 1193288 linux-libc-dev_3.0.4_arm64.deb
+ 4e27878c466a1142fc972610cfbf3cfe93c2d8ef09ad7ef3fdb43f7175d83a45 16712 linux-dtb-current-sun50iw9_3.0.4_arm64.deb
+ a058fdac1342125be9383d7244e9c9922e0ac341472f0ce0b23abd55b4f3168a 12021096 linux-headers-current-sun50iw9_3.0.4_arm64.deb
+ f91cfd6e1d71735d06dd8230d87acf3b76cac8008fdbab18d337d40cb14892d3 33946780 linux-image-current-sun50iw9_3.0.4_arm64.deb
+ 6f8d2f5c67ec3f44e30d8a48bb5cbb936d5c3fb04896f5d47e161f0af67aa3af 1193364 linux-libc-dev_3.0.4_arm64.deb
 Build-Origin: Ubuntu
 Build-Architecture: amd64
-Build-Date: Thu, 30 Jun 2022 19:15:59 +0800
+Build-Date: Fri, 01 Jul 2022 10:19:02 +0800
 Build-Tainted-By:
  merged-usr-via-aliased-dirs
  usr-local-has-libraries
@@ -183,5 +183,5 @@ Environment:
  LEX="flex"
  MAKE="make"
  MAKEFLAGS="rR -j24 --jobserver-auth=3,4 --no-print-directory -- KDEB_PKGVERSION=3.0.4 KDEB_COMPRESS=xz BRANCH=current LOCALVERSION=-sun50iw9 KBUILD_DEBARCH=arm64 ARCH=arm64 DEBFULLNAME=Orange\ Pi DEBEMAIL=leeboby@aliyun.com CROSS_COMPILE=ccache\ aarch64-none-linux-gnu-"
- SOURCE_DATE_EPOCH="1656587687"
+ SOURCE_DATE_EPOCH="1656641886"
  YACC="bison"
