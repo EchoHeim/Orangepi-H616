@@ -13,12 +13,12 @@ if [ -e "./linux-u-boot-current-orangepizero2_3.0.4_arm64.deb" ];then
     sudo nand-sata-install
 fi
 
-sudo apt install udhcpc -y
+# sudo apt install udhcpc -y
 
-sudo mv regulatory.db* /lib/firmware/
+# sudo mv regulatory.db* /lib/firmware/
 
-sudo rm /lib/modules/5.13.0-sun50iw9 -fr
-sudo mv ./5.13.0-sun50iw9 /lib/modules/ -f
+# sudo rm /lib/modules/5.16.17-sun50iw9 -fr
+# sudo mv ./5.16.17-sun50iw9 /lib/modules/ -f
 
 if [ -e "./linux-dtb-current-sun50iw9_3.0.4_arm64.deb" ];then
     echo -e "\n **** remove dtb ****\n"
@@ -34,7 +34,7 @@ if [ -e "./linux-image-current-sun50iw9_3.0.4_arm64.deb" ];then
     sudo dpkg -i linux-image-current-sun50iw9_3.0.4_arm64.deb
 fi
 
-sudo rm ./linux-*.deb
+sudo rm ./linux-*.deb ./5.16.17-sun50iw9 -fr
 
 sudo reboot
 

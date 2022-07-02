@@ -253,7 +253,6 @@ kernel/drivers/net/ethernet/allwinner/sun4i-emac.ko
 kernel/drivers/net/ethernet/stmicro/stmmac/stmmac.ko
 kernel/drivers/net/ethernet/stmicro/stmmac/stmmac-platform.ko
 kernel/drivers/net/ethernet/stmicro/stmmac/dwmac-generic.ko
-kernel/drivers/net/wireless/uwe5622/unisocwcn/uwe5622_bsp_sdio.ko
 kernel/drivers/usb/common/usb-common.ko
 kernel/drivers/usb/core/usbcore.ko
 kernel/drivers/usb/core/ledtrig-usbport.ko
