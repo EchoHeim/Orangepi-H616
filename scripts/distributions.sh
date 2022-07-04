@@ -367,17 +367,17 @@ POST_INSTALL_KERNEL_DEBS
 	fi
 
 	# install orangepi-config
-	if [[ "${PACKAGE_LIST_RM}" != *orangepi-config* ]]; then
-		if [[ "${REPOSITORY_INSTALL}" != *orangepi-config* ]]; then
-			if [[ $BUILD_MINIMAL != yes ]]; then
-				install_deb_chroot "${DEB_STORAGE}/orangepi-config_${REVISION}_all.deb"
-			fi
-		else
-			if [[ $BUILD_MINIMAL != yes ]]; then
-				install_deb_chroot "${DEB_ORANGEPI}/orangepi-config_${REVISION}_all.deb" "orangepi"
-			fi
-		fi
-	fi
+	# if [[ "${PACKAGE_LIST_RM}" != *orangepi-config* ]]; then
+	# 	if [[ "${REPOSITORY_INSTALL}" != *orangepi-config* ]]; then
+	# 		if [[ $BUILD_MINIMAL != yes ]]; then
+	# 			install_deb_chroot "${DEB_STORAGE}/orangepi-config_${REVISION}_all.deb"
+	# 		fi
+	# 	else
+	# 		if [[ $BUILD_MINIMAL != yes ]]; then
+	# 			install_deb_chroot "${DEB_ORANGEPI}/orangepi-config_${REVISION}_all.deb" "orangepi"
+	# 		fi
+	# 	fi
+	# fi
 
 	# install orangepi-zsh
 	if [[ "${PACKAGE_LIST_RM}" != *orangepi-zsh* ]]; then

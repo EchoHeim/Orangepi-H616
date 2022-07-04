@@ -7,7 +7,7 @@
 setenv load_addr "0x45000000"
 setenv overlay_error "false"
 setenv rootdev "/dev/mmcblk0p1"
-setenv verbosity "1"
+setenv verbosity "7"
 setenv rootfstype "ext4"
 setenv console "both"
 setenv docker_optimizations "on"
@@ -33,7 +33,7 @@ if test "${bootlogo}" = "true"; then setenv consoleargs "bootsplash.bootfile=boo
 # mmc 0 is always mapped to device u-boot (2016.09+) was loaded from
 if test "${devtype}" = "mmc"; then part uuid mmc 0:1 partuuid; fi
 
-setenv bootargs "root=${rootdev} rootwait rootfstype=${rootfstype} ${consoleargs} consoleblank=0 loglevel=${verbosity} ubootpart=${partuuid} usb-storage.quirks=${usbstoragequirks} ${extraargs} ${extraboardargs}"
+setenv bootargs "root=${rootdev} rootwait rootfstype=${rootfstype} ${consoleargs} consoleblank=0 loglevel=7 ubootpart=${partuuid} usb-storage.quirks=${usbstoragequirks} ${extraargs} ${extraboardargs}"
 
 if test "${docker_optimizations}" = "on"; then setenv bootargs "${bootargs} cgroup_enable=memory swapaccount=1"; fi
 

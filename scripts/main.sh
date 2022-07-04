@@ -471,15 +471,13 @@ fi
 if [[ $BUILD_OPT == rootfs || $BUILD_OPT == image ]]; then
 
 	# Compile orangepi-config if packed .deb does not exist or use the one from Orange Pi
-	if [[ ! -f ${DEB_STORAGE}/orangepi-config_${REVISION}_all.deb ]]; then
-	
-		[[ "${REPOSITORY_INSTALL}" != *orangepi-config* ]] && compile_orangepi-config
-	fi 
+	# if [[ ! -f ${DEB_STORAGE}/orangepi-config_${REVISION}_all.deb ]]; then
+	# 	[[ "${REPOSITORY_INSTALL}" != *orangepi-config* ]] && compile_orangepi-config
+	# fi 
 
 	# Compile orangepi-zsh if packed .deb does not exist or use the one from repository
 	if [[ ! -f ${DEB_STORAGE}/orangepi-zsh_${REVISION}_all.deb ]]; then
-
-	        [[ "${REPOSITORY_INSTALL}" != *orangepi-zsh* ]] && compile_orangepi-zsh
+	    [[ "${REPOSITORY_INSTALL}" != *orangepi-zsh* ]] && compile_orangepi-zsh
 	fi
 
 	# Compile orangepi-firmware if packed .deb does not exist or use the one from repository
@@ -507,13 +505,8 @@ if [[ $BUILD_OPT == rootfs || $BUILD_OPT == image ]]; then
 
 	overlayfs_wrapper "cleanup"
 	
-	
-	
-	
 	# create board support package
 	[[ -n $RELEASE && ! -f ${DEB_STORAGE}/$RELEASE/${BSP_CLI_PACKAGE_FULLNAME}.deb ]] && create_board_package
-
-
 
 	# create desktop package
 	#[[ -n $RELEASE && $DESKTOP_ENVIRONMENT && ! -f ${DEB_STORAGE}/$RELEASE/${CHOSEN_DESKTOP}_${REVISION}_all.deb ]] && create_desktop_package
@@ -521,8 +514,6 @@ if [[ $BUILD_OPT == rootfs || $BUILD_OPT == image ]]; then
 	[[ -n $RELEASE && $DESKTOP_ENVIRONMENT ]] && create_desktop_package
 	[[ -n $RELEASE && $DESKTOP_ENVIRONMENT ]] && create_bsp_desktop_package
 
-
-	
 	# build additional packages
 	[[ $EXTERNAL_NEW == compile ]] && chroot_build_packages
 	

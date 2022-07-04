@@ -63,9 +63,7 @@ done
 
 }
 
-
 check_args "$@"
-
 
 update_src() {
 
@@ -122,19 +120,7 @@ if [[ $(systemd-detect-virt) == 'none' ]]; then
 
 fi
 
-
 rm "${TMPFILE}"
-
-
-if [[ "${EUID}" == "0" ]] || [[ "${1}" == "vagrant" ]]; then
-	:
-elif [[ "${1}" == docker || "${1}" == dockerpurge || "${1}" == docker-shell ]] && grep -q "$(whoami)" <(getent group docker); then
-	:
-else
-	display_alert "This script requires root privileges, trying to use sudo" "" "wrn"
-	sudo "${SRC}/build.sh" "$@"
-	exit $?
-fi
 
 if [ "$OFFLINE_WORK" == "yes" ]; then
 
@@ -151,55 +137,12 @@ else
 
 fi
 
-# Check for Vagrant
-if [[ "${1}" == vagrant && -z "$(command -v vagrant)" ]]; then
-	display_alert "Vagrant not installed." "Installing"
-	sudo apt-get update
-	sudo apt-get install -y vagrant virtualbox
-fi
-
-# Purge Orange Pi Docker images
-if [[ "${1}" == dockerpurge && -f /etc/debian_version ]]; then
-	display_alert "Purging Orange Pi Docker containers" "" "wrn"
-	docker container ls -a | grep orangepi | awk '{print $1}' | xargs docker container rm &> /dev/null
-	docker image ls | grep orangepi | awk '{print $3}' | xargs docker image rm &> /dev/null
-	shift
-	set -- "docker" "$@"
-fi
-
 # Docker shell
 if [[ "${1}" == docker-shell ]]; then
 	shift
 	#shellcheck disable=SC2034
 	SHELL_ONLY=yes
 	set -- "docker" "$@"
-fi
-
-# Install Docker if not there but wanted. We cover only Debian based distro install. On other distros, manual Docker install is needed
-if [[ "${1}" == docker && -f /etc/debian_version && -z "$(command -v docker)" ]]; then
-
-	DOCKER_BINARY="docker-ce"
-
-	# add exception for Ubuntu Focal until Docker provides dedicated binary
-	codename=$(cat /etc/os-release | grep VERSION_CODENAME | cut -d"=" -f2)
-	codeid=$(cat /etc/os-release | grep ^NAME | cut -d"=" -f2 | awk '{print tolower($0)}' | tr -d '"' | awk '{print $1}')
-	[[ "${codename}" == "debbie" ]] && codename="buster" && codeid="debian"
-	[[ "${codename}" == "ulyana" || "${codename}" == "jammy" ]] && codename="focal" && codeid="ubuntu"
-
-	# different binaries for some. TBD. Need to check for all others
-	[[ "${codename}" =~ focal|hirsute ]] && DOCKER_BINARY="docker containerd docker.io"
-
-	display_alert "Docker not installed." "Installing" "Info"
-	sudo bash -c "echo \"deb [arch=$(dpkg --print-architecture)] https://download.docker.com/linux/${codeid} ${codename} stable\" > /etc/apt/sources.list.d/docker.list"
-
-	sudo bash -c "curl -fsSL \"https://download.docker.com/linux/${codeid}/gpg\" | apt-key add -qq - > /dev/null 2>&1 "
-	export DEBIAN_FRONTEND=noninteractive
-	sudo apt-get update
-	sudo apt-get install -y -qq --no-install-recommends ${DOCKER_BINARY}
-	display_alert "Add yourself to docker group to avoid root privileges" "" "wrn"
-	"${SRC}/build.sh" "$@"
-	exit $?
-
 fi
 
 EXTER="${SRC}/external"
@@ -228,24 +171,24 @@ if ! ls "${SRC}"/userpatches/{config-example.conf,config-docker.conf,config-vagr
 	fi
 
 	# Create Docker config
-	if [[ ! -f "${SRC}"/userpatches/config-docker.conf ]]; then
-		cp "${EXTER}"/config/templates/config-docker.conf "${SRC}"/userpatches/config-docker.conf || exit 1
-	fi
+	# if [[ ! -f "${SRC}"/userpatches/config-docker.conf ]]; then
+	# 	cp "${EXTER}"/config/templates/config-docker.conf "${SRC}"/userpatches/config-docker.conf || exit 1
+	# fi
 
 	# Create Docker file
-        if [[ ! -f "${SRC}"/userpatches/Dockerfile ]]; then
-                cp "${EXTER}"/config/templates/Dockerfile "${SRC}"/userpatches/Dockerfile || exit 1
-        fi
+        # if [[ ! -f "${SRC}"/userpatches/Dockerfile ]]; then
+        #         cp "${EXTER}"/config/templates/Dockerfile "${SRC}"/userpatches/Dockerfile || exit 1
+        # fi
 
 	# Create Vagrant config
-	if [[ ! -f "${SRC}"/userpatches/config-vagrant.conf ]]; then
-	        cp "${EXTER}"/config/templates/config-vagrant.conf "${SRC}"/userpatches/config-vagrant.conf || exit 1
-	fi
+	# if [[ ! -f "${SRC}"/userpatches/config-vagrant.conf ]]; then
+	#         cp "${EXTER}"/config/templates/config-vagrant.conf "${SRC}"/userpatches/config-vagrant.conf || exit 1
+	# fi
 
 	# Create Vagrant file
-	if [[ ! -f "${SRC}"/userpatches/Vagrantfile ]]; then
-		cp "${EXTER}"/config/templates/Vagrantfile "${SRC}"/userpatches/Vagrantfile || exit 1
-	fi
+	# if [[ ! -f "${SRC}"/userpatches/Vagrantfile ]]; then
+	# 	cp "${EXTER}"/config/templates/Vagrantfile "${SRC}"/userpatches/Vagrantfile || exit 1
+	# fi
 
 fi
 

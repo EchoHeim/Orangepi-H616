@@ -1,6 +1,6 @@
-verbosity=1
+verbosity=7
 console=both
 disp_mode=1080p60
-fb0_width=1920
-fb0_height=1080
+fb0_width=1024
+fb0_height=600
 debug_uart=ttyS0
