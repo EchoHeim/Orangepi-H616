@@ -26,18 +26,7 @@ if [[ "${ORANGEPI_ENABLE_CALL_TRACING}" == "yes" ]]; then
 	trap 'echo "${BASH_LINENO[@]}|${BASH_SOURCE[@]}|${FUNCNAME[@]}" >> ${SRC}/output/debug/calls.txt ;' RETURN
 fi
 
-if [[ -f "${SRC}"/scripts/general.sh ]]; then
-
-	# shellcheck source=scripts/general.sh
-	source "${SRC}"/scripts/general.sh
-
-else
-
-	echo "Error: missing build directory structure"
-	echo "Please clone the full repository by https://github.com/orangepi-xunlong/orangepi-build"
-	exit 255
-
-fi
+source "${SRC}"/scripts/general.sh
 
 #  Add the variables needed at the beginning of the path
 check_args ()
@@ -93,9 +82,7 @@ update_src() {
 			git pull
 		fi
 	fi
-
 }
-
 
 TMPFILE=$(mktemp)
 chmod 644 "${TMPFILE}"
@@ -169,27 +156,6 @@ if ! ls "${SRC}"/userpatches/{config-example.conf,config-docker.conf,config-vagr
 		cp "${EXTER}"/config/templates/config-example.conf "${SRC}"/userpatches/config-example.conf || exit 1
                 ln -fs config-example.conf "${SRC}"/userpatches/config-default.conf || exit 1
 	fi
-
-	# Create Docker config
-	# if [[ ! -f "${SRC}"/userpatches/config-docker.conf ]]; then
-	# 	cp "${EXTER}"/config/templates/config-docker.conf "${SRC}"/userpatches/config-docker.conf || exit 1
-	# fi
-
-	# Create Docker file
-        # if [[ ! -f "${SRC}"/userpatches/Dockerfile ]]; then
-        #         cp "${EXTER}"/config/templates/Dockerfile "${SRC}"/userpatches/Dockerfile || exit 1
-        # fi
-
-	# Create Vagrant config
-	# if [[ ! -f "${SRC}"/userpatches/config-vagrant.conf ]]; then
-	#         cp "${EXTER}"/config/templates/config-vagrant.conf "${SRC}"/userpatches/config-vagrant.conf || exit 1
-	# fi
-
-	# Create Vagrant file
-	# if [[ ! -f "${SRC}"/userpatches/Vagrantfile ]]; then
-	# 	cp "${EXTER}"/config/templates/Vagrantfile "${SRC}"/userpatches/Vagrantfile || exit 1
-	# fi
-
 fi
 
 if [[ -z "${CONFIG}" && -n "$1" && -f "${SRC}/userpatches/config-$1.conf" ]]; then
@@ -212,14 +178,11 @@ fi
 
 CONFIG_PATH=$(dirname "${CONFIG_FILE}")
 
-# Source the extensions manager library at this point, before sourcing the config.
-# This allows early calls to enable_extension(), but initialization proper is done later.
-# shellcheck source=scripts/extensions.sh
 source "${SRC}"/scripts/extensions.sh
 
 display_alert "Using config file" "${CONFIG_FILE}" "info"
 pushd "${CONFIG_PATH}" > /dev/null || exit
-# shellcheck source=/dev/null
+
 source "${CONFIG_FILE}"
 popd > /dev/null || exit
 
@@ -236,15 +199,4 @@ while [[ "${1}" == *=* ]]; do
 
 done
 
-
-if [[ "${BUILD_ALL}" == "yes" || "${BUILD_ALL}" == "demo" ]]; then
-
-	# shellcheck source=scripts/build-all-ng.sh
-	source "${SRC}"/scripts/build-all-ng.sh
-
-else
-
-	# shellcheck source=scripts/main.sh
-	source "${SRC}"/scripts/main.sh
-
-fi
+source "${SRC}"/scripts/main.sh

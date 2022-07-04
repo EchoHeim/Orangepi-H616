@@ -9,7 +9,6 @@
 # Main program
 #
 
-
 cleanup_list() {
 	local varname="${1}"
 	local list_to_clean="${!varname}"
@@ -17,19 +16,6 @@ cleanup_list() {
 	list_to_clean="${list_to_clean%"${list_to_clean##*[![:space:]]}"}"
 	echo ${list_to_clean}
 }
-
-
-
-
-if [[ $(basename "$0") == main.sh ]]; then
-
-	echo "Please use build.sh to start the build process"
-	exit 255
-
-fi
-
-
-
 
 # default umask for root is 022 so parent directories won't be group writeable without this
 # this is used instead of making the chmod in prepare_host() recursive
@@ -64,27 +50,15 @@ titlestr="Choose an option"
 
 # Libraries include
 
-# shellcheck source=debootstrap.sh
 source "${SRC}"/scripts/debootstrap.sh	# system specific install
-# shellcheck source=image-helpers.sh
 source "${SRC}"/scripts/image-helpers.sh	# helpers for OS image building
-# shellcheck source=distributions.sh
 source "${SRC}"/scripts/distributions.sh	# system specific install
-# shellcheck source=desktop.sh
 source "${SRC}"/scripts/desktop.sh		# desktop specific install
-# shellcheck source=compilation.sh
 source "${SRC}"/scripts/compilation.sh	# patching and compilation of kernel, uboot, ATF
-# shellcheck source=compilation-prepare.sh
-#source "${SRC}"/scripts/compilation-prepare.sh	# drivers that are not upstreamed
-# shellcheck source=makeboarddeb.sh
 source "${SRC}"/scripts/makeboarddeb.sh		# board support package
-# shellcheck source=general.sh
 source "${SRC}"/scripts/general.sh		# general functions
-# shellcheck source=chroot-buildpackages.sh
 source "${SRC}"/scripts/chroot-buildpackages.sh	# chroot packages building
-# shellcheck source=pack.sh
 source "${SRC}"/scripts/pack-uboot.sh
-
 
 # set log path
 LOG_SUBPATH=${LOG_SUBPATH:=debug}
@@ -110,11 +84,7 @@ fi
 
 if [[ $PROGRESS_LOG_TO_FILE != yes ]]; then unset PROGRESS_LOG_TO_FILE; fi
 
-
-
 SHOW_WARNING=yes
-
-
 
 if [[ $USE_CCACHE != no ]]; then
 
@@ -129,9 +99,6 @@ else
 	CCACHE=""
 
 fi
-
-
-
 
 if [[ -n $REPOSITORY_UPDATE ]]; then
 
@@ -158,7 +125,6 @@ if [[ -n $REPOSITORY_UPDATE ]]; then
 fi
 
 
-
 # if BUILD_OPT, KERNEL_CONFIGURE, BOARD, BRANCH or RELEASE are not set, display selection menu
 if [[ -z $BUILD_OPT ]]; then
 
@@ -179,8 +145,6 @@ if [[ -z $BUILD_OPT ]]; then
 fi
 
 
-
-
 if [[ ${BUILD_OPT} =~ kernel|image ]]; then
 
 	if [[ -z $KERNEL_CONFIGURE ]]; then
@@ -199,50 +163,14 @@ if [[ ${BUILD_OPT} =~ kernel|image ]]; then
 	fi
 fi
 
-
-if [[ -z $BOARD ]]; then
-
-	options+=("orangepizero2"		"Allwinner H616 quad core 512MB/1GB RAM WiFi/BT GBE SPI")
-
-	menustr="Please choose a Board."
-	BOARD=$(whiptail --title "${titlestr}" --backtitle "${backtitle}" \
-			  --menu "${menustr}" "${TTY_Y}" "${TTY_X}" $((TTY_Y - 8))  \
-			  --cancel-button Exit --ok-button Select "${options[@]}" \
-			  3>&1 1>&2 2>&3)
-
-	unset options
-	[[ -z $BOARD ]] && exit_with_error "No option selected"
-fi
-
 BOARD_TYPE="conf"
+BOARD="orangepizero2"
+
 # shellcheck source=/dev/null
-source "${EXTER}/config/boards/${BOARD}.${BOARD_TYPE}"
+source "${EXTER}/config/boards/orangepizero2.conf"
 LINUXFAMILY="${BOARDFAMILY}"
 
-[[ -z $KERNEL_TARGET ]] && exit_with_error "Board configuration does not define valid kernel config"
-
-if [[ -z $BRANCH ]]; then
-
-	options=()
-	[[ $KERNEL_TARGET == *current* ]] && options+=("current" "Recommended. Come with best support")
-	[[ $KERNEL_TARGET == *legacy* ]] && options+=("legacy" "Old stable / Legacy")
-	[[ $KERNEL_TARGET == *next* ]] && options+=("next" "Use the latest kernel")
-
-	menustr="Select the target kernel branch\nExact kernel versions depend on selected board"
-	# do not display selection dialog if only one kernel branch is available
-	if [[ "${#options[@]}" == 2 ]]; then
-		BRANCH="${options[0]}"
-	else
-		BRANCH=$(whiptail --title "${titlestr}" --backtitle "${backtitle}" \
-				  --menu "${menustr}" "${TTY_Y}" "${TTY_X}" $((TTY_Y - 8))  \
-				  --cancel-button Exit --ok-button Select "${options[@]}" \
-				  3>&1 1>&2 2>&3)
-	fi
-	unset options
-	[[ -z $BRANCH ]] && exit_with_error "No kernel branch selected"
-	[[ $BRANCH == dev && $SHOW_WARNING == yes ]] && show_developer_warning
-
-fi
+BRANCH="current"
 
 if [[ $BUILD_OPT =~ rootfs|image && -z $RELEASE ]]; then
 
@@ -320,11 +248,6 @@ elif [[ $BUILD_MINIMAL == "yes" ]]; then
 	SELECTED_CONFIGURATION="cli_minimal"
 fi
 
-#[[ ${KERNEL_CONFIGURE} == prebuilt ]] && [[ -z ${REPOSITORY_INSTALL} ]] && \
-#REPOSITORY_INSTALL="u-boot,kernel,bsp,orangepi-zsh,orangepi-config,orangepi-firmware${BUILD_DESKTOP:+,orangepi-desktop}"
-
-
-#shellcheck source=configuration.sh
 source "${SRC}"/scripts/configuration.sh
 
 # optimize build time with 100% CPU usage
@@ -399,24 +322,6 @@ if [[ ${IGNORE_UPDATES} != yes ]]; then
 
 	fi
 
-	if [[ ${BOARD} =~ orangepi4|orangepi4-lts|orangepi800 && $BRANCH == legacy ]]; then
-
-		[[ $BUILD_OPT =~ image ]] && fetch_from_repo "https://github.com/orangepi-xunlong/rk3399_gst_xserver_libs.git" "${EXTER}/cache/sources/rk3399_gst_xserver_libs" "branch:main"
-
-	fi
-
-	if [[ ${BOARD} =~ orangepi4|orangepi4-lts|orangepi800 && $RELEASE =~ focal|buster|bullseye|bookworm ]]; then
-
-		[[ ${BUILD_OPT} == image ]] && fetch_from_repo "https://github.com/orangepi-xunlong/rk-rootfs-build.git" "${EXTER}/cache/sources/rk-rootfs-build-${RELEASE}" "branch:rk-rootfs-build-${RELEASE}"
-
-	fi
-
-	if [[ ${BOARD} =~ orangepi3|orangepi3-lts && $RELEASE =~ bullseye && $BRANCH==current ]]; then
-
-		[[ ${BUILD_OPT} == image ]] && fetch_from_repo "https://github.com/orangepi-xunlong/rk-rootfs-build.git" "${EXTER}/cache/sources/ffmpeg_kodi_debian11" "branch:ffmpeg_kodi_debian11"
-
-	fi
-
 	call_extension_method "fetch_sources_tools"  <<- 'FETCH_SOURCES_TOOLS'
 	*fetch host-side sources needed for tools and build*
 	Run early to fetch_from_repo or otherwise obtain sources for needed tools.
@@ -439,7 +344,6 @@ if [[ $BUILD_OPT == u-boot || $BUILD_OPT == image ]]; then
 	if [[ ! -f "${DEB_STORAGE}"/u-boot/${CHOSEN_UBOOT}_${REVISION}_${ARCH}.deb ]]; then
 
 		[[ -n "${ATFSOURCE}" && "${REPOSITORY_INSTALL}" != *u-boot* ]] && compile_atf
-		
 		[[ ${REPOSITORY_INSTALL} != *u-boot* ]] && compile_uboot
 	fi
 
@@ -476,32 +380,19 @@ if [[ $BUILD_OPT == rootfs || $BUILD_OPT == image ]]; then
 	# fi 
 
 	# Compile orangepi-zsh if packed .deb does not exist or use the one from repository
-	if [[ ! -f ${DEB_STORAGE}/orangepi-zsh_${REVISION}_all.deb ]]; then
-	    [[ "${REPOSITORY_INSTALL}" != *orangepi-zsh* ]] && compile_orangepi-zsh
-	fi
+	# if [[ ! -f ${DEB_STORAGE}/orangepi-zsh_${REVISION}_all.deb ]]; then
+	#     [[ "${REPOSITORY_INSTALL}" != *orangepi-zsh* ]] && compile_orangepi-zsh
+	# fi
 
 	# Compile orangepi-firmware if packed .deb does not exist or use the one from repository
+	# if [[ "${REPOSITORY_INSTALL}" != *orangepi-firmware* ]]; then
 
-
-	if [[ "${REPOSITORY_INSTALL}" != *orangepi-firmware* ]]; then
-
-		if ! ls "${DEB_STORAGE}/orangepi-firmware_${REVISION}_all.deb" 1> /dev/null 2>&1; then
-
-			FULL=""
-			REPLACE="-full"
-			compile_firmware
-
-		fi
-
-		#if ! ls "${DEB_STORAGE}/orangepi-firmware-full_${REVISION}_all.deb" 1> /dev/null 2>&1; then
-
-			#FULL="-full"
-			#REPLACE=""
-			#compile_firmware
-
-		#fi
-
-	fi
+	# 	if ! ls "${DEB_STORAGE}/orangepi-firmware_${REVISION}_all.deb" 1> /dev/null 2>&1; then
+	# 		FULL=""
+	# 		REPLACE="-full"
+	# 		compile_firmware
+	# 	fi
+	# fi
 
 	overlayfs_wrapper "cleanup"
 	

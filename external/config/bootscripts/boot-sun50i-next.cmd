@@ -7,7 +7,6 @@
 setenv load_addr "0x45000000"
 setenv overlay_error "false"
 setenv rootdev "/dev/mmcblk0p1"
-setenv verbosity "7"
 setenv rootfstype "ext4"
 setenv console "both"
 setenv docker_optimizations "on"

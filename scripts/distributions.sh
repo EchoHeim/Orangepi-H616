@@ -14,9 +14,6 @@
 # install_distribution_specific
 # post_debootstrap_tweaks
 
-
-
-
 install_common()
 {
 	display_alert "Applying common tweaks" "" "info"
@@ -356,15 +353,19 @@ POST_INSTALL_KERNEL_DEBS
 	fi
 
 	# install orangepi-firmware
-	if [[ "${REPOSITORY_INSTALL}" != *orangepi-firmware* ]]; then
-		if [[ -f ${DEB_STORAGE}/orangepi-firmware_${REVISION}_all.deb ]]; then
-			install_deb_chroot "${DEB_STORAGE}/orangepi-firmware_${REVISION}_all.deb"
-		fi
-	else
-		if [[ -f ${DEB_STORAGE}/orangepi-firmware_${REVISION}_all.deb ]]; then
-			install_deb_chroot "${DEB_ORANGEPI}/orangepi-firmware_${REVISION}_all.deb" "orangepi"
-		fi
-	fi
+	# if [[ "${REPOSITORY_INSTALL}" != *orangepi-firmware* ]]; then
+    #     echo "==================firmware"
+	# 	if [[ -f ${DEB_STORAGE}/orangepi-firmware_${REVISION}_all.deb ]]; then
+    #         echo "=========install=========firmware"
+	# 		install_deb_chroot "${DEB_STORAGE}/orangepi-firmware_${REVISION}_all.deb"
+	# 	fi
+	# else
+    #     echo "==================firmware orangeou"
+	# 	if [[ -f ${DEB_STORAGE}/orangepi-firmware_${REVISION}_all.deb ]]; then
+    #         echo "========install==========firmware orangepi"
+	# 		install_deb_chroot "${DEB_ORANGEPI}/orangepi-firmware_${REVISION}_all.deb" "orangepi"
+	# 	fi
+	# fi
 
 	# install orangepi-config
 	# if [[ "${PACKAGE_LIST_RM}" != *orangepi-config* ]]; then
@@ -380,17 +381,17 @@ POST_INSTALL_KERNEL_DEBS
 	# fi
 
 	# install orangepi-zsh
-	if [[ "${PACKAGE_LIST_RM}" != *orangepi-zsh* ]]; then
-		if [[ "${REPOSITORY_INSTALL}" != *orangepi-zsh* ]]; then
-			if [[ $BUILD_MINIMAL != yes ]]; then
-				install_deb_chroot "${DEB_STORAGE}/orangepi-zsh_${REVISION}_all.deb"
-			fi
-		else
-			if [[ $BUILD_MINIMAL != yes ]]; then
-				install_deb_chroot "orangepi-zsh" "remote"
-			fi
-		fi
-	fi
+	# if [[ "${PACKAGE_LIST_RM}" != *orangepi-zsh* ]]; then
+	# 	if [[ "${REPOSITORY_INSTALL}" != *orangepi-zsh* ]]; then
+	# 		if [[ $BUILD_MINIMAL != yes ]]; then
+	# 			install_deb_chroot "${DEB_STORAGE}/orangepi-zsh_${REVISION}_all.deb"
+	# 		fi
+	# 	else
+	# 		if [[ $BUILD_MINIMAL != yes ]]; then
+	# 			install_deb_chroot "orangepi-zsh" "remote"
+	# 		fi
+	# 	fi
+	# fi
 
 	# install kernel sources
 	if [[ -f ${DEB_STORAGE}/${CHOSEN_KSRC}_${REVISION}_all.deb && $INSTALL_KSRC == yes ]]; then
@@ -649,28 +650,6 @@ install_distribution_specific()
 	display_alert "Applying distribution specific tweaks for" "$RELEASE" "info"
 
 	case $RELEASE in
-
-	xenial)
-
-			# remove legal info from Ubuntu
-			[[ -f "${SDCARD}"/etc/legal ]] && rm "${SDCARD}"/etc/legal
-
-			# ureadahead needs kernel tracing options that AFAIK are present only in mainline. disable
-			chroot "${SDCARD}" /bin/bash -c \
-			"systemctl --no-reload mask ondemand.service ureadahead.service >/dev/null 2>&1"
-			chroot "${SDCARD}" /bin/bash -c \
-			"systemctl --no-reload mask setserial.service etc-setserial.service >/dev/null 2>&1"
-
-		;;
-
-	stretch|buster|sid)
-
-			# remove doubled uname from motd
-			[[ -f "${SDCARD}"/etc/update-motd.d/10-uname ]] && rm "${SDCARD}"/etc/update-motd.d/10-uname
-			# rc.local is not existing but one might need it
-			install_rclocal
-
-		;;
 
 	bullseye)
 

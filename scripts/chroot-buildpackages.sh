@@ -15,9 +15,6 @@
 # chroot_installpackages_local
 # chroot_installpackages
 
-
-
-
 # create_chroot <target_dir> <release> <arch>
 #
 create_chroot()

@@ -16,8 +16,6 @@
 # create_image
 
 
-
-
 # debootstrap_ng
 #
 debootstrap_ng()
@@ -740,7 +738,7 @@ update_initramfs()
 	umount_chroot "$chroot_target/"
 	rm $chroot_target/usr/bin/$QEMU_BINARY
 
-} #############################################################################
+} 
 
 # create_image
 #
@@ -966,4 +964,4 @@ POST_UMOUNT_FINAL_IMAGE
 		display_alert "Can't write to $CARD_DEVICE" "Enable docker privileged mode in config-docker.conf" "wrn"
 	fi
 
-} #############################################################################
+}

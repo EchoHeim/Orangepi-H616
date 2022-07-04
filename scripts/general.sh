@@ -1754,9 +1754,6 @@ download_and_verify()
 	fi
 }
 
-
-
-
 show_developer_warning()
 {
 	local temp_rc
@@ -1810,75 +1807,3 @@ show_checklist_variables ()
 	done
 }
 
-
-
-#function run_after_build()
-#{
-#	chown -R $(logname).$(logname) $BOOTSOURCEDIR
-#	chown -R $(logname).$(logname) $LINUXSOURCEDIR
-#	chown -R $(logname).$(logname) $USERPATCHES_PATH
-#	chown -R $(logname).$(logname) $DEST/{config,debs,debug,images,patch}
-#
-#	if [[ $DEBUG_DEB == yes && $BUILD_OPT =~ u-boot|kernel ]]; then
-#
-#		[[ -z $REMOTEIP ]] && exit_with_error "The remote IP address has not been set" ""
-#		[[ -z $PASS_ROOT ]] && PASS_ROOT="orangepi"
-#		[[ -z $MMC_DEV ]] && MMC_DEV="tfcard"
-#
-#		#ssh-keygen -f "~/.ssh/known_hosts" -R ${REMOTEIP}
-#		local num=0
-#		while true;
-#		do
-#			ping ${REMOTEIP} -c 1 > /dev/null 2>&1
-#
-#			if [[ $? == 0 ]]; then
-#				echo " "
-#				break
-#			fi
-#
-#			if [[ $num == 0 ]]; then
-#				display_alert "${BOARD} network cannot be connected" "${REMOTEIP}" "wrn"
-#				((num++))
-#			fi
-#
-#			echo -e ".\c"
-#		done
-#		display_alert "${BOARD} network is connected" "${REMOTEIP}" "info"
-#
-#		if [[ $BUILD_OPT == u-boot ]]; then
-#			sshpass -p ${PASS_ROOT} scp ${DEB_STORAGE}/u-boot/${CHOSEN_UBOOT}_${REVISION}_${ARCH}.deb root@${REMOTEIP}:/root
-#			display_alert "Uninstall deb package" "linux-u-boot-${BOARD}-${BRANCH}" "info"
-#			sshpass -p ${PASS_ROOT} ssh root@${REMOTEIP} "apt-get purge -y linux-u-boot-${BOARD}-${BRANCH}"
-#			display_alert "Install deb package" "${CHOSEN_UBOOT}_${REVISION}_${ARCH}.deb" "info"
-#			sshpass -p ${PASS_ROOT} ssh root@${REMOTEIP} "dpkg -i /root/${CHOSEN_UBOOT}_${REVISION}_${ARCH}.deb"
-#
-#			if [[ $MMC_DEV == emmc ]]; then
-#				display_alert "Burn the U-Boot into EMMC" "" "info"
-#				sshpass -p ${PASS_ROOT} ssh root@${REMOTEIP} "dd bs=1k seek=8 if=/usr/lib/linux-u-boot-legacy-orangepi400_2.1.0_arm64/boot0_sdcard.fex of=/dev/mmcblk0"
-#				sshpass -p ${PASS_ROOT} ssh root@${REMOTEIP} "dd bs=1k seek=16400 if=/usr/lib/linux-u-boot-legacy-orangepi400_2.1.0_arm64/boot_package.fex of=/dev/mmcblk0"
-#				sshpass -p ${PASS_ROOT} ssh root@${REMOTEIP} "sync"
-#			else
-#				display_alert "Burn the U-Boot into TF card" "" "info"
-#				sshpass -p ${PASS_ROOT} ssh root@${REMOTEIP} "nand-sata-install DEBUG_UBOOT"
-#				sshpass -p ${PASS_ROOT} ssh root@${REMOTEIP} "sync"
-#				sshpass -p ${PASS_ROOT} ssh root@${REMOTEIP} "reboot"
-#			fi
-#		fi
-#
-#		if [[ $BUILD_OPT == kernel ]]; then
-#			sshpass -p ${PASS_ROOT} scp ${DEB_STORAGE}/linux-image-${BRANCH}-${LINUXFAMILY}_${REVISION}_${ARCH}.deb root@${REMOTEIP}:/root
-#			sshpass -p ${PASS_ROOT} ssh root@${REMOTEIP} "apt-get purge -y linux-image-${BRANCH}-${LINUXFAMILY}"
-#			sshpass -p ${PASS_ROOT} ssh root@${REMOTEIP} "dpkg -i /root/linux-image-${BRANCH}-${LINUXFAMILY}_${REVISION}_${ARCH}.deb"
-#			if [[ $BRANCH == current && $BOARD =~ orangepizero2|orangepi400 ]]; then
-#				sshpass -p ${PASS_ROOT} scp ${LINUXSOURCEDIR}/arch/arm64/boot/dts/allwinner/sun50i-h616-orangepi-*.dtb root@${REMOTEIP}:/boot/dtb/allwinner/
-#			fi
-#
-#			sshpass -p ${PASS_ROOT} ssh root@${REMOTEIP} "sync"
-#			sshpass -p ${PASS_ROOT} ssh root@${REMOTEIP} "reboot"
-#		fi
-#	fi
-#
-#	if [[ $DEBUG_DEB == yes && $BUILD_OPT == image ]]; then
-#		scp ${destimg}/*.img ${PC_NAME}@${PC_IP}:${PC_DIR}
-#	fi
-#}

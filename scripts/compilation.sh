@@ -6,7 +6,6 @@
 # License version 2. This program is licensed "as is" without any
 # warranty of any kind, whether express or implied.
 
-
 # Functions:
 
 # compile_atf
@@ -15,16 +14,12 @@
 # compile_firmware
 # compile_orangepi-config
 # compile_sunxi_tools
-# install_rkbin_tools
 # grab_version
 # find_toolchain
 # advanced_patch
 # process_patch_file
 # userpatch_create
 # overlayfs_wrapper
-
-
-
 
 compile_atf()
 {
@@ -110,9 +105,6 @@ compile_atf()
 	[[ -f license.md ]] && cp license.md "${atftempdir}"/
 }
 
-
-
-
 compile_uboot()
 {
 	# not optimal, but extra cleaning before overlayfs_wrapper should keep sources directory clean
@@ -137,22 +129,22 @@ compile_uboot()
 	display_alert "Compiling u-boot" "v$version" "info"
 
 # build aarch64
-  if [[ $(dpkg --print-architecture) == amd64 ]]; then
+    if [[ $(dpkg --print-architecture) == amd64 ]]; then
 
-	local toolchain
-	toolchain=$(find_toolchain "$UBOOT_COMPILER" "$UBOOT_USE_GCC")
-	[[ -z $toolchain ]] && exit_with_error "Could not find required toolchain" "${UBOOT_COMPILER}gcc $UBOOT_USE_GCC"
+        local toolchain
+        toolchain=$(find_toolchain "$UBOOT_COMPILER" "$UBOOT_USE_GCC")
+        [[ -z $toolchain ]] && exit_with_error "Could not find required toolchain" "${UBOOT_COMPILER}gcc $UBOOT_USE_GCC"
 
-	if [[ -n $UBOOT_TOOLCHAIN2 ]]; then
-		local toolchain2_type toolchain2_ver toolchain2
-		toolchain2_type=$(cut -d':' -f1 <<< "${UBOOT_TOOLCHAIN2}")
-		toolchain2_ver=$(cut -d':' -f2 <<< "${UBOOT_TOOLCHAIN2}")
-		toolchain2=$(find_toolchain "$toolchain2_type" "$toolchain2_ver")
-		[[ -z $toolchain2 ]] && exit_with_error "Could not find required toolchain" "${toolchain2_type}gcc $toolchain2_ver"
-	fi
+        if [[ -n $UBOOT_TOOLCHAIN2 ]]; then
+            local toolchain2_type toolchain2_ver toolchain2
+            toolchain2_type=$(cut -d':' -f1 <<< "${UBOOT_TOOLCHAIN2}")
+            toolchain2_ver=$(cut -d':' -f2 <<< "${UBOOT_TOOLCHAIN2}")
+            toolchain2=$(find_toolchain "$toolchain2_type" "$toolchain2_ver")
+            [[ -z $toolchain2 ]] && exit_with_error "Could not find required toolchain" "${toolchain2_type}gcc $toolchain2_ver"
+        fi
 
-# build aarch64
-  fi
+    # build aarch64
+    fi
 
 	display_alert "Compiler version" "${UBOOT_COMPILER}gcc $(eval env PATH="${toolchain}:${toolchain2}:${PATH}" "${UBOOT_COMPILER}gcc" -dumpversion)" "info"
 	[[ -n $toolchain2 ]] && display_alert "Additional compiler version" "${toolchain2_type}gcc $(eval env PATH="${toolchain}:${toolchain2}:${PATH}" "${toolchain2_type}gcc" -dumpversion)" "info"
@@ -443,7 +435,6 @@ Before any olddefconfig any Kconfig make is called.
 A good place to customize the .config directly.
 CUSTOM_KERNEL_CONFIG
 
-
 	# hack for deb builder. To pack what's missing in headers pack.
 	cp "$EXTER"/patch/misc/headers-debian-byteshift.patch /tmp
 
@@ -570,32 +561,36 @@ CUSTOM_KERNEL_CONFIG
 
 }
 
-
-
-
 compile_firmware()
 {
-	display_alert "Merging and packaging linux firmware" "@host" "info"
+	display_alert "Merging and packaging linux ---firmware---" "@host" "info"
 
 	local firmwaretempdir plugin_dir
 
 	firmwaretempdir=$(mktemp -d)
+    echo " === pwd "
+    pwd
 	chmod 700 ${firmwaretempdir}
 	trap "ret=\$?; rm -rf \"${firmwaretempdir}\" ; exit \$ret" 0 1 2 3 15
 	plugin_dir="orangepi-firmware${FULL}"
 	mkdir -p "${firmwaretempdir}/${plugin_dir}/lib/firmware"
 
-	[[ $IGNORE_UPDATES != yes ]] && fetch_from_repo "https://github.com/orangepi-xunlong/firmware" "${EXTER}/cache/sources/orangepi-firmware-git" "branch:master"
+    echo "${plugin_dir} ::${plugin_dir}   ===IGNORE_UPDATES "
+
+	# [[ $IGNORE_UPDATES != yes ]] && fetch_from_repo "https://github.com/orangepi-xunlong/firmware" "${EXTER}/cache/sources/orangepi-firmware-git" "branch:master"
 	if [[ -n $FULL ]]; then
-		[[ $IGNORE_UPDATES != yes ]] && fetch_from_repo "$MAINLINE_FIRMWARE_SOURCE" "${EXTER}/cache/sources/linux-firmware-git" "branch:master"
+		# [[ $IGNORE_UPDATES != yes ]] && fetch_from_repo "$MAINLINE_FIRMWARE_SOURCE" "${EXTER}/cache/sources/linux-firmware-git" "branch:master"
 		# cp : create hardlinks
+        echo "IGNORE_UPDATES   ===2 IGNORE_UPDATES "
 		cp -af --reflink=auto "${EXTER}"/cache/sources/linux-firmware-git/* "${firmwaretempdir}/${plugin_dir}/lib/firmware/"
 	fi
 	# overlay our firmware
 	# cp : create hardlinks
+    echo "IGNORE_UPDATES   ===3 IGNORE_UPDATES ${firmwaretempdir}/${plugin_dir}/lib/firmware "
 	cp -af --reflink=auto "${EXTER}"/cache/sources/orangepi-firmware-git/* "${firmwaretempdir}/${plugin_dir}/lib/firmware/"
 
 	# cleanup what's not needed for sure
+    
 	rm -rf "${firmwaretempdir}/${plugin_dir}"/lib/firmware/{amdgpu,amd-ucode,radeon,nvidia,matrox,.git}
 	cd "${firmwaretempdir}/${plugin_dir}" || exit
 
@@ -614,23 +609,26 @@ compile_firmware()
 	END
 
 	cd "${firmwaretempdir}" || exit
+    pwd
 	# pack
 	mv "orangepi-firmware${FULL}" "orangepi-firmware${FULL}_${REVISION}_all"
 	display_alert "Building firmware package" "orangepi-firmware${FULL}_${REVISION}_all" "info"
+    echo "IGNORE_UPDATES   ==34=IGNORE_UPDATES "
 	fakeroot dpkg -Z xz -b "orangepi-firmware${FULL}_${REVISION}_all" >> "${DEST}"/${LOG_SUBPATH}/install.log 2>&1
 	mv "orangepi-firmware${FULL}_${REVISION}_all" "orangepi-firmware${FULL}"
+
+    echo "IGNORE_UPDATES   ==5=IGNORE_UPDATES ${DEB_STORAGE} "
 	rsync -rq "orangepi-firmware${FULL}_${REVISION}_all.deb" "${DEB_STORAGE}/"
+
+    echo "IGNORE_UPDATES   ==66  IGNORE_UPDATES ${firmwaretempdir} "
 
 	# remove temp directory
 	rm -rf "${firmwaretempdir}"
 }
 
 
-
-
 compile_orangepi-zsh()
 {
-
 	local tmp_dir orangepi_zsh_dir
 	tmp_dir=$(mktemp -d)
 	chmod 700 ${tmp_dir}
@@ -762,20 +760,6 @@ compile_sunxi_tools()
 		make -s tools >/dev/null
 		mkdir -p /usr/local/bin/
 		make install-tools >/dev/null 2>&1
-		improved_git rev-parse @ 2>/dev/null > .commit_id
-	fi
-}
-
-install_rkbin_tools()
-{
-	# install only if git commit hash changed
-	cd "${EXTER}"/cache/sources/rkbin-tools || exit
-	# need to check if /usr/local/bin/sunxi-fexc to detect new Docker containers with old cached sources
-	if [[ ! -f .commit_id || $(improved_git rev-parse @ 2>/dev/null) != $(<.commit_id) || ! -f /usr/local/bin/loaderimage ]]; then
-		display_alert "Installing" "rkbin-tools" "info"
-		mkdir -p /usr/local/bin/
-		install -m 755 tools/loaderimage /usr/local/bin/
-		install -m 755 tools/trust_merger /usr/local/bin/
 		improved_git rev-parse @ 2>/dev/null > .commit_id
 	fi
 }
