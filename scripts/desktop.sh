@@ -14,9 +14,6 @@
 # add_desktop_package_sources
 # desktop_postinstall
 
-
-
-
 create_desktop_package ()
 {
 
@@ -185,8 +182,6 @@ install_ppa_prerequisites() {
 }
 
 
-
-
 add_apt_sources() {
 
 	local potential_paths=""
@@ -259,8 +254,6 @@ add_desktop_package_sources() {
 	cat "${SDCARD}/etc/apt/sources.list" >> "${DEST}"/${LOG_SUBPATH}/install.log
 
 }
-
-
 
 
 desktop_postinstall ()

@@ -144,24 +144,8 @@ if [[ -z $BUILD_OPT ]]; then
 	[[ $BUILD_OPT == rootfs ]] && ROOT_FS_CREATE_ONLY="yes"
 fi
 
-
-if [[ ${BUILD_OPT} =~ kernel|image ]]; then
-
-	if [[ -z $KERNEL_CONFIGURE ]]; then
-
-		options+=("no" "Do not change the kernel configuration")
-		options+=("yes" "Show a kernel configuration menu before compilation")
-
-		menustr="Select the kernel configuration."
-		KERNEL_CONFIGURE=$(whiptail --title "${titlestr}" --backtitle "$backtitle" --notags \
-						 --menu "${menustr}" $TTY_Y $TTY_X $((TTY_Y - 8)) \
-						 --cancel-button Exit --ok-button Select "${options[@]}" \
-						 3>&1 1>&2 2>&3)
-
-		unset options
-		[[ -z $KERNEL_CONFIGURE ]] && exit_with_error "No option selected"
-	fi
-fi
+KERNEL_CONFIGURE="no"
+[[ $BUILD_OPT == kernel ]] && KERNEL_CONFIGURE="yes"
 
 BOARD_TYPE="conf"
 BOARD="orangepizero2"
@@ -171,82 +155,13 @@ source "${EXTER}/config/boards/orangepizero2.conf"
 LINUXFAMILY="${BOARDFAMILY}"
 
 BRANCH="current"
+BUILD_MINIMAL="no"    # Just in case BUILD_MINIMAL is not defined
+BUILD_DESKTOP="no"
 
-if [[ $BUILD_OPT =~ rootfs|image && -z $RELEASE ]]; then
+RELEASE="bullseye"          # 发行版本 bookworm/bullseye/focal/jammy 可选   
+SELECTED_CONFIGURATION="cli_standard"
+# SELECTED_CONFIGURATION="cli_minimal"
 
-	options=()
-
-	distros_options
-
-	menustr="Select the target OS release package base"
-	RELEASE=$(whiptail --title "Choose a release package base" --backtitle "${backtitle}" \
-			  --menu "${menustr}" "${TTY_Y}" "${TTY_X}" $((TTY_Y - 8))  \
-			  --cancel-button Exit --ok-button Select "${options[@]}" \
-			  3>&1 1>&2 2>&3)
-	#echo "options : ${options}"
-	[[ -z $RELEASE ]] && exit_with_error "No release selected"
-
-	unset options
-fi
-
-# don't show desktop option if we choose minimal build
-[[ $BUILD_MINIMAL == yes ]] && BUILD_DESKTOP=no
-
-if [[ $BUILD_OPT =~ rootfs|image && -z $BUILD_DESKTOP ]]; then
-
-	# read distribution support status which is written to the orangepi-release file
-	set_distribution_status
-
-	options=()
-	options+=("no" "Image with console interface (server)")
-	options+=("yes" "Image with desktop environment")
-
-	menustr="Select the target image type"
-	BUILD_DESKTOP=$(whiptail --title "Choose image type" --backtitle "${backtitle}" \
-			  --menu "${menustr}" "${TTY_Y}" "${TTY_X}" $((TTY_Y - 8))  \
-			  --cancel-button Exit --ok-button Select "${options[@]}" \
-			  3>&1 1>&2 2>&3)
-	unset options
-	[[ -z $BUILD_DESKTOP ]] && exit_with_error "No option selected"
-	if [[ ${BUILD_DESKTOP} == "yes" ]]; then
-		BUILD_MINIMAL=no
-		SELECTED_CONFIGURATION="desktop"
-	fi
-
-fi
-
-if [[ $BUILD_OPT =~ rootfs|image && $BUILD_DESKTOP == no && -z $BUILD_MINIMAL ]]; then
-
-	options=()
-	options+=("no" "Standard image with console interface")
-	options+=("yes" "Minimal image with console interface")
-	menustr="Select the target image type"
-	BUILD_MINIMAL=$(whiptail --title "Choose image type" --backtitle "${backtitle}" \
-			  --menu "${menustr}" "${TTY_Y}" "${TTY_X}" $((TTY_Y - 8))  \
-			  --cancel-button Exit --ok-button Select "${options[@]}" \
-			  3>&1 1>&2 2>&3)
-	unset options
-	[[ -z $BUILD_MINIMAL ]] && exit_with_error "No option selected"
-	if [[ $BUILD_MINIMAL == "yes" ]]; then
-		SELECTED_CONFIGURATION="cli_minimal"
-	else
-		SELECTED_CONFIGURATION="cli_standard"
-	fi
-
-fi
-
-#prevent conflicting setup
-if [[ $BUILD_DESKTOP == "yes" ]]; then
-	BUILD_MINIMAL=no
-	SELECTED_CONFIGURATION="desktop"
-elif [[ $BUILD_MINIMAL != "yes" || -z "${BUILD_MINIMAL}" ]]; then
-	BUILD_MINIMAL=no # Just in case BUILD_MINIMAL is not defined
-	BUILD_DESKTOP=no
-	SELECTED_CONFIGURATION="cli_standard"
-elif [[ $BUILD_MINIMAL == "yes" ]]; then
-	BUILD_DESKTOP=no
-	SELECTED_CONFIGURATION="cli_minimal"
-fi
 
 source "${SRC}"/scripts/configuration.sh
 
@@ -374,26 +289,6 @@ fi
 
 if [[ $BUILD_OPT == rootfs || $BUILD_OPT == image ]]; then
 
-	# Compile orangepi-config if packed .deb does not exist or use the one from Orange Pi
-	# if [[ ! -f ${DEB_STORAGE}/orangepi-config_${REVISION}_all.deb ]]; then
-	# 	[[ "${REPOSITORY_INSTALL}" != *orangepi-config* ]] && compile_orangepi-config
-	# fi 
-
-	# Compile orangepi-zsh if packed .deb does not exist or use the one from repository
-	# if [[ ! -f ${DEB_STORAGE}/orangepi-zsh_${REVISION}_all.deb ]]; then
-	#     [[ "${REPOSITORY_INSTALL}" != *orangepi-zsh* ]] && compile_orangepi-zsh
-	# fi
-
-	# Compile orangepi-firmware if packed .deb does not exist or use the one from repository
-	# if [[ "${REPOSITORY_INSTALL}" != *orangepi-firmware* ]]; then
-
-	# 	if ! ls "${DEB_STORAGE}/orangepi-firmware_${REVISION}_all.deb" 1> /dev/null 2>&1; then
-	# 		FULL=""
-	# 		REPLACE="-full"
-	# 		compile_firmware
-	# 	fi
-	# fi
-
 	overlayfs_wrapper "cleanup"
 	
 	# create board support package
@@ -402,7 +297,7 @@ if [[ $BUILD_OPT == rootfs || $BUILD_OPT == image ]]; then
 	# create desktop package
 	#[[ -n $RELEASE && $DESKTOP_ENVIRONMENT && ! -f ${DEB_STORAGE}/$RELEASE/${CHOSEN_DESKTOP}_${REVISION}_all.deb ]] && create_desktop_package
 	#[[ -n $RELEASE && $DESKTOP_ENVIRONMENT && ! -f ${DEB_STORAGE}/${RELEASE}/${BSP_DESKTOP_PACKAGE_FULLNAME}.deb ]] && create_bsp_desktop_package
-	[[ -n $RELEASE && $DESKTOP_ENVIRONMENT ]] && create_desktop_package
+	# [[ -n $RELEASE && $DESKTOP_ENVIRONMENT ]] && create_desktop_package
 	[[ -n $RELEASE && $DESKTOP_ENVIRONMENT ]] && create_bsp_desktop_package
 
 	# build additional packages

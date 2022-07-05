@@ -816,20 +816,8 @@ function distro_menu ()
 			local expert_infos=""
 			[[ $EXPERT == "yes" ]] && expert_infos="(${support_level})"
 
-			if [[ "${BRANCH}" == "legacy" ]]; then
-				DISTRIB_TYPE="${DISTRIB_TYPE_LEGACY}"
-				[[ -z "${DISTRIB_TYPE_LEGACY}" ]] && DISTRIB_TYPE="buster bionic focal"
-			elif [[ "${BRANCH}" == "current" ]]; then
-				DISTRIB_TYPE="${DISTRIB_TYPE_CURRENT}"
-				[[ -z "${DISTRIB_TYPE_CURRENT}" ]] && DISTRIB_TYPE="bullseye bookworm focal jammy"
-			elif [[ "${BRANCH}" == "next" ]]; then
-				if [[ -n "${DISTRIB_TYPE_NEXT}" ]]; then
-					DISTRIB_TYPE="${DISTRIB_TYPE_NEXT}"
-				else
-					DISTRIB_TYPE="${DISTRIB_TYPE_CURRENT}"
-					[[ -z "${DISTRIB_TYPE_CURRENT}" ]] && DISTRIB_TYPE="bullseye bookworm focal jammy"
-				fi
-			fi
+            DISTRIB_TYPE="${DISTRIB_TYPE_CURRENT}"
+            [[ -z "${DISTRIB_TYPE_CURRENT}" ]] && DISTRIB_TYPE="bullseye bookworm focal jammy"
 
 			if [[ "${DISTRIB_TYPE}" =~ "${distro_codename}" ]]; then
 				options+=("${distro_codename}" "${distro_fullname} ${expert_infos}")

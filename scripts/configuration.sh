@@ -7,11 +7,11 @@
 # warranty of any kind, whether express or implied.
 
 
-[[ -z $VENDOR ]] && VENDOR="Orange Pi"
-[[ -z $ROOTPWD ]] && ROOTPWD="orangepi" # Must be changed @first login
-[[ -z $OPI_USERNAME ]] && OPI_USERNAME="orangepi" 
-[[ -z $OPI_PWD ]] && OPI_PWD="orangepi" 
-[[ -z $MAINTAINER ]] && MAINTAINER="Orange Pi" # deb signature
+[[ -z $VENDOR ]] && VENDOR="Hurakan"
+[[ -z $ROOTPWD ]] && ROOTPWD="root" # Must be changed @first login
+[[ -z $OPI_USERNAME ]] && OPI_USERNAME="biqu" 
+[[ -z $OPI_PWD ]] && OPI_PWD="biqu" 
+[[ -z $MAINTAINER ]] && MAINTAINER="Hurakan" # deb signature
 [[ -z $MAINTAINERMAIL ]] && MAINTAINERMAIL="leeboby@aliyun.com" # deb signature
 [[ -z $DEB_COMPRESS ]] && DEB_COMPRESS="xz" # compress .debs with XZ by default. Use 'none' for faster/larger builds
 TZDATA=$(cat /etc/timezone) # Timezone for target is taken from host or defined here.
@@ -19,7 +19,7 @@ USEALLCORES=yes # Use all CPU cores for compiling
 HOSTRELEASE=$(cat /etc/os-release | grep VERSION_CODENAME | cut -d"=" -f2)
 [[ -z $HOSTRELEASE ]] && HOSTRELEASE=$(cut -d'/' -f1 /etc/debian_version)
 [[ -z $EXIT_PATCHING_ERROR ]] && EXIT_PATCHING_ERROR="" # exit patching if failed
-[[ -z $HOST ]] && HOST="$BOARD" # set hostname to the board
+[[ -z $HOST ]] && HOST="Hurakan" # set hostname to the board
 [[ -z $CHINA_DOWNLOAD_MIRROR ]] && CHINA_DOWNLOAD_MIRROR=tsinghua
 cd "${SRC}" || exit
 [[ -z "${ROOTFSCACHE_VERSION}" ]] && ROOTFSCACHE_VERSION=11
@@ -338,34 +338,6 @@ if [[ $BUILD_DESKTOP == "yes" && -z $DESKTOP_ENVIRONMENT_CONFIG_NAME ]]; then
 	fi
 fi
 
-if [[ $BUILD_DESKTOP == "yes" ]]; then
-	DESKTOP_ENVIRONMENT_PACKAGE_LIST_DIRPATH="${DESKTOP_ENVIRONMENT_DIRPATH}/${DESKTOP_ENVIRONMENT_CONFIG_NAME}"
-	DESKTOP_ENVIRONMENT_PACKAGE_LIST_FILEPATH="${DESKTOP_ENVIRONMENT_PACKAGE_LIST_DIRPATH}/packages"
-fi
-
-# "-z ${VAR+x}" allows to check for unset variable
-# Technically, someone might want to build a desktop with no additional
-# appgroups.
-if [[ $BUILD_DESKTOP == "yes" && -z ${DESKTOP_APPGROUPS_SELECTED+x} ]]; then
-
-	options=()
-	for appgroup_path in "${DESKTOP_APPGROUPS_DIR}/"*; do
-		appgroup="$(basename "${appgroup_path}")"
-		options+=("${appgroup}" "${appgroup^}" off)
-	done
-
-	DESKTOP_APPGROUPS_SELECTED=$(\
-		show_select_menu \
-		"Choose desktop softwares to add" \
-		"$backtitle" \
-		"Select which kind of softwares you'd like to add to your build" \
-		"${options[@]}")
-
-	DESKTOP_APPGROUPS_SELECTED=${DESKTOP_APPGROUPS_SELECTED//\"/}
-
-	unset options
-fi
-
 #exit_with_error 'Testing'
 
 # Expected variables
@@ -416,9 +388,9 @@ BOOTCONFIG_VAR_NAME=BOOTCONFIG_${BRANCH^^}
 [[ -z $KERNELPATCHDIR ]] && KERNELPATCHDIR="$LINUXFAMILY-$BRANCH"
 
 if [[ "$RELEASE" =~ ^(xenial|bionic|focal|hirsute|impish|jammy)$ ]]; then
-		DISTRIBUTION="Ubuntu"
-	else
-		DISTRIBUTION="Debian"
+    DISTRIBUTION="Ubuntu"
+else
+    DISTRIBUTION="Debian"
 fi
 
 CLI_CONFIG_PATH="${EXTER}/config/cli/${RELEASE}"

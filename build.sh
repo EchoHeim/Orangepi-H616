@@ -124,58 +124,32 @@ else
 
 fi
 
-# Docker shell
-if [[ "${1}" == docker-shell ]]; then
-	shift
-	#shellcheck disable=SC2034
-	SHELL_ONLY=yes
-	set -- "docker" "$@"
-fi
-
 EXTER="${SRC}/external"
 
-# Create userpatches directory if not exists
 mkdir -p "${SRC}"/userpatches
 
-
 # Create example configs if none found in userpatches
-if ! ls "${SRC}"/userpatches/{config-example.conf,config-docker.conf,config-vagrant.conf} 1> /dev/null 2>&1; then
+# if ! ls "${SRC}"/userpatches/{config-example.conf,config-docker.conf,config-vagrant.conf} 1> /dev/null 2>&1; then
 
-	# Migrate old configs
-	if ls "${SRC}"/*.conf 1> /dev/null 2>&1; then
-		display_alert "Migrate config files to userpatches directory" "all *.conf" "info"
-                cp "${SRC}"/*.conf "${SRC}"/userpatches  || exit 1
-		rm "${SRC}"/*.conf
-		[[ ! -L "${SRC}"/userpatches/config-example.conf ]] && ln -fs config-example.conf "${SRC}"/userpatches/config-default.conf || exit 1
-	fi
+# 	# Migrate old configs
+# 	if ls "${SRC}"/*.conf 1> /dev/null 2>&1; then
+# 		display_alert "Migrate config files to userpatches directory" "all *.conf" "info"
+#                 cp "${SRC}"/*.conf "${SRC}"/userpatches  || exit 1
+# 		rm "${SRC}"/*.conf
+# 		[[ ! -L "${SRC}"/userpatches/config-example.conf ]] && ln -fs config-example.conf "${SRC}"/userpatches/config-default.conf || exit 1
+# 	fi
 
-	display_alert "Create example config file using template" "config-default.conf" "info"
+# 	display_alert "Create example config file using template" "config-default.conf" "info"
 
-	# Create example config
-	if [[ ! -f "${SRC}"/userpatches/config-example.conf ]]; then
-		cp "${EXTER}"/config/templates/config-example.conf "${SRC}"/userpatches/config-example.conf || exit 1
-                ln -fs config-example.conf "${SRC}"/userpatches/config-default.conf || exit 1
-	fi
-fi
+# 	# Create example config
+# 	if [[ ! -f "${SRC}"/userpatches/config-example.conf ]]; then
+# 		cp "${EXTER}"/config/templates/config-example.conf "${SRC}"/userpatches/config-example.conf || exit 1
+#                 ln -fs config-example.conf "${SRC}"/userpatches/config-default.conf || exit 1
+# 	fi
+# fi
 
-if [[ -z "${CONFIG}" && -n "$1" && -f "${SRC}/userpatches/config-$1.conf" ]]; then
-	CONFIG="userpatches/config-$1.conf"
-	shift
-fi
-
-# usind default if custom not found
-if [[ -z "${CONFIG}" && -f "${SRC}/userpatches/config-default.conf" ]]; then
-	CONFIG="userpatches/config-default.conf"
-fi
-
-# source build configuration file
+CONFIG="userpatches/config-default.conf"
 CONFIG_FILE="$(realpath "${CONFIG}")"
-
-if [[ ! -f "${CONFIG_FILE}" ]]; then
-	display_alert "Config file does not exist" "${CONFIG}" "error"
-	exit 254
-fi
-
 CONFIG_PATH=$(dirname "${CONFIG_FILE}")
 
 source "${SRC}"/scripts/extensions.sh
