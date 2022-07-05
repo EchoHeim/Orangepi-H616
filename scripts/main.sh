@@ -21,12 +21,7 @@ cleanup_list() {
 # this is used instead of making the chmod in prepare_host() recursive
 umask 002
 
-# destination
-if [ -d "$CONFIG_PATH/output" ]; then
-	DEST="${CONFIG_PATH}"/output
-else
-	DEST="${SRC}"/output
-fi
+DEST="${SRC}"/output
 
 REVISION="3.0.4"
 
@@ -72,58 +67,15 @@ date +"%d_%m_%Y-%H_%M_%S" > "${DEST}"/${LOG_SUBPATH}/timestamp
 # delete compressed logs older than 7 days
 (cd "${DEST}"/${LOG_SUBPATH} && find . -name '*.tgz' -mtime +7 -delete) > /dev/null
 
-if [[ $PROGRESS_DISPLAY == none ]]; then
-
-	OUTPUT_VERYSILENT=yes
-
-elif [[ $PROGRESS_DISPLAY == dialog ]]; then
-
-	OUTPUT_DIALOG=yes
-
-fi
-
 if [[ $PROGRESS_LOG_TO_FILE != yes ]]; then unset PROGRESS_LOG_TO_FILE; fi
 
 SHOW_WARNING=yes
 
-if [[ $USE_CCACHE != no ]]; then
-
-	CCACHE=ccache
-	export PATH="/usr/lib/ccache:$PATH"
-	# private ccache directory to avoid permission issues when using build script with "sudo"
-	# see https://ccache.samba.org/manual.html#_sharing_a_cache for alternative solution
-	[[ $PRIVATE_CCACHE == yes ]] && export CCACHE_DIR=$EXTER/cache/ccache
-
-else
-
-	CCACHE=""
-
-fi
-
-if [[ -n $REPOSITORY_UPDATE ]]; then
-
-		# select stable/beta configuration
-		if [[ $BETA == yes ]]; then
-				DEB_STORAGE=$DEST/debs-beta
-				REPO_STORAGE=$DEST/repository-beta
-				REPO_CONFIG="aptly-beta.conf"
-		else
-				DEB_STORAGE=$DEST/debs
-				REPO_STORAGE=$DEST/repository
-				REPO_CONFIG="aptly.conf"
-		fi
-
-		# For user override
-		if [[ -f "${USERPATCHES_PATH}"/lib.config ]]; then
-				display_alert "Using user configuration override" "userpatches/lib.config" "info"
-			source "${USERPATCHES_PATH}"/lib.config
-		fi
-
-		repo-manipulate "$REPOSITORY_UPDATE"
-		exit
-
-fi
-
+CCACHE=ccache
+export PATH="/usr/lib/ccache:$PATH"
+# private ccache directory to avoid permission issues when using build script with "sudo"
+# see https://ccache.samba.org/manual.html#_sharing_a_cache for alternative solution
+[[ $PRIVATE_CCACHE == yes ]] && export CCACHE_DIR=$EXTER/cache/ccache
 
 # if BUILD_OPT, KERNEL_CONFIGURE, BOARD, BRANCH or RELEASE are not set, display selection menu
 if [[ -z $BUILD_OPT ]]; then
@@ -167,28 +119,14 @@ source "${SRC}"/scripts/configuration.sh
 
 # optimize build time with 100% CPU usage
 CPUS=$(grep -c 'processor' /proc/cpuinfo)
-if [[ $USEALLCORES != no ]]; then
-
-	CTHREADS="-j$((CPUS + CPUS/2))"
-
-else
-
-	CTHREADS="-j1"
-
-fi
+CTHREADS="-j$((CPUS + CPUS/2))"
 
 call_extension_method "post_determine_cthreads" "config_post_determine_cthreads" << 'POST_DETERMINE_CTHREADS'
 *give config a chance modify CTHREADS programatically. A build server may work better with hyperthreads-1 for example.*
 Called early, before any compilation work starts.
 POST_DETERMINE_CTHREADS
 
-if [[ $BETA == yes ]]; then
-	IMAGE_TYPE=nightly
-elif [[ $BETA != "yes" && $BUILD_ALL == yes && -n $GPG_PASS ]]; then
-	IMAGE_TYPE=stable
-else
-	IMAGE_TYPE=user-built
-fi
+IMAGE_TYPE=user-built
 
 branch2dir() {
 	[[ "${1}" == "head" ]] && echo "HEAD" || echo "${1##*:}"
@@ -274,7 +212,6 @@ fi
 if [[ $BUILD_OPT == kernel || $BUILD_OPT == image ]]; then
 
 	if [[ ! -f ${DEB_STORAGE}/${CHOSEN_KERNEL}_${REVISION}_${ARCH}.deb ]]; then 
-
 		KDEB_CHANGELOG_DIST=$RELEASE
 		[[ "${REPOSITORY_INSTALL}" != *kernel* ]] && compile_kernel
 	fi
@@ -298,7 +235,7 @@ if [[ $BUILD_OPT == rootfs || $BUILD_OPT == image ]]; then
 	#[[ -n $RELEASE && $DESKTOP_ENVIRONMENT && ! -f ${DEB_STORAGE}/$RELEASE/${CHOSEN_DESKTOP}_${REVISION}_all.deb ]] && create_desktop_package
 	#[[ -n $RELEASE && $DESKTOP_ENVIRONMENT && ! -f ${DEB_STORAGE}/${RELEASE}/${BSP_DESKTOP_PACKAGE_FULLNAME}.deb ]] && create_bsp_desktop_package
 	# [[ -n $RELEASE && $DESKTOP_ENVIRONMENT ]] && create_desktop_package
-	[[ -n $RELEASE && $DESKTOP_ENVIRONMENT ]] && create_bsp_desktop_package
+	# [[ -n $RELEASE && $DESKTOP_ENVIRONMENT ]] && create_bsp_desktop_package
 
 	# build additional packages
 	[[ $EXTERNAL_NEW == compile ]] && chroot_build_packages

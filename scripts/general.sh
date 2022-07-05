@@ -26,10 +26,8 @@
 # prepare_host_basic
 # prepare_host
 # webseed
-# download_and_verify
 # show_developer_warning
 # show_checklist_variables
-
 
 # cleaning <target>
 #
@@ -167,21 +165,6 @@ create_sources_list()
 	[[ -z $basedir ]] && exit_with_error "No basedir passed to create_sources_list"
 
 	case $release in
-	stretch|buster)
-	cat <<-EOF > "${basedir}"/etc/apt/sources.list
-	deb http://${DEBIAN_MIRROR} $release main contrib non-free
-	#deb-src http://${DEBIAN_MIRROR} $release main contrib non-free
-
-	deb http://${DEBIAN_MIRROR} ${release}-updates main contrib non-free
-	#deb-src http://${DEBIAN_MIRROR} ${release}-updates main contrib non-free
-
-	deb http://${DEBIAN_MIRROR} ${release}-backports main contrib non-free
-	#deb-src http://${DEBIAN_MIRROR} ${release}-backports main contrib non-free
-
-	deb http://${DEBIAN_SECURTY} ${release}/updates main contrib non-free
-	#deb-src http://${DEBIAN_SECURTY} ${release}/updates main contrib non-free
-	EOF
-	;;
 
 	bullseye|bookworm|trixie)
 	cat <<-EOF > "${basedir}"/etc/apt/sources.list
@@ -196,13 +179,6 @@ create_sources_list()
 
 	deb http://${DEBIAN_SECURTY} ${release}-security main contrib non-free
 	#deb-src http://${DEBIAN_SECURTY} ${release}-security main contrib non-free
-	EOF
-	;;
-
-	sid) # sid is permanent unstable development and has no such thing as updates or security
-	cat <<-EOF > "${basedir}"/etc/apt/sources.list
-	deb http://${DEBIAN_MIRROR} $release main contrib non-free
-	#deb-src http://${DEBIAN_MIRROR} $release main contrib non-free
 	EOF
 	;;
 
@@ -221,24 +197,8 @@ create_sources_list()
 	#deb-src http://${UBUNTU_MIRROR} ${release}-backports main restricted universe multiverse
 	EOF
 	;;
+
 	esac
-
-	# stage: add armbian repository and install key
-	#if [[ $DOWNLOAD_MIRROR == "china" ]]; then
-	#	echo "deb https://mirrors.tuna.tsinghua.edu.cn/armbian $RELEASE main ${RELEASE}-utils ${RELEASE}-desktop" > "${SDCARD}"/etc/apt/sources.list.d/armbian.list
-	#elif [[ $DOWNLOAD_MIRROR == "bfsu" ]]; then
-	#    echo "deb http://mirrors.bfsu.edu.cn/armbian $RELEASE main ${RELEASE}-utils ${RELEASE}-desktop" > "${SDCARD}"/etc/apt/sources.list.d/armbian.list
-	#else
-	#	echo "deb http://"$([[ $BETA == yes ]] && echo "beta" || echo "apt" )".armbian.com $RELEASE main ${RELEASE}-utils ${RELEASE}-desktop" > "${SDCARD}"/etc/apt/sources.list.d/armbian.list
-	#fi
-
-	# replace local package server if defined. Suitable for development
-	#[[ -n $LOCAL_MIRROR ]] && echo "deb http://$LOCAL_MIRROR $RELEASE main ${RELEASE}-utils ${RELEASE}-desktop" > "${SDCARD}"/etc/apt/sources.list.d/armbian.list
-
-	#display_alert "Adding Armbian repository and authentication key" "/etc/apt/sources.list.d/armbian.list" "info"
-	#cp "${EXTER}"/config/armbian.key "${SDCARD}"
-	#chroot "${SDCARD}" /bin/bash -c "cat armbian.key | apt-key add - > /dev/null 2>&1"
-	#rm "${SDCARD}"/armbian.key
 }
 
 
@@ -1305,7 +1265,7 @@ prepare_host_basic()
 			)
 
 	for check_pack in "${checklist[@]}"; do
-	        if ! which ${check_pack%:*} >/dev/null; then local install_pack+=${check_pack#*:}" "; fi
+	    if ! which ${check_pack%:*} >/dev/null; then local install_pack+=${check_pack#*:}" "; fi
 	done
 
 	if [[ -n $install_pack ]]; then
@@ -1501,11 +1461,6 @@ prepare_host()
 		USE_TORRENT_STATUS=${USE_TORRENT}
 		USE_TORRENT="no"
 
-
-		# for toolchain in ${toolchains[@]}; do
-		# 	download_and_verify "_toolchain" "${toolchain##*/}"
-		# done
-
         cd $SRC/toolchains/gcc-arm-9.2-2019.12-x86_64-aarch64-none-linux-gnu/
         sudo cat libexec.tar.gz* | sudo tar zx
 
@@ -1563,9 +1518,6 @@ prepare_host()
 	fi
 }
 
-
-
-
 function webseed ()
 {
 	# list of mirrors that host our files
@@ -1589,157 +1541,6 @@ function webseed ()
 	done
 	text="${text:1}"
 	echo "${text}"
-}
-
-
-
-
-download_and_verify()
-{
-
-	local remotedir=$1
-	local filename=$2
-	local localdir=$SRC/toolchains
-	local dirname=${filename//.tar.xz}
-
-        if [[ $DOWNLOAD_MIRROR == china ]]; then
-			local server="https://mirrors.tuna.tsinghua.edu.cn/armbian-releases/"
-		elif [[ $DOWNLOAD_MIRROR == bfsu ]]; then
-			local server="https://mirrors.bfsu.edu.cn/armbian-releases/"
-		else
-			local server=${ARMBIAN_MIRROR}
-        fi
-
-	if [[ -f ${localdir}/${dirname}/.download-complete ]]; then
-		return
-	fi
-
-	# switch to china mirror if US timeouts
-	timeout 10 curl --head --fail --silent ${server}${remotedir}/${filename} 2>&1 >/dev/null
-	if [[ $? -ne 7 && $? -ne 22 && $? -ne 0 ]]; then
-		display_alert "Timeout from $server" "retrying" "info"
-		server="https://mirrors.tuna.tsinghua.edu.cn/armbian-releases/"
-
-		# switch to another china mirror if tuna timeouts
-		timeout 10 curl --head --fail --silent ${server}${remotedir}/${filename} 2>&1 >/dev/null
-		if [[ $? -ne 7 && $? -ne 22 && $? -ne 0 ]]; then
-			display_alert "Timeout from $server" "retrying" "info"
-			server="https://mirrors.bfsu.edu.cn/armbian-releases/"
-		fi
-	fi
-
-
-	# check if file exists on remote server before running aria2 downloader
-	[[ ! `timeout 10 curl --head --fail --silent ${server}${remotedir}/${filename}` ]] && return
-
-	cd "${localdir}" || exit
-
-	# use local control file
-	if [[ -f "${EXTER}"/config/torrents/${filename}.asc ]]; then
-		local torrent="${EXTER}"/config/torrents/${filename}.torrent
-		ln -sf "${EXTER}/config/torrents/${filename}.asc" "${localdir}/${filename}.asc"
-	elif [[ ! `timeout 10 curl --head --fail --silent "${server}${remotedir}/${filename}.asc"` ]]; then
-		return
-	else
-		# download control file
-		local torrent=${server}$remotedir/${filename}.torrent
-		aria2c --download-result=hide --disable-ipv6=true --summary-interval=0 --console-log-level=error --auto-file-renaming=false \
-		--continue=false --allow-overwrite=true --dir="${localdir}" ${server}${remotedir}/${filename}.asc $(webseed "$remotedir/${filename}.asc") -o "${filename}.asc"
-		[[ $? -ne 0 ]] && display_alert "Failed to download control file" "" "wrn"
-	fi
-
-	# download torrent first
-	if [[ ${USE_TORRENT} == "yes" ]]; then
-
-		display_alert "downloading using torrent network" "$filename"
-		local ariatorrent="--summary-interval=0 --auto-save-interval=0 --seed-time=0 --bt-stop-timeout=120 --console-log-level=error \
-		--allow-overwrite=true --download-result=hide --rpc-save-upload-metadata=false --auto-file-renaming=false \
-		--file-allocation=trunc --continue=true ${torrent} \
-		--dht-file-path=$EXTER/cache/.aria2/dht.dat --disable-ipv6=true --stderr --follow-torrent=mem --dir=${localdir}"
-
-		# exception. It throws error if dht.dat file does not exists. Error suppress needed only at first download.
-		if [[ -f $EXTER/cache/.aria2/dht.dat ]]; then
-			# shellcheck disable=SC2086
-			aria2c ${ariatorrent}
-		else
-			# shellcheck disable=SC2035
-			aria2c ${ariatorrent} &> "${DEST}"/${LOG_SUBPATH}/torrent.log
-		fi
-		# mark complete
-		[[ $? -eq 0 ]] && touch "${localdir}/${filename}.complete"
-
-	fi
-
-
-	# direct download if torrent fails
-	if [[ ! -f "${localdir}/${filename}.complete" ]]; then
-		if [[ ! `timeout 10 curl --head --fail --silent ${server}${remotedir}/${filename} 2>&1 >/dev/null` ]]; then
-			display_alert "downloading using http(s) network" "$filename"
-			aria2c --download-result=hide --rpc-save-upload-metadata=false --console-log-level=error \
-			--dht-file-path="${SRC}"/cache/.aria2/dht.dat --disable-ipv6=true --summary-interval=0 --auto-file-renaming=false --dir="${localdir}" ${server}${remotedir}/${filename} $(webseed "${remotedir}/${filename}") -o "${filename}"
-			# mark complete
-			[[ $? -eq 0 ]] && touch "${localdir}/${filename}.complete" && echo ""
-
-		fi
-	fi
-
-	if [[ -f ${localdir}/${filename}.asc ]]; then
-
-		if grep -q 'BEGIN PGP SIGNATURE' "${localdir}/${filename}.asc"; then
-
-			if [[ ! -d $EXTER/cache/.gpg ]]; then
-				mkdir -p $EXTER/cache/.gpg
-				chmod 700 $EXTER/cache/.gpg
-				touch $EXTER/cache/.gpg/gpg.conf
-				chmod 600 $EXTER/cache/.gpg/gpg.conf
-			fi
-
-			# Verify archives with Linaro and Armbian GPG keys
-
-			if [ x"" != x"${http_proxy}" ]; then
-				(gpg --homedir "${EXTER}"/cache/.gpg --no-permission-warning --list-keys 8F427EAF >> "${DEST}"/${LOG_SUBPATH}/output.log 2>&1\
-				 || gpg --homedir "${EXTER}"/cache/.gpg --no-permission-warning \
-				--keyserver hkp://keyserver.ubuntu.com:80 --keyserver-options http-proxy="${http_proxy}" \
-				--recv-keys 8F427EAF >> "${DEST}"/${LOG_SUBPATH}/output.log 2>&1)
-
-				(gpg --homedir "${EXTER}"/cache/.gpg --no-permission-warning --list-keys 9F0E78D5 >> "${DEST}"/${LOG_SUBPATH}/output.log 2>&1\
-				|| gpg --homedir "${EXTER}"/cache/.gpg --no-permission-warning \
-				--keyserver hkp://keyserver.ubuntu.com:80 --keyserver-options http-proxy="${http_proxy}" \
-				--recv-keys 9F0E78D5 >> "${DEST}"/${LOG_SUBPATH}/output.log 2>&1)
-			else
-				(gpg --homedir "${EXTER}"/cache/.gpg --no-permission-warning --list-keys 8F427EAF >> "${DEST}"/${LOG_SUBPATH}/output.log 2>&1\
-				 || gpg --homedir "${EXTER}"/cache/.gpg --no-permission-warning \
-				--keyserver hkp://keyserver.ubuntu.com:80 \
-				--recv-keys 8F427EAF >> "${DEST}"/${LOG_SUBPATH}/output.log 2>&1)
-
-				(gpg --homedir "${EXTER}"/cache/.gpg --no-permission-warning --list-keys 9F0E78D5 >> "${DEST}"/${LOG_SUBPATH}/output.log 2>&1\
-				|| gpg --homedir "${EXTER}"/cache/.gpg --no-permission-warning \
-				--keyserver hkp://keyserver.ubuntu.com:80 \
-				--recv-keys 9F0E78D5 >> "${DEST}"/${LOG_SUBPATH}/output.log 2>&1)
-			fi
-
-			gpg --homedir "${EXTER}"/cache/.gpg --no-permission-warning --verify \
-			--trust-model always -q "${localdir}/${filename}.asc" >> "${DEST}"/${LOG_SUBPATH}/output.log 2>&1
-			[[ ${PIPESTATUS[0]} -eq 0 ]] && verified=true && display_alert "Verified" "PGP" "info"
-
-		else
-
-			md5sum -c --status "${localdir}/${filename}.asc" && verified=true && display_alert "Verified" "MD5" "info"
-
-		fi
-
-		if [[ $verified == true ]]; then
-			if [[ "${filename:(-6)}" == "tar.xz" ]]; then
-
-				display_alert "decompressing"
-				pv -p -b -r -c -N "[ .... ] ${filename}" "${filename}" | xz -dc | tar xp --xattrs --no-same-owner --overwrite
-				[[ $? -eq 0 ]] && touch "${localdir}/${dirname}/.download-complete"
-			fi
-		else
-			exit_with_error "verification failed"
-		fi
-
-	fi
 }
 
 show_developer_warning()

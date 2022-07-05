@@ -13,140 +13,13 @@
 #  http://www.orangepi.org/downloadresources
 
 SRC="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
-
-# check for whitespace in ${SRC} and exit for safety reasons
-grep -q "[[:space:]]" <<<"${SRC}" && { echo "\"${SRC}\" contains whitespace. Not supported. Aborting." >&2 ; exit 1 ; }
+EXTER="${SRC}/external"
 
 cd "${SRC}" || exit
 
-if [[ "${ORANGEPI_ENABLE_CALL_TRACING}" == "yes" ]]; then
-	set -T # inherit return/debug traps
-	mkdir -p "${SRC}"/output/debug
-	echo -n "" > "${SRC}"/output/debug/calls.txt
-	trap 'echo "${BASH_LINENO[@]}|${BASH_SOURCE[@]}|${FUNCNAME[@]}" >> ${SRC}/output/debug/calls.txt ;' RETURN
-fi
-
 source "${SRC}"/scripts/general.sh
 
-#  Add the variables needed at the beginning of the path
-check_args ()
-{
-
-for p in "$@"; do
-
-	case "${p%=*}" in
-		LIB_TAG)
-			# Take a variable if the branch exists locally
-			if [ "${p#*=}" == "$(git branch | \
-				gawk -v b="${p#*=}" '{if ( $NF == b ) {print $NF}}')" ]; then
-				echo -e "[\e[0;35m warn \x1B[0m] Setting $p"
-				eval "$p"
-			else
-				echo -e "[\e[0;35m warn \x1B[0m] Skip $p setting as LIB_TAG=\"\""
-				eval LIB_TAG=""
-			fi
-			;;
-	esac
-
-done
-
-}
-
-check_args "$@"
-
-update_src() {
-
-	cd "${SRC}" || exit
-	if [[ ! -f "${SRC}"/.ignore_changes ]]; then
-		echo -e "[\e[0;32m o.k. \x1B[0m] This script will try to update"
-
-		CHANGED_FILES=$(git diff --name-only)
-		if [[ -n "${CHANGED_FILES}" ]]; then
-			echo -e "[\e[0;35m warn \x1B[0m] Can't update since you made changes to: \e[0;32m\n${CHANGED_FILES}\x1B[0m"
-			while true; do
-				echo -e "Press \e[0;33m<Ctrl-C>\x1B[0m or \e[0;33mexit\x1B[0m to abort compilation"\
-				", \e[0;33m<Enter>\x1B[0m to ignore and continue, \e[0;33mdiff\x1B[0m to display changes"
-				read -r
-				if [[ "${REPLY}" == "diff" ]]; then
-					git diff
-				elif [[ "${REPLY}" == "exit" ]]; then
-					exit 1
-				elif [[ "${REPLY}" == "" ]]; then
-					break
-				else
-					echo "Unknown command!"
-				fi
-			done
-		elif [[ $(git branch | grep "*" | awk '{print $2}') != "${LIB_TAG}" && -n "${LIB_TAG}" ]]; then
-			git checkout "${LIB_TAG:-master}"
-			git pull
-		fi
-	fi
-}
-
-TMPFILE=$(mktemp)
-chmod 644 "${TMPFILE}"
-{
-
-	echo SRC="$SRC"
-	echo LIB_TAG="$LIB_TAG"
-	declare -f update_src
-	#echo "update_src"
-
-}  > "$TMPFILE"
-
-#do not update/checkout git with root privileges to messup files onwership.
-#due to in docker/VM, we can't su to a normal user, so do not update/checkout git.
-if [[ $(systemd-detect-virt) == 'none' ]]; then
-
-	if [[ "${EUID}" == "0" ]]; then
-		su "$(stat --format=%U "${SRC}"/.git)" -c "bash ${TMPFILE}"
-	else
-		bash "${TMPFILE}"
-	fi
-
-fi
-
-rm "${TMPFILE}"
-
-if [ "$OFFLINE_WORK" == "yes" ]; then
-
-	echo -e "\n"
-	display_alert "* " "You are working offline."
-	display_alert "* " "Sources, time and host will not be checked"
-	echo -e "\n"
-	sleep 3s
-
-else
-
-	# check and install the basic utilities here
-	prepare_host_basic
-
-fi
-
-EXTER="${SRC}/external"
-
-mkdir -p "${SRC}"/userpatches
-
-# Create example configs if none found in userpatches
-# if ! ls "${SRC}"/userpatches/{config-example.conf,config-docker.conf,config-vagrant.conf} 1> /dev/null 2>&1; then
-
-# 	# Migrate old configs
-# 	if ls "${SRC}"/*.conf 1> /dev/null 2>&1; then
-# 		display_alert "Migrate config files to userpatches directory" "all *.conf" "info"
-#                 cp "${SRC}"/*.conf "${SRC}"/userpatches  || exit 1
-# 		rm "${SRC}"/*.conf
-# 		[[ ! -L "${SRC}"/userpatches/config-example.conf ]] && ln -fs config-example.conf "${SRC}"/userpatches/config-default.conf || exit 1
-# 	fi
-
-# 	display_alert "Create example config file using template" "config-default.conf" "info"
-
-# 	# Create example config
-# 	if [[ ! -f "${SRC}"/userpatches/config-example.conf ]]; then
-# 		cp "${EXTER}"/config/templates/config-example.conf "${SRC}"/userpatches/config-example.conf || exit 1
-#                 ln -fs config-example.conf "${SRC}"/userpatches/config-default.conf || exit 1
-# 	fi
-# fi
+prepare_host_basic
 
 CONFIG="userpatches/config-default.conf"
 CONFIG_FILE="$(realpath "${CONFIG}")"
@@ -160,17 +33,6 @@ pushd "${CONFIG_PATH}" > /dev/null || exit
 source "${CONFIG_FILE}"
 popd > /dev/null || exit
 
-[[ -z "${USERPATCHES_PATH}" ]] && USERPATCHES_PATH="${CONFIG_PATH}"
-
-# Script parameters handling
-while [[ "${1}" == *=* ]]; do
-
-	parameter=${1%%=*}
-	value=${1##*=}
-	shift
-	display_alert "Command line: setting $parameter to" "${value:-(empty)}" "info"
-	eval "$parameter=\"$value\""
-
-done
+USERPATCHES_PATH="${CONFIG_PATH}"
 
 source "${SRC}"/scripts/main.sh

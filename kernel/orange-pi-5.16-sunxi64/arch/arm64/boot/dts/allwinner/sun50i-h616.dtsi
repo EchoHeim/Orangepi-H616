@@ -432,15 +432,15 @@
 				function = "uart0";
 			};
 
-			uart1_pins: uart1-pins {
-				pins = "PG6", "PG7";
-				function = "uart1";
-			};
+			// uart1_pins: uart1-pins {
+			// 	pins = "PG6", "PG7";
+			// 	function = "uart1";
+			// };
 
-			uart1_rts_cts_pins: uart1-rts-cts-pins {
-				pins = "PG8", "PG9";
-				function = "uart1";
-			};
+			// uart1_rts_cts_pins: uart1-rts-cts-pins {
+			// 	pins = "PG8", "PG9";
+			// 	function = "uart1";
+			// };
 
 			uart2_ph_pins: uart2-ph-pins {
 				pins = "PH5", "PH6";
@@ -667,16 +667,16 @@
 			status = "disabled";
 		};
 
-		uart1: serial@5000400 {
-			compatible = "snps,dw-apb-uart";
-			reg = <0x05000400 0x400>;
-			interrupts = <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>;
-			reg-shift = <2>;
-			reg-io-width = <4>;
-			clocks = <&ccu CLK_BUS_UART1>;
-			resets = <&ccu RST_BUS_UART1>;
-			status = "disabled";
-		};
+		// uart1: serial@5000400 {
+		// 	compatible = "snps,dw-apb-uart";
+		// 	reg = <0x05000400 0x400>;
+		// 	interrupts = <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>;
+		// 	reg-shift = <2>;
+		// 	reg-io-width = <4>;
+		// 	clocks = <&ccu CLK_BUS_UART1>;
+		// 	resets = <&ccu RST_BUS_UART1>;
+		// 	status = "disabled";
+		// };
 
 		uart2: serial@5000800 {
 			compatible = "snps,dw-apb-uart";

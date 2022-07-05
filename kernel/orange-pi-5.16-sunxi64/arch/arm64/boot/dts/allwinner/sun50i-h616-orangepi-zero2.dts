@@ -19,7 +19,6 @@
 	aliases {
 		ethernet0 = &emac0;
 		serial0 = &uart0;
-		serial5 = &uart5;
 	};
 
 	chosen {
@@ -124,14 +123,12 @@
 };
 
 &gpu {
-    // mali-supply = <&reg_dcdcc>;     // axp305
-    mali-supply = <&reg_dcdc3>;     // axp1530
+    mali-supply = <&reg_dcdc3>;
     status = "disabled";
 };
 
 &hdmi {
-	// hvcc-supply = <&reg_bldo1>;     // axp305
-	hvcc-supply = <&reg_aldo1>;     // axp1530
+	hvcc-supply = <&reg_aldo1>;
 	status = "okay";
 };
 
@@ -148,8 +145,7 @@
 	pinctrl-0 = <&ext_rgmii_pins>;
 	phy-mode = "rgmii";
 	phy-handle = <&ext_rgmii_phy>;
-	// phy-supply = <&reg_dcdce>;      // axp305
-    phy-supply = <&reg_dldo1>;      // axp1530
+    phy-supply = <&reg_dldo1>;
 	allwinner,rx-delay-ps = <3100>;
 	allwinner,tx-delay-ps = <700>;
 	status = "okay";
@@ -163,13 +159,11 @@
 };
 
 &mmc0 {
-	// vmmc-supply = <&reg_dcdce>;     // axp305
-    vmmc-supply = <&reg_dldo1>;     // axp1530
+    vmmc-supply = <&reg_dldo1>;
 
 	// cd-gpios = <&pio 5 6 GPIO_ACTIVE_LOW>;	/* PF6 */
 
     no-1-8-v;
-    
 	bus-width = <4>;
 	status = "okay";
 };
@@ -267,118 +261,10 @@
 			};
 		};
 	};
-
-    /*
-	axp305: pmic@36 {
-		compatible = "x-powers,axp305", "x-powers,axp805",
-			     "x-powers,axp806";
-        status = "disabled";
-		interrupt-controller;
-		#interrupt-cells = <1>;
-		reg = <0x36>;
-
-		x-powers,self-working-mode;
-		vina-supply = <&reg_vcc5v>;
-		vinb-supply = <&reg_vcc5v>;
-		vinc-supply = <&reg_vcc5v>;
-		vind-supply = <&reg_vcc5v>;
-		vine-supply = <&reg_vcc5v>;
-		aldoin-supply = <&reg_vcc5v>;
-		bldoin-supply = <&reg_vcc5v>;
-		cldoin-supply = <&reg_vcc5v>;
-
-		regulators {
-			reg_aldo1: aldo1 {
-				regulator-always-on;
-				regulator-min-microvolt = <3300000>;
-				regulator-max-microvolt = <3300000>;
-				regulator-name = "vcc-sys";
-			};
-
-			reg_aldo2: aldo2 {	                    // 3.3V on headers 
-				regulator-always-on;
-				regulator-min-microvolt = <3300000>;
-				regulator-max-microvolt = <3300000>;
-				regulator-name = "vcc3v3-ext";
-			};
-
-			reg_aldo3: aldo3 {	                    // 3.3V on headers 
-				regulator-always-on;
-				regulator-min-microvolt = <3300000>;
-				regulator-max-microvolt = <3300000>;
-				regulator-name = "vcc3v3-ext2";
-			};
-
-			reg_bldo1: bldo1 {
-				regulator-always-on;
-				regulator-min-microvolt = <1800000>;
-				regulator-max-microvolt = <1800000>;
-				regulator-name = "vcc1v8";
-			};
-
-			bldo2 {
-				// unused 
-			};
-
-			bldo3 {
-				// unused 
-			};
-
-			bldo4 {
-				// unused 
-			};
-
-			cldo1 {
-				// reserved
-			};
-
-			cldo2 {
-				// unused 
-			};
-
-			cldo3 {
-				// unused 
-			};
-
-			reg_dcdca: dcdca {
-				regulator-always-on;
-				regulator-min-microvolt = <810000>;
-				regulator-max-microvolt = <1160000>;
-				regulator-name = "vdd-cpu";
-			};
-
-			reg_dcdcc: dcdcc {
-				regulator-always-on;
-				regulator-min-microvolt = <810000>;
-				regulator-max-microvolt = <1080000>;
-				regulator-name = "vdd-gpu-sys";
-			};
-
-			reg_dcdcd: dcdcd {
-				regulator-always-on;
-				regulator-min-microvolt = <1400000>;
-				regulator-max-microvolt = <1400000>;
-				regulator-name = "vdd-dram";
-			};
-
-			reg_dcdce: dcdce {
-				regulator-always-on;
-				regulator-min-microvolt = <3300000>;
-				regulator-max-microvolt = <3300000>;
-				regulator-name = "vcc-eth-mmc";
-			};
-
-			sw {
-				// unused 
-			};
-		};
-	};
-    */
 };
 
 &cpu0 {
-    // cpu-supply = <&reg_dcdca>;      // axp305
-    cpu-supply = <&reg_dcdc2>;      // axp1530
+    cpu-supply = <&reg_dcdc2>;
 };
 
 &spi0  {
@@ -390,6 +276,19 @@
 		compatible = "jedec,spi-nor";
 		reg = <0>;
 		spi-max-frequency = <40000000>;
+	};
+};
+
+&spi1 {
+	#address-cells = <1>;
+	#size-cells = <0>;
+	status = "disabled";
+
+	spidev@1 {
+		compatible = "rohm,dh2228fv";
+		status = "disabled";
+		reg = <1>;
+		spi-max-frequency = <1000000>;
 	};
 };
 
@@ -436,67 +335,8 @@
 	status = "disabled";
 };
 
-&uart2 {
-	pinctrl-names = "default";
-	pinctrl-0 = <&uart2_ph_pins>;
-	status = "disabled";
-};
-
-&uart5 {
-	pinctrl-names = "default";
-	pinctrl-0 = <&uart5_ph_pins>;
-	status = "disabled";
-};
-
 &ir {
 	pinctrl-names = "default";
 	pinctrl-0 = <&ir_rx_pin>;
-	status = "okay";
-};
-
-&spi1 {
-	#address-cells = <1>;
-	#size-cells = <0>;
 	status = "disabled";
-
-	spidev@1 {
-		compatible = "rohm,dh2228fv";
-		status = "disabled";
-		reg = <1>;
-		spi-max-frequency = <1000000>;
-	};
-};
-
-&codec {
-        allwinner,audio-routing =
-                "Line Out", "LINEOUT";
-        status = "okay";
-};
-
-&ahub_codec {
-	status = "okay";
-};
-
-&ahub_cpudai0 {
-	status = "okay";
-};
-
-&ahub_cpudai1 {
-	status = "okay";
-};
-
-&ahub_cpudai2 {
-	status = "okay";
-};
-
-&sndahub {
-	status = "okay";
-};
-
-&ahub_i2s1 {
-	status = "okay";
-};
-
-&hdmi_audio {
-	status = "okay";
 };

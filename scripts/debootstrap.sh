@@ -79,14 +79,8 @@ PRE_INSTALL_DISTRIBUTION_SPECIFIC
 	umount_chroot "$SDCARD"
 	post_debootstrap_tweaks
 
-	if [[ $ROOTFS_TYPE == fel ]]; then
-		FEL_ROOTFS=$SDCARD/
-		display_alert "Starting FEL boot" "$BOARD" "info"
-		source $SRC/scripts/fel-load.sh
-	else
-		prepare_partitions
-		create_image
-	fi
+    prepare_partitions
+    create_image
 
 	# stage: unmount tmpfs
 	umount $SDCARD 2>&1
