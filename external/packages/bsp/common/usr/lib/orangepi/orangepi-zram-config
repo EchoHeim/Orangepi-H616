@@ -15,14 +15,14 @@
 
 
 # Read in basic OS image information
-. /etc/orangepi-release
+. /etc/board-release
 # and script configuration
 . /usr/lib/orangepi/orangepi-common
 
 # It's possible to override SWAP, ZRAM_PERCENTAGE, MEM_LIMIT_PERCENTAGE, ZRAM_MAX_DEVICES,
 # SWAP_ALGORITHM, RAMLOG_ALGORITHM, TMP_ALGORITHM and TMP_SIZE here:
 ENABLED=false
-[ -f /etc/default/orangepi-zram-config ] && . /etc/default/orangepi-zram-config
+[ -f /etc/default/system-zram-config ] && . /etc/default/system-zram-config
 # Exit if not Enabled
 [[ "$ENABLED" != "true" ]] && exit 0
 
@@ -58,7 +58,7 @@ activate_zram_swap() {
 
 	# Disable zswap if zram should be used. To make use of zswap instead a
 	# swap file or partition on *capable* storage needs to be chosen and
-	# defined as swap and also in /etc/default/orangepi-zram-config SWAP=false
+	# defined as swap and also in /etc/default/system-zram-config SWAP=false
 	# needs to be set.
 	echo 0 >/sys/module/zswap/parameters/enabled 2>/dev/null
 
@@ -93,17 +93,17 @@ activate_zram_swap() {
 
 activate_ramlog_partition() {
 	# /dev/zram0 will be used as a compressed /var/log partition in RAM if
-	# ENABLED=true in /etc/default/orangepi-ramlog is set
-	ENABLED=$(awk -F"=" '/^ENABLED/ {print $2}' /etc/default/orangepi-ramlog)
+	# ENABLED=true in /etc/default/system-ramlog is set
+	ENABLED=$(awk -F"=" '/^ENABLED/ {print $2}' /etc/default/system-ramlog)
 	[[ "$ENABLED" != "true" ]] && return
 	log_device=$(zramctl -f |sed 's/\/dev\///')
 	[[ ! ${log_device} =~ ^zram ]] && printf "\n### No more available zram devices (%s)\n" "${log_device}" >> ${Log} && exit 1;
 
-	# read size also from /etc/default/orangepi-ramlog
-	ramlogsize=$(awk -F"=" '/^SIZE/ {print $2}' /etc/default/orangepi-ramlog)
+	# read size also from /etc/default/system-ramlog
+	ramlogsize=$(awk -F"=" '/^SIZE/ {print $2}' /etc/default/system-ramlog)
 	disksize=$(sed -e 's/M$/*1048576/' -e 's/K$/*1024/' <<<${ramlogsize:=50M} | bc)
 
-	# choose RAMLOG_ALGORITHM if defined in /etc/default/orangepi-zram-config
+	# choose RAMLOG_ALGORITHM if defined in /etc/default/system-zram-config
 	# otherwise try to choose most efficient compression scheme available.
 	# See https://patchwork.kernel.org/patch/9918897/
 	if [ "X${RAMLOG_ALGORITHM}" = "X" ]; then

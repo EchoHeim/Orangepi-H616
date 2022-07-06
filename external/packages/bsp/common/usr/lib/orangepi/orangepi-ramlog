@@ -10,11 +10,11 @@ SIZE=50M
 USE_RSYNC=true
 ENABLED=false
 
-[ -f /etc/default/orangepi-ramlog ] && . /etc/default/orangepi-ramlog
+[ -f /etc/default/system-ramlog ] && . /etc/default/system-ramlog
 
 [ "$ENABLED" != true ] && exit 0
 
-# Never touch anything below here. Only edit /etc/default/orangepi-ramlog
+# Never touch anything below here. Only edit /etc/default/system-ramlog
 
 HDD_LOG=/var/log.hdd/
 RAM_LOG=/var/log/

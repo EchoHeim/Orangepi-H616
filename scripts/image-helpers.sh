@@ -21,8 +21,6 @@
 # run_on_sdcard
 
 
-
-
 # mount_chroot <target>
 #
 # helper to reduce code duplication
@@ -37,9 +35,6 @@ mount_chroot()
 	mount -t devpts chpts "${target}"/dev/pts
 
 }
-
-
-
 
 # umount_chroot <target>
 #
@@ -60,14 +55,8 @@ umount_chroot()
 
 }
 
-
-
-
-# unmount_on_exit
-#
 unmount_on_exit()
 {
-
 	trap - INT TERM EXIT
 	local stacktrace="$(get_extension_hook_stracktrace "${BASH_SOURCE[*]}" "${BASH_LINENO[*]}")"
 	display_alert "unmount_on_exit() called!" "$stacktrace" "err"
@@ -84,18 +73,12 @@ unmount_on_exit()
 	umount -l "${SDCARD}" >/dev/null 2>&1
 	umount -l "${MOUNT}"/boot >/dev/null 2>&1
 	umount -l "${MOUNT}" >/dev/null 2>&1
-	[[ $CRYPTROOT_ENABLE == yes ]] && cryptsetup luksClose "${ROOT_MAPPER}"
 	losetup -d "${LOOP}" >/dev/null 2>&1
 	rm -rf --one-file-system "${SDCARD}"
 	exit_with_error "debootstrap-ng was interrupted" || true # don't trigger again
 
 }
 
-
-
-
-# check_loop_device <device_node>
-#
 check_loop_device()
 {
 
@@ -111,11 +94,6 @@ check_loop_device()
 
 }
 
-
-
-
-# write_uboot <loopdev>
-#
 write_uboot()
 {
 
@@ -139,9 +117,6 @@ write_uboot()
 
 }
 
-
-
-
 # copy_all_packages_files_for <folder> to package
 #
 copy_all_packages_files_for()
@@ -158,15 +133,8 @@ copy_all_packages_files_for()
 	done
 }
 
-
-
-
 customize_image()
 {
-
-	# for users that need to prepare files at host
-	[[ -f $USERPATCHES_PATH/customize-image-host.sh ]] && source "$USERPATCHES_PATH"/customize-image-host.sh
-
 	call_extension_method "pre_customize_image" "image_tweaks_pre_customize" << 'PRE_CUSTOMIZE_IMAGE'
 *run before customize-image.sh*
 This hook is called after `customize-image-host.sh` is called, but before the overlay is mounted.
@@ -192,9 +160,6 @@ PRE_CUSTOMIZE_IMAGE
 Run after the customize-image.sh script is run, and the overlay is unmounted.
 POST_CUSTOMIZE_IMAGE
 }
-
-
-
 
 install_deb_chroot()
 {
@@ -244,8 +209,6 @@ dpkg_install_deb_chroot()
 	[[ $? -ne 0 ]] && exit_with_error "Installation of $name failed" "${BOARD} ${RELEASE} ${LINUXFAMILY}"
 
 }
-
-
 
 run_on_sdcard()
 {

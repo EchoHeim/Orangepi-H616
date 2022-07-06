@@ -21,7 +21,7 @@ EX_LIST="${CWD}/exclude.txt"
 logfile="/var/log/nand-sata-install.log"
 
 # read in board info
-[[ -f /etc/orangepi-release ]] && source /etc/orangepi-release
+[[ -f /etc/board-release ]] && source /etc/board-release
 backtitle="$BOARD_NAME install script, http://www.orangepi.org"
 title="eMMC and USB Orange Pi installer v${VERSION}"
 

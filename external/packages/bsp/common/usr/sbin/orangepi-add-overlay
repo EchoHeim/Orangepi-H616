@@ -28,12 +28,12 @@ else
 	exit -1
 fi
 
-if [[ ! -f /etc/orangepi-release || ! -f /boot/orangepiEnv.txt ]]; then
+if [[ ! -f /etc/board-release || ! -f /boot/orangepiEnv.txt ]]; then
 	echo >&2 "Orange Pi is not installed properly. Missing orangepi-release or orangepiEnv.txt"
 	exit -1
 fi
 
-. /etc/orangepi-release
+. /etc/board-release
 
 case "${LINUXFAMILY}" in
 	sunxi|sunxi64|rockchip64|sun50iw9|sun50iw6|rk3399)

@@ -194,7 +194,7 @@ ParseOptions() {
 					;;
 				*)
 					# On other SoCs than H3 make minor adjustments to config to reflect OrangePi reality:
-					. /etc/orangepi-release
+					. /etc/board-release
 					sed -e "s/^web.status.1.name=.*/web.status.1.name=$BOARD_NAME/" \
 						-e "s/^web.statistics.1.name=.*/web.statistics.1.name=$BOARD_NAME/" \
 						</etc/rpimonitor/template/raspbian.conf >/etc/rpimonitor/template/orangepi.conf

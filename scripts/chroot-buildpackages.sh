@@ -369,20 +369,16 @@ chroot_installpackages_local()
 	local conf=$EXTER/config/aptly-temp.conf
 	rm -rf /tmp/aptly-temp/
 	mkdir -p /tmp/aptly-temp/
-	aptly -config="${conf}" repo create temp >> "${DEST}"/${LOG_SUBPATH}/install.log
+	# aptly -config="${conf}" repo create temp >> "${DEST}"/${LOG_SUBPATH}/install.log
 	# NOTE: this works recursively
-	if [[ $EXTERNAL_NEW == prebuilt ]]; then
-		aptly -config="${conf}" repo add temp "${DEB_ORANGEPI}/extra/${RELEASE}-desktop/" >> "${DEST}"/${LOG_SUBPATH}/install.log 2>&1
-		aptly -config="${conf}" repo add temp "${DEB_ORANGEPI}/extra/${RELEASE}-utils/" >> "${DEST}"/${LOG_SUBPATH}/install.log 2>&1
-	else
-		aptly -config="${conf}" repo add temp "${DEB_STORAGE}/extra/${RELEASE}-desktop/" >> "${DEST}"/${LOG_SUBPATH}/install.log 2>&1
-		aptly -config="${conf}" repo add temp "${DEB_STORAGE}/extra/${RELEASE}-utils/" >> "${DEST}"/${LOG_SUBPATH}/install.log 2>&1
-	fi
-	
+
+    aptly -config="${conf}" repo add temp "${DEB_ORANGEPI}/extra/${RELEASE}-desktop/" >> "${DEST}"/${LOG_SUBPATH}/install.log 2>&1
+    aptly -config="${conf}" repo add temp "${DEB_ORANGEPI}/extra/${RELEASE}-utils/" >> "${DEST}"/${LOG_SUBPATH}/install.log 2>&1
+
 	# -gpg-key="925644A6"
 	[[ ! -d /root/.gnupg ]] && mkdir -p /root/.gnupg
-	aptly -keyring="$EXTER/packages/extras-buildpkgs/buildpkg-public.gpg" -secret-keyring="$EXTER/packages/extras-buildpkgs/buildpkg.gpg" -batch=true -config="${conf}" \
-		 -gpg-key="925644A6" -passphrase="testkey1234" -component=temp -distribution="${RELEASE}" publish repo temp >> "${DEST}"/${LOG_SUBPATH}/install.log
+	# aptly -keyring="$EXTER/packages/extras-buildpkgs/buildpkg-public.gpg" -secret-keyring="$EXTER/packages/extras-buildpkgs/buildpkg.gpg" -batch=true -config="${conf}" \
+	# 	 -gpg-key="925644A6" -passphrase="testkey1234" -component=temp -distribution="${RELEASE}" publish repo temp >> "${DEST}"/${LOG_SUBPATH}/install.log
 	#aptly -config="${conf}" -listen=":8189" serve &
 	aptly -config="${conf}" -listen=":8189" serve >> "${DEST}"/debug/install.log 2>&1 &
 	local aptly_pid=$!
@@ -397,7 +393,7 @@ chroot_installpackages_local()
 	EOF
 	chroot_installpackages
 	kill "${aptly_pid}" >> "${DEST}"/${LOG_SUBPATH}/install.log 2>&1
-} #############################################################################
+}
 
 # chroot_installpackages
 #
@@ -434,4 +430,5 @@ chroot_installpackages()
 	chroot "${SDCARD}" /bin/bash -c "/tmp/install.sh" >> "${DEST}"/${LOG_SUBPATH}/install.log 2>&1
 
 	[[ -f ${SDCARD}/etc/hostapd.conf ]] && sed -i "s/^ssid=.*/ssid=OrangePi/" ${SDCARD}/etc/hostapd.conf
-} #############################################################################
+}
+

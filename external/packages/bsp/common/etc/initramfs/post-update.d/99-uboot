@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. /etc/orangepi-release
+. /etc/board-release
 
 echo "update-initramfs: Converting to u-boot format" >&2
 tempname="/boot/uInitrd-$1"

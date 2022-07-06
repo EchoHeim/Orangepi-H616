@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source /etc/orangepi-release
+source /etc/board-release
 
 if [[ $LINUXFAMILY != sun8i || $BRANCH != legacy ]]; then
 	echo -e "Unsupported Linux Image: [$LINUXFAMILY|$BRANCH]" ; exit 1

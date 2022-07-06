@@ -6,7 +6,7 @@
 # License version 2. This program is licensed "as is" without any
 # warranty of any kind, whether express or implied.
 
-. /etc/orangepi-release
+. /etc/board-release
 . /etc/os-release
 . /lib/init/vars.sh
 . /lib/lsb/init-functions

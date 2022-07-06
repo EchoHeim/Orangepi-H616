@@ -71,7 +71,7 @@ Main() {
 	fi
 
 	# check for supported boards
-	/bin/bash -n /etc/orangepi-release && . /etc/orangepi-release
+	/bin/bash -n /etc/board-release && . /etc/board-release
 	if [ "X${LINUXFAMILY}" = "Xsun8i" -a "X${BRANCH}" = "Xlegacy" -a "X${BOARD}" != "Xorangepir1" -a "X${BOARD}" != "Xorangepizero" ]; then
 		# Supported board/kernel combination so proceed
 		:

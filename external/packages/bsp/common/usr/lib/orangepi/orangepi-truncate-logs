@@ -7,12 +7,12 @@
 # warranty of any kind, whether express or implied.
 #
 # truncate, save and clean logs if they get over 75% of the /var/log size
-# working only when orangepi-ramlog is enabled
+# working only when system-ramlog is enabled
 
 treshold=75 # %
 JOURNAL_SIZE=5M # size to shrink systemd-journal
 
-[ -f /etc/default/orangepi-ramlog ] && . /etc/default/orangepi-ramlog
+[ -f /etc/default/system-ramlog ] && . /etc/default/system-ramlog
 
 [ "$ENABLED" != true ] && exit 0
 

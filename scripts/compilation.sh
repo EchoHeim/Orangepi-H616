@@ -38,23 +38,23 @@ compile_atf()
 
 	display_alert "Compiling ATF" "" "info"
 
-# build aarch64
-  if [[ $(dpkg --print-architecture) == amd64 ]]; then
+    # build aarch64
+    if [[ $(dpkg --print-architecture) == amd64 ]]; then
 
-	local toolchain
-	toolchain=$(find_toolchain "$ATF_COMPILER" "$ATF_USE_GCC")
-	[[ -z $toolchain ]] && exit_with_error "Could not find required toolchain" "${ATF_COMPILER}gcc $ATF_USE_GCC"
+        local toolchain
+        toolchain=$(find_toolchain "$ATF_COMPILER" "$ATF_USE_GCC")
+        [[ -z $toolchain ]] && exit_with_error "Could not find required toolchain" "${ATF_COMPILER}gcc $ATF_USE_GCC"
 
-	if [[ -n $ATF_TOOLCHAIN2 ]]; then
-		local toolchain2_type toolchain2_ver toolchain2
-		toolchain2_type=$(cut -d':' -f1 <<< "${ATF_TOOLCHAIN2}")
-		toolchain2_ver=$(cut -d':' -f2 <<< "${ATF_TOOLCHAIN2}")
-		toolchain2=$(find_toolchain "$toolchain2_type" "$toolchain2_ver")
-		[[ -z $toolchain2 ]] && exit_with_error "Could not find required toolchain" "${toolchain2_type}gcc $toolchain2_ver"
-	fi
+        if [[ -n $ATF_TOOLCHAIN2 ]]; then
+            local toolchain2_type toolchain2_ver toolchain2
+            toolchain2_type=$(cut -d':' -f1 <<< "${ATF_TOOLCHAIN2}")
+            toolchain2_ver=$(cut -d':' -f2 <<< "${ATF_TOOLCHAIN2}")
+            toolchain2=$(find_toolchain "$toolchain2_type" "$toolchain2_ver")
+            [[ -z $toolchain2 ]] && exit_with_error "Could not find required toolchain" "${toolchain2_type}gcc $toolchain2_ver"
+        fi
 
-# build aarch64
-  fi
+    # build aarch64
+    fi
 
 	display_alert "Compiler version" "${ATF_COMPILER}gcc $(eval env PATH="${toolchain}:${PATH}" "${ATF_COMPILER}gcc" -dumpversion)" "info"
 
@@ -128,7 +128,7 @@ compile_uboot()
 
 	display_alert "Compiling u-boot" "v$version" "info"
 
-# build aarch64
+    # build aarch64
     if [[ $(dpkg --print-architecture) == amd64 ]]; then
 
         local toolchain
@@ -256,17 +256,10 @@ compile_uboot()
 	done <<< "$UBOOT_TARGET_MAP"
 
 	if [[ $PACK_UBOOT == "yes" ]];then
-		if [[ $BOARDFAMILY =~ sun50iw1 ]]; then
-			if [[ $(type -t u-boot_tweaks) == function ]]; then
-				u-boot_tweaks ${uboot_name}
-			else
-				exit_with_error "U-boot pack failed"
-			fi
-		else
-			pack_uboot
-			cp $uboottempdir/packout/{boot0_sdcard.fex,boot_package.fex} "${SRC}/.tmp/${uboot_name}/usr/lib/${uboot_name}/"
-			cp $uboottempdir/packout/dts/${BOARD}-u-boot.dts "${SRC}/.tmp/${uboot_name}/usr/lib/u-boot/"
-		fi
+        pack_uboot
+        cp $uboottempdir/packout/{boot0_sdcard.fex,boot_package.fex} "${SRC}/.tmp/${uboot_name}/usr/lib/${uboot_name}/"
+        cp $uboottempdir/packout/dts/${BOARD}-u-boot.dts "${SRC}/.tmp/${uboot_name}/usr/lib/u-boot/"
+
 		cd "${ubootdir}" || exit
 	fi
 
@@ -439,14 +432,11 @@ CUSTOM_KERNEL_CONFIG
 	cp "$EXTER"/patch/misc/headers-debian-byteshift.patch /tmp
 
 	if [[ $KERNEL_CONFIGURE != yes ]]; then
-		if [[ $BRANCH == legacy ]]; then
-			eval CCACHE_BASEDIR="$(pwd)" env PATH="${toolchain}:${PATH}" \
-				'make ARCH=$ARCHITECTURE CROSS_COMPILE="$CCACHE $KERNEL_COMPILER" silentoldconfig'
-		else
-			# TODO: check if required
-			eval CCACHE_BASEDIR="$(pwd)" env PATH="${toolchain}:${PATH}" \
-				'make ARCH=$ARCHITECTURE CROSS_COMPILE="$CCACHE $KERNEL_COMPILER" olddefconfig'
-		fi
+		
+        # TODO: check if required
+        eval CCACHE_BASEDIR="$(pwd)" env PATH="${toolchain}:${PATH}" \
+            'make ARCH=$ARCHITECTURE CROSS_COMPILE="$CCACHE $KERNEL_COMPILER" olddefconfig'
+
 	else
 		eval CCACHE_BASEDIR="$(pwd)" env PATH="${toolchain}:${PATH}" \
 			'make $CTHREADS ARCH=$ARCHITECTURE CROSS_COMPILE="$CCACHE $KERNEL_COMPILER" oldconfig'
@@ -526,227 +516,7 @@ CUSTOM_KERNEL_CONFIG
 
 	rsync --remove-source-files -rq ./*.deb "${DEB_STORAGE}/" || exit_with_error "Failed moving kernel DEBs"
 
-	# store git hash to the file and create a change log
-	#HASHTARGET="${EXTER}/cache/hash"$([[ ${BETA} == yes ]] && echo "-beta")"/linux-image-${BRANCH}-${LINUXFAMILY}"
-	#OLDHASHTARGET=$(head -1 "${HASHTARGET}.githash" 2>/dev/null)
-
-	# check if OLDHASHTARGET commit exists otherwise use oldest
-	#if  [[ -z ${KERNEL_VERSION_LEVEL} ]]; then
-	#	git -C ${kerneldir} cat-file -t ${OLDHASHTARGET} >/dev/null 2>&1
-	#	[[ $? -ne 0 ]] && OLDHASHTARGET=$(git -C ${kerneldir} show HEAD~199 --pretty=format:"%H" --no-patch)
-	#	else
-	#	git -C ${kerneldir} cat-file -t ${OLDHASHTARGET} >/dev/null 2>&1
-	#	[[ $? -ne 0 ]] && OLDHASHTARGET=$(git -C ${kerneldir} rev-list --max-parents=0 HEAD)
-	#fi
-
-	#[[ -z ${KERNELPATCHDIR} ]] && KERNELPATCHDIR=$LINUXFAMILY-$BRANCH
-	#[[ -z ${LINUXCONFIG} ]] && LINUXCONFIG=linux-$LINUXFAMILY-$BRANCH
-
-	# calculate URL
-	#if [[ "$KERNELSOURCE" == *"github.com"* ]]; then
-	#	URL="${KERNELSOURCE/git:/https:}/commit/${HASH}"
-	#elif [[ "$KERNELSOURCE" == *"kernel.org"* ]]; then
-	#	URL="${KERNELSOURCE/git:/https:}/commit/?h=$(echo $KERNELBRANCH | cut -d":" -f2)&id=${HASH}"
-	#else
-	#	URL="${KERNELSOURCE}/+/$HASH"
-	#fi
-
-	# create change log
-	#git --no-pager -C ${kerneldir} log --abbrev-commit --oneline --no-patch --no-merges --date-order --date=format:'%Y-%m-%d %H:%M:%S' --pretty=format:'%C(black bold)%ad%Creset%C(auto) | %s | <%an> | <a href='$URL'%H>%H</a>' ${OLDHASHTARGET}..${hash} > "${HASHTARGET}.gitlog"
-
-	#echo "${hash}" > "${HASHTARGET}.githash"
-	#hash_watch_1=$(LC_COLLATE=C find -L "${EXTER}/patch/kernel/${KERNELPATCHDIR}"/ -name '*.patch' -mindepth 1 -maxdepth 1 -printf '%s %P\n' 2> /dev/null | LC_COLLATE=C sort -n)
-	#hash_watch_2=$(cat "${EXTER}/config/kernel/${LINUXCONFIG}.config")
-	#echo "${hash_watch_1}${hash_watch_2}" | improved_git hash-object --stdin >> "${HASHTARGET}.githash"
-
 }
-
-compile_firmware()
-{
-	display_alert "Merging and packaging linux ---firmware---" "@host" "info"
-
-	local firmwaretempdir plugin_dir
-
-	firmwaretempdir=$(mktemp -d)
-    echo " === pwd "
-    pwd
-	chmod 700 ${firmwaretempdir}
-	trap "ret=\$?; rm -rf \"${firmwaretempdir}\" ; exit \$ret" 0 1 2 3 15
-	plugin_dir="orangepi-firmware${FULL}"
-	mkdir -p "${firmwaretempdir}/${plugin_dir}/lib/firmware"
-
-    echo "${plugin_dir} ::${plugin_dir}   ===IGNORE_UPDATES "
-
-	# [[ $IGNORE_UPDATES != yes ]] && fetch_from_repo "https://github.com/orangepi-xunlong/firmware" "${EXTER}/cache/sources/orangepi-firmware-git" "branch:master"
-	if [[ -n $FULL ]]; then
-		# [[ $IGNORE_UPDATES != yes ]] && fetch_from_repo "$MAINLINE_FIRMWARE_SOURCE" "${EXTER}/cache/sources/linux-firmware-git" "branch:master"
-		# cp : create hardlinks
-        echo "IGNORE_UPDATES   ===2 IGNORE_UPDATES "
-		cp -af --reflink=auto "${EXTER}"/cache/sources/linux-firmware-git/* "${firmwaretempdir}/${plugin_dir}/lib/firmware/"
-	fi
-	# overlay our firmware
-	# cp : create hardlinks
-    echo "IGNORE_UPDATES   ===3 IGNORE_UPDATES ${firmwaretempdir}/${plugin_dir}/lib/firmware "
-	cp -af --reflink=auto "${EXTER}"/cache/sources/orangepi-firmware-git/* "${firmwaretempdir}/${plugin_dir}/lib/firmware/"
-
-	# cleanup what's not needed for sure
-    
-	rm -rf "${firmwaretempdir}/${plugin_dir}"/lib/firmware/{amdgpu,amd-ucode,radeon,nvidia,matrox,.git}
-	cd "${firmwaretempdir}/${plugin_dir}" || exit
-
-	# set up control file
-	mkdir -p DEBIAN
-	cat <<-END > DEBIAN/control
-	Package: orangepi-firmware${FULL}
-	Version: $REVISION
-	Architecture: all
-	Maintainer: $MAINTAINER <$MAINTAINERMAIL>
-	Installed-Size: 1
-	Replaces: linux-firmware, firmware-brcm80211, firmware-ralink, firmware-samsung, firmware-realtek, orangepi-firmware${REPLACE}
-	Section: kernel
-	Priority: optional
-	Description: Linux firmware${FULL}
-	END
-
-	cd "${firmwaretempdir}" || exit
-    pwd
-	# pack
-	mv "orangepi-firmware${FULL}" "orangepi-firmware${FULL}_${REVISION}_all"
-	display_alert "Building firmware package" "orangepi-firmware${FULL}_${REVISION}_all" "info"
-    echo "IGNORE_UPDATES   ==34=IGNORE_UPDATES "
-	fakeroot dpkg -Z xz -b "orangepi-firmware${FULL}_${REVISION}_all" >> "${DEST}"/${LOG_SUBPATH}/install.log 2>&1
-	mv "orangepi-firmware${FULL}_${REVISION}_all" "orangepi-firmware${FULL}"
-
-    echo "IGNORE_UPDATES   ==5=IGNORE_UPDATES ${DEB_STORAGE} "
-	rsync -rq "orangepi-firmware${FULL}_${REVISION}_all.deb" "${DEB_STORAGE}/"
-
-    echo "IGNORE_UPDATES   ==66  IGNORE_UPDATES ${firmwaretempdir} "
-
-	# remove temp directory
-	rm -rf "${firmwaretempdir}"
-}
-
-
-compile_orangepi-zsh()
-{
-	local tmp_dir orangepi_zsh_dir
-	tmp_dir=$(mktemp -d)
-	chmod 700 ${tmp_dir}
-	trap "rm -rf \"${tmp_dir}\" ; exit 0" 0 1 2 3 15
-	orangepi_zsh_dir=orangepi-zsh_${REVISION}_all
-	display_alert "Building deb" "orangepi-zsh" "info"
-
-	[[ $IGNORE_UPDATES != yes ]] && fetch_from_repo "https://github.com/robbyrussell/oh-my-zsh" "${EXTER}/cache/sources/oh-my-zsh" "branch:master"
-	[[ $IGNORE_UPDATES != yes ]] && fetch_from_repo "https://github.com/mroth/evalcache" "${EXTER}/cache/sources/evalcache" "branch:master"
-
-	mkdir -p "${tmp_dir}/${orangepi_zsh_dir}"/{DEBIAN,etc/skel/,etc/oh-my-zsh/,/etc/skel/.oh-my-zsh/cache}
-
-	# set up control file
-	cat <<-END > "${tmp_dir}/${orangepi_zsh_dir}"/DEBIAN/control
-	Package: orangepi-zsh
-	Version: $REVISION
-	Architecture: all
-	Maintainer: $MAINTAINER <$MAINTAINERMAIL>
-	Depends: zsh, tmux
-	Section: utils
-	Priority: optional
-	Description: Orange Pi improved ZShell
-	END
-
-	# set up post install script
-	cat <<-END > "${tmp_dir}/${orangepi_zsh_dir}"/DEBIAN/postinst
-	#!/bin/sh
-
-	# copy cache directory if not there yet
-	awk -F'[:]' '{if (\$3 >= 1000 && \$3 != 65534 || \$3 == 0) print ""\$6"/.oh-my-zsh"}' /etc/passwd | xargs -i sh -c 'test ! -d {} && cp -R --attributes-only /etc/skel/.oh-my-zsh {}'
-	awk -F'[:]' '{if (\$3 >= 1000 && \$3 != 65534 || \$3 == 0) print ""\$6"/.zshrc"}' /etc/passwd | xargs -i sh -c 'test ! -f {} && cp -R /etc/skel/.zshrc {}'
-
-	# fix owner permissions in home directory
-	awk -F'[:]' '{if (\$3 >= 1000 && \$3 != 65534 || \$3 == 0) print ""\$1":"\$3" "\$6"/.oh-my-zsh"}' /etc/passwd | xargs -n2 chown -R
-	awk -F'[:]' '{if (\$3 >= 1000 && \$3 != 65534 || \$3 == 0) print ""\$1":"\$3" "\$6"/.zshrc"}' /etc/passwd | xargs -n2 chown -R
-
-	# add support for bash profile
-	! grep emulate /etc/zsh/zprofile  >/dev/null && echo "emulate sh -c 'source /etc/profile'" >> /etc/zsh/zprofile
-	exit 0
-	END
-
-	cp -R "${EXTER}"/cache/sources/oh-my-zsh "${tmp_dir}/${orangepi_zsh_dir}"/etc/
-	cp -R "${EXTER}"/cache/sources/evalcache "${tmp_dir}/${orangepi_zsh_dir}"/etc/oh-my-zsh/plugins
-	cp "${tmp_dir}/${orangepi_zsh_dir}"/etc/oh-my-zsh/templates/zshrc.zsh-template "${tmp_dir}/${orangepi_zsh_dir}"/etc/skel/.zshrc
-
-	chmod -R g-w,o-w "${tmp_dir}/${orangepi_zsh_dir}"/etc/oh-my-zsh/
-
-	# we have common settings
-	sed -i "s/^export ZSH=.*/export ZSH=\/etc\/oh-my-zsh/" "${tmp_dir}/${orangepi_zsh_dir}"/etc/skel/.zshrc
-
-	# user cache
-	sed -i "/^export ZSH=.*/a export ZSH_CACHE_DIR=~\/.oh-my-zsh\/cache" "${tmp_dir}/${orangepi_zsh_dir}"/etc/skel/.zshrc
-
-	# define theme
-	sed -i 's/^ZSH_THEME=.*/ZSH_THEME="mrtazz"/' "${tmp_dir}/${orangepi_zsh_dir}"/etc/skel/.zshrc
-
-	# disable prompt while update
-	sed -i 's/# DISABLE_UPDATE_PROMPT="true"/DISABLE_UPDATE_PROMPT="true"/g' "${tmp_dir}/${orangepi_zsh_dir}"/etc/skel/.zshrc
-
-	# disable auto update since we provide update via package
-	sed -i 's/# DISABLE_AUTO_UPDATE="true"/DISABLE_AUTO_UPDATE="true"/g' "${tmp_dir}/${orangepi_zsh_dir}"/etc/skel/.zshrc
-
-	# define default plugins
-	sed -i 's/^plugins=.*/plugins=(evalcache git git-extras debian tmux screen history extract colorize web-search docker)/' "${tmp_dir}/${orangepi_zsh_dir}"/etc/skel/.zshrc
-
-	chmod 755 "${tmp_dir}/${orangepi_zsh_dir}"/DEBIAN/postinst
-
-	fakeroot dpkg-deb -b -Z${DEB_COMPRESS} "${tmp_dir}/${orangepi_zsh_dir}" >> "${DEST}"/${LOG_SUBPATH}/output.log 2>&1
-	rsync --remove-source-files -rq "${tmp_dir}/${orangepi_zsh_dir}.deb" "${DEB_STORAGE}/"
-	rm -rf "${tmp_dir}"
-
-}
-
-
-
-
-compile_orangepi-config()
-{
-	local tmpdir=${SRC}/.tmp/orangepi-config_${REVISION}_all
-
-	display_alert "Building deb" "orangepi-config" "info"
-
-
-	mkdir -p "${tmpdir}"/{DEBIAN,usr/bin/,usr/sbin/,usr/lib/orangepi-config/}
-
-	# set up control file
-	cat <<-END > "${tmpdir}"/DEBIAN/control
-	Package: orangepi-config
-	Version: $REVISION
-	Architecture: all
-	Maintainer: $MAINTAINER <$MAINTAINERMAIL>
-	Replaces: orangepi-bsp
-	Depends: bash, iperf3, psmisc, curl, bc, expect, dialog, pv, \
-	debconf-utils, unzip, build-essential, html2text, apt-transport-https, html2text, dirmngr, software-properties-common
-	Recommends: orangepi-bsp
-	Suggests: libpam-google-authenticator, qrencode, network-manager, sunxi-tools
-	Section: utils
-	Priority: optional
-	Description: Orange Pi configuration utility
-	END
-
-	install -m 755 $EXTER/cache/sources/orangepi-config/scripts/tv_grab_file $tmpdir/usr/bin/tv_grab_file
-	install -m 755 $EXTER/cache/sources/orangepi-config/debian-config $tmpdir/usr/sbin/orangepi-config
-	install -m 644 $EXTER/cache/sources/orangepi-config/debian-config-jobs $tmpdir/usr/lib/orangepi-config/jobs.sh
-	install -m 644 $EXTER/cache/sources/orangepi-config/debian-config-submenu $tmpdir/usr/lib/orangepi-config/submenu.sh
-	install -m 644 $EXTER/cache/sources/orangepi-config/debian-config-functions $tmpdir/usr/lib/orangepi-config/functions.sh
-	install -m 644 $EXTER/cache/sources/orangepi-config/debian-config-functions-network $tmpdir/usr/lib/orangepi-config/functions-network.sh
-	install -m 755 $EXTER/cache/sources/orangepi-config/softy $tmpdir/usr/sbin/softy
-	# fallback to replace orangepi-config in BSP
-	ln -sf /usr/sbin/orangepi-config $tmpdir/usr/bin/orangepi-config
-	ln -sf /usr/sbin/softy "${tmpdir}"/usr/bin/softy
-
-	fakeroot dpkg -Z xz -b "${tmpdir}" >/dev/null
-	rsync --remove-source-files -rq "${tmpdir}.deb" "${DEB_STORAGE}/"
-	rm -rf "${tmpdir}"
-}
-
-
 
 
 compile_sunxi_tools()

@@ -34,7 +34,7 @@ index 0000000..183032b
 +        return;
 +    }
 +    
-+    ret = ReadKeyValue( "/etc/orangepi-release", "VERSION=", version);
++    ret = ReadKeyValue( "/etc/board-release", "VERSION=", version);
 +    
 +    if (ret) {
 +        xSnprintf(buffer, len, "%s", version);
@@ -2646,7 +2646,7 @@ index 0000000..aa41d2a
 +
 +#define BLEN 256
 +/*
-+    /etc/orangepi-release
++    /etc/board-release
 +    VERSION=20.02.1
 +
 +    /etc/debian_version
@@ -2838,7 +2838,7 @@ index 0000000..adb4e5b
 +
 +#define BLEN 256
 +/*
-+    /etc/orangepi-release
++    /etc/board-release
 +    VERSION=20.02.1
 +
 +    /etc/debian_version

@@ -3,7 +3,7 @@
 BRANCH=""
 LINUXFAMILY=""
 
-[ -f "/etc/orangepi-release" ] && . /etc/orangepi-release
+[ -f "/etc/board-release" ] && . /etc/board-release
 
 case "$1" in
 	install)

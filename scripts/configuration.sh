@@ -45,11 +45,6 @@ ROOT_MAPPER="orangepi-root"
 # echo $(( $(blockdev --getsize64 /dev/sdX) / 1024 / 1024 ))
 [[ "f2fs" == *$ROOTFS_TYPE* && -z $FIXED_IMAGE_SIZE ]] && exit_with_error "Please define FIXED_IMAGE_SIZE"
 
-# a passphrase is mandatory if rootfs encryption is enabled
-if [[ $CRYPTROOT_ENABLE == yes && -z $CRYPTROOT_PASSPHRASE ]]; then
-	exit_with_error "Root encryption is enabled but CRYPTROOT_PASSPHRASE is not set"
-fi
-
 # small SD card with kernel, boot script and .dtb/.bin files
 [[ $ROOTFS_TYPE == nfs ]] && FIXED_IMAGE_SIZE=64
 
@@ -189,7 +184,6 @@ MOUNT="${SRC}/.tmp/mount-${MOUNT_UUID}"
 DESTIMG="${SRC}/.tmp/image-${MOUNT_UUID}"
 
 # dropbear needs to be configured differently
-[[ $CRYPTROOT_ENABLE == yes && $RELEASE == xenial ]] && exit_with_error "Encrypted rootfs is not supported in Xenial"
 [[ $RELEASE == stretch && $CAN_BUILD_STRETCH != yes ]] && exit_with_error "Building Debian Stretch images with selected kernel is not supported"
 [[ $RELEASE == bionic && $CAN_BUILD_STRETCH != yes ]] && exit_with_error "Building Ubuntu Bionic images with selected kernel is not supported"
 [[ $RELEASE == hirsute && $HOSTRELEASE == focal ]] && exit_with_error "Building Ubuntu Hirsute images requires Hirsute build host. Please upgrade your host or select a different target OS"
@@ -213,10 +207,6 @@ fi
 
 CLI_CONFIG_PATH="${EXTER}/config/cli/${RELEASE}"
 DEBOOTSTRAP_CONFIG_PATH="${CLI_CONFIG_PATH}/debootstrap"
-
-if [[ $? != 0 ]]; then
-	exit_with_error "The desktop environment ${DESKTOP_ENVIRONMENT} is not available for your architecture ${ARCH}"
-fi
 
 AGGREGATION_SEARCH_ROOT_ABSOLUTE_DIRS="
 ${EXTER}/config

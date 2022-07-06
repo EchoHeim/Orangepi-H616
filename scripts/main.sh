@@ -1,11 +1,5 @@
 #!/bin/bash
 #
-# Copyright (c) 2013-2021 Igor Pecovnik, igor.pecovnik@gma**.com
-#
-# This file is licensed under the terms of the GNU General Public
-# License version 2. This program is licensed "as is" without any
-# warranty of any kind, whether express or implied.
-#
 # Main program
 #
 
@@ -44,14 +38,13 @@ titlestr="Choose an option"
 [[ -z $CONSOLE_CHAR ]] && export CONSOLE_CHAR="UTF-8"       # set console to UTF-8 if not set
 
 # Libraries include
-
-source "${SRC}"/scripts/debootstrap.sh	# system specific install
+source "${SRC}"/scripts/debootstrap.sh	    # system specific install
 source "${SRC}"/scripts/image-helpers.sh	# helpers for OS image building
 source "${SRC}"/scripts/distributions.sh	# system specific install
-source "${SRC}"/scripts/compilation.sh	# patching and compilation of kernel, uboot, ATF
+source "${SRC}"/scripts/compilation.sh	    # patching and compilation of kernel, uboot, ATF
 source "${SRC}"/scripts/makeboarddeb.sh		# board support package
-source "${SRC}"/scripts/general.sh		# general functions
-source "${SRC}"/scripts/chroot-buildpackages.sh	# chroot packages building
+source "${SRC}"/scripts/general.sh		    # general functions
+source "${SRC}"/scripts/chroot-buildpackages.sh	    # chroot packages building
 source "${SRC}"/scripts/pack-uboot.sh
 
 # set log path
@@ -78,7 +71,6 @@ export PATH="/usr/lib/ccache:$PATH"
 
 # if BUILD_OPT, KERNEL_CONFIGURE, BOARD, BRANCH or RELEASE are not set, display selection menu
 if [[ -z $BUILD_OPT ]]; then
-
 	options+=("u-boot"	 "U-boot package")
 	options+=("kernel"	 "Kernel package")
 	options+=("rootfs"	 "Rootfs and all deb packages")
@@ -98,11 +90,10 @@ fi
 KERNEL_CONFIGURE="no"
 [[ $BUILD_OPT == kernel ]] && KERNEL_CONFIGURE="yes"
 
-BOARD_TYPE="conf"
 BOARD="orangepizero2"
 
-# shellcheck source=/dev/null
-source "${EXTER}/config/boards/orangepizero2.conf"
+source "${SRC}/userpatches/board.conf"
+
 LINUXFAMILY="${BOARDFAMILY}"
 
 BRANCH="current"
@@ -156,32 +147,6 @@ prepare_host
 
 # fetch_from_repo <url> <dir> <ref> <subdir_flag>
 
-# ignore updates help on building all images - for internal purposes
-if [[ ${IGNORE_UPDATES} != yes ]]; then
-
-	display_alert "Downloading sources" "" "info"
-
-	[[ $BUILD_OPT =~ u-boot|image ]] && fetch_from_repo "$BOOTSOURCE" "$BOOTDIR" "$BOOTBRANCH" "yes"
-	[[ $BUILD_OPT =~ kernel|image ]] && fetch_from_repo "$KERNELSOURCE" "$KERNELDIR" "$KERNELBRANCH" "yes"
-
-	if [[ -n ${ATFSOURCE} ]]; then
-
-		[[ ${BUILD_OPT} =~ u-boot|image ]] && fetch_from_repo "$ATFSOURCE" "${EXTER}/cache/sources/$ATFDIR" "$ATFBRANCH" "yes"
-
-	fi
-
-	call_extension_method "fetch_sources_tools"  <<- 'FETCH_SOURCES_TOOLS'
-	*fetch host-side sources needed for tools and build*
-	Run early to fetch_from_repo or otherwise obtain sources for needed tools.
-	FETCH_SOURCES_TOOLS
-
-	call_extension_method "build_host_tools"  <<- 'BUILD_HOST_TOOLS'
-	*build needed tools for the build, host-side*
-	After sources are fetched, build host-side tools needed for the build.
-	BUILD_HOST_TOOLS
-
-fi
-
 for option in $(tr ',' ' ' <<< "$CLEAN_LEVEL"); do
 	[[ $option != sources ]] && cleaning "$option"
 done
@@ -225,9 +190,6 @@ if [[ $BUILD_OPT == rootfs || $BUILD_OPT == image ]]; then
 	
 	# create board support package
 	[[ -n $RELEASE && ! -f ${DEB_STORAGE}/$RELEASE/${BSP_CLI_PACKAGE_FULLNAME}.deb ]] && create_board_package
-
-	# build additional packages
-	[[ $EXTERNAL_NEW == compile ]] && chroot_build_packages
 	
 	[[ $BSP_BUILD != yes ]] && debootstrap_ng
 

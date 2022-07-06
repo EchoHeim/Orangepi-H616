@@ -15,7 +15,7 @@
 
 
 # Read in basic OS image information
-. /etc/orangepi-release
+. /etc/board-release
 # and script configuration
 . /usr/lib/orangepi/orangepi-common
 
@@ -67,7 +67,7 @@ log_hardware_info() {
 	echo -e "\n### dmesg:\n" >>${Log}
 	dmesg >>${Log}
 	echo -e "\n### orangepi-release:\n" >>${Log}
-	cat /etc/orangepi-release >>${Log}
+	cat /etc/board-release >>${Log}
 	echo -e "\n### boot environment:\n" >>${Log}
 	cat /boot/orangepiEnv.txt >>${Log} 2>/dev/null || grep -v "^#" /boot/boot.ini | sed '/^\s*$/d' >>${Log}
 	echo -e "\n### lsusb:\n" >>${Log}

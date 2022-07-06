@@ -6,9 +6,6 @@
 # License version 2. This program is licensed "as is" without any
 # warranty of any kind, whether express or implied.
 
-# Functions:
-# create_board_package
-
 create_board_package()
 {
 	display_alert "Creating board support package for CLI" "$CHOSEN_ROOTFS" "info"
@@ -30,16 +27,7 @@ create_board_package()
 		local bootscript_dst=${BOOTSCRIPT##*:}
 		mkdir -p "${destination}"/usr/share/orangepi/
 
-		# create extlinux config file
-		if [[ $SRC_EXTLINUX != yes ]]; then
-			if [ -f "${USERPATCHES_PATH}/bootscripts/${bootscript_src}" ]; then
-			  cp "${USERPATCHES_PATH}/bootscripts/${bootscript_src}" "${destination}/usr/share/orangepi/${bootscript_dst}"
-			else
-			  cp "${EXTER}/config/bootscripts/${bootscript_src}" "${destination}/usr/share/orangepi/${bootscript_dst}"
-			fi
-			[[ -n $BOOTENV_FILE && -f $SRC/config/bootenv/$BOOTENV_FILE ]] && \
-				cp "${EXTER}/config/bootenv/${BOOTENV_FILE}" "${destination}"/usr/share/orangepi/orangepiEnv.txt
-		fi
+		cp "${EXTER}/config/bootscripts/${bootscript_src}" "${destination}/usr/share/orangepi/${bootscript_dst}"
 
 		# add configuration for setting uboot environment from userspace with: fw_setenv fw_printenv
 		if [[ -n $UBOOT_FW_ENV ]]; then
@@ -161,7 +149,7 @@ create_board_package()
 	# check if it was disabled in config and disable in new service
 	if [ -n "\$(grep -w '^ENABLED=false' /etc/default/log2ram 2> /dev/null)" ]; then
 
-	     sed -i "s/^ENABLED=.*/ENABLED=false/" /etc/default/orangepi-ramlog
+	    sed -i "s/^ENABLED=.*/ENABLED=false/" /etc/default/system-ramlog
 
 	fi
 
@@ -192,7 +180,7 @@ create_board_package()
 	cat <<-EOF >> "${destination}"/DEBIAN/postinst
     # move bootscript to /usr/share/orangepi
     # create a backup
-    [ -f /etc/orangepi-release ] &&  . /etc/orangepi-release
+    [ -f /etc/board-release ] &&  . /etc/board-release
     [ -z \${VERSION} ] && VERSION=$(echo \`date +%s\`)
     if [ -f /boot/$bootscript_dst ]; then
        cp /boot/$bootscript_dst /usr/share/orangepi/${bootscript_dst}-\${VERSION} >/dev/null 2>&1
@@ -208,15 +196,6 @@ create_board_package()
     rootdev=\$(sed -e 's/^.*root=//' -e 's/ .*\$//' < /proc/cmdline)
     rootfstype=\$(sed -e 's/^.*rootfstype=//' -e 's/ .*$//' < /proc/cmdline)
 
-    # recreate orangepiEnv.txt if it and extlinux does not exists
-    if [ ! -f /boot/orangepiEnv.txt ] && [ ! -f /boot/extlinux/extlinux.conf ]; then
-      cp /usr/share/orangepi/orangepiEnv.txt /boot  >/dev/null 2>&1
-      echo "rootdev="\$rootdev >> /boot/orangepiEnv.txt
-      echo "rootfstype="\$rootfstype >> /boot/orangepiEnv.txt
-    fi
-
-    [ -f /boot/boot.ini ] && sed -i "s/setenv rootdev.*/setenv rootdev \\"\$rootdev\\"/" /boot/boot.ini
-    [ -f /boot/boot.ini ] && sed -i "s/setenv rootfstype.*/setenv rootfstype \\"\$rootfstype\\"/" /boot/boot.ini
     [ -f /boot/boot.cmd ] && mkimage -C none -A arm -T script -d /boot/boot.cmd /boot/boot.scr  >/dev/null 2>&1
 
 	fi
@@ -225,18 +204,14 @@ create_board_package()
 	ln -sf /var/run/motd /etc/motd
 	rm -f /etc/update-motd.d/00-header /etc/update-motd.d/10-help-text
 	if [ -f "/boot/bin/$BOARD.bin" ] && [ ! -f "/boot/script.bin" ]; then ln -sf bin/$BOARD.bin /boot/script.bin >/dev/null 2>&1 || cp /boot/bin/$BOARD.bin /boot/script.bin; fi
-	if [ ! -f "/etc/default/orangepi-motd" ]; then
-		mv /etc/default/orangepi-motd.dpkg-dist /etc/default/orangepi-motd
+	if [ ! -f "/etc/default/system-motd" ]; then
+		mv /etc/default/system-motd.dpkg-dist /etc/default/system-motd
 	fi
-	if [ ! -f "/etc/default/orangepi-ramlog" ] && [ -f /etc/default/orangepi-ramlog.dpkg-dist ]; then
-		mv /etc/default/orangepi-ramlog.dpkg-dist /etc/default/orangepi-ramlog
+	if [ ! -f "/etc/default/system-ramlog" ] && [ -f /etc/default/system-ramlog.dpkg-dist ]; then
+		mv /etc/default/system-ramlog.dpkg-dist /etc/default/system-ramlog
 	fi
-	if [ ! -f "/etc/default/orangepi-zram-config" ] && [ -f /etc/default/orangepi-zram-config.dpkg-dist ]; then
-		mv /etc/default/orangepi-zram-config.dpkg-dist /etc/default/orangepi-zram-config
-	fi
-
-	if [ -L "/usr/lib/chromium-browser/master_preferences.dpkg-dist" ]; then
-		mv /usr/lib/chromium-browser/master_preferences.dpkg-dist /usr/lib/chromium-browser/master_preferences
+	if [ ! -f "/etc/default/system-zram-config" ] && [ -f /etc/default/system-zram-config.dpkg-dist ]; then
+		mv /etc/default/system-zram-config.dpkg-dist /etc/default/system-zram-config
 	fi
 
 	# Read release value
@@ -253,11 +228,6 @@ create_board_package()
 	EOF
 
 	chmod 755 "${destination}"/DEBIAN/postinst
-
-	# won't recreate files if they were removed by user
-	# TODO: Add proper handling for updated conffiles
-	#cat <<-EOF > "${destination}"/DEBIAN/conffiles
-	#EOF
 
 	# copy common files from a premade directory structure
 	rsync -a "${EXTER}"/packages/bsp/common/* ${destination}
@@ -276,7 +246,7 @@ create_board_package()
 	done
 
 	# armhwinfo, firstrun, orangepimonitor, etc. config file
-	cat <<-EOF > "${destination}"/etc/orangepi-release
+	cat <<-EOF > "${destination}"/etc/board-release
 	# PLEASE DO NOT EDIT THIS FILE
 	BOARD=${BOARD}
 	BOARD_NAME="$BOARD_NAME"
@@ -289,7 +259,6 @@ create_board_package()
 	LINUXFAMILY=${LINUXFAMILY}
 	ARCH=${ARCHITECTURE}
 	IMAGE_TYPE=$IMAGE_TYPE
-	BOARD_TYPE=$BOARD_TYPE
 	INITRD_ARCH=${INITRD_ARCH}
 	KERNEL_IMAGE_TYPE=${KERNEL_IMAGE_TYPE}
 	EOF

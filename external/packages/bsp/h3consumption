@@ -217,7 +217,7 @@ ChangeSettings() {
 			echo 'ethtool -s eth0 speed 100 duplex full' >>"${RCLocalContents}"
 			;;
 		on)
-			BOARD=$(awk -F"=" '/^BOARD=/ {print $2}' </etc/orangepi-release)
+			BOARD=$(awk -F"=" '/^BOARD=/ {print $2}' </etc/board-release)
 			if [ "X${BOARD}" = "X" ]; then
 				echo "Orange Pi installation too old, please apt-get upgrade before. Exiting." >&2
 				exit 1
@@ -314,7 +314,7 @@ ChangeSettings() {
 		"")
 			: ;;
 		*)
-			BOARD=$(awk -F"=" '/^BOARD=/ {print $2}' </etc/orangepi-release)
+			BOARD=$(awk -F"=" '/^BOARD=/ {print $2}' </etc/board-release)
 			case ${BOARD} in
 				nanopineo|nanopiair)
 					HardwareUpperLimit=432

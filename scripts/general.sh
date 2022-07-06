@@ -20,8 +20,6 @@
 # fingerprint_image
 # distro_menu
 # addtorepo
-# repo-remove-old-packages
-# wait_for_package_manager
 # install_pkg_deb
 # prepare_host_basic
 # prepare_host
@@ -745,18 +743,12 @@ display_alert "Building kernel splash logo" "$RELEASE" "info"
 	--blob "${SDCARD}"/tmp/throbber73.rgb \
 	--blob "${SDCARD}"/tmp/throbber74.rgb \
 	"${SDCARD}"/lib/firmware/bootsplash.orangepi >/dev/null 2>&1
-	if [[ $BOOT_LOGO == yes || $BOOT_LOGO == desktop ]]; then
-		[[ -f "${SDCARD}"/boot/orangepiEnv.txt ]] &&	grep -q '^bootlogo' "${SDCARD}"/boot/orangepiEnv.txt && \
-		sed -i 's/^bootlogo.*/bootlogo=true/' "${SDCARD}"/boot/orangepiEnv.txt || echo 'bootlogo=true' >> "${SDCARD}"/boot/orangepiEnv.txt
-		[[ -f "${SDCARD}"/boot/boot.ini ]] &&	sed -i 's/^setenv bootlogo.*/setenv bootlogo "true"/' "${SDCARD}"/boot/boot.ini
-	fi
+
 	# enable additional services
 	chroot "${SDCARD}" /bin/bash -c "systemctl --no-reload enable bootsplash-ask-password-console.path >/dev/null 2>&1"
 	chroot "${SDCARD}" /bin/bash -c "systemctl --no-reload enable bootsplash-hide-when-booted.service >/dev/null 2>&1"
 	chroot "${SDCARD}" /bin/bash -c "systemctl --no-reload enable bootsplash-show-on-shutdown.service >/dev/null 2>&1"
 }
-
-
 
 DISTRIBUTIONS_DESC_DIR="external/config/distributions"
 
@@ -825,9 +817,6 @@ adding_packages()
 	done
 
 }
-
-
-
 
 addtorepo()
 {
@@ -951,174 +940,9 @@ addtorepo()
 	else
 		display_alert "There were some problems $err_txt" "leaving incoming directory intact" "err"
 	fi
-
 }
 
-
-
-
-repo-manipulate()
-{
-# repository manipulation
-# "show" displays packages in each repository
-# "server" serve repository - useful for local diagnostics
-# "unique" manually select which package should be removed from all repositories
-# "update" search for new files in output/debs* to add them to repository
-# "purge" leave only last 5 versions
-
-	local DISTROS=("stretch" "bionic" "buster" "bullseye" "bookworm" "focal" "hirsute" "jammy" "sid")
-	#local DISTROS=($(grep -rw config/distributions/*/ -e 'supported' | cut -d"/" -f3))
-
-	case $@ in
-
-		serve)
-			# display repository content
-			display_alert "Serving content" "common utils" "ext"
-			aptly serve -listen=$(ip -f inet addr | grep -Po 'inet \K[\d.]+' | grep -v 127.0.0.1 | head -1):80 -config="${SCRIPTPATH}config/${REPO_CONFIG}"
-			exit 0
-			;;
-
-		show)
-			# display repository content
-			for release in "${DISTROS[@]}"; do
-				display_alert "Displaying repository contents for" "$release" "ext"
-				aptly repo show -with-packages -config="${SCRIPTPATH}config/${REPO_CONFIG}" "${release}" | tail -n +7
-				aptly repo show -with-packages -config="${SCRIPTPATH}config/${REPO_CONFIG}" "${release}-desktop" | tail -n +7
-			done
-			display_alert "Displaying repository contents for" "common utils" "ext"
-			aptly repo show -with-packages -config="${SCRIPTPATH}config/${REPO_CONFIG}" utils | tail -n +7
-			echo "done."
-			exit 0
-			;;
-
-		unique)
-			# which package should be removed from all repositories
-			IFS=$'\n'
-			while true; do
-				LIST=()
-				for release in "${DISTROS[@]}"; do
-					LIST+=( $(aptly repo show -with-packages -config="${SCRIPTPATH}config/${REPO_CONFIG}" "${release}" | tail -n +7) )
-					LIST+=( $(aptly repo show -with-packages -config="${SCRIPTPATH}config/${REPO_CONFIG}" "${release}-desktop" | tail -n +7) )
-				done
-				LIST+=( $(aptly repo show -with-packages -config="${SCRIPTPATH}config/${REPO_CONFIG}" utils | tail -n +7) )
-				LIST=( $(echo "${LIST[@]}" | tr ' ' '\n' | sort -u))
-				new_list=()
-				# create a human readable menu
-				for ((n=0;n<$((${#LIST[@]}));n++));
-				do
-					new_list+=( "${LIST[$n]}" )
-					new_list+=( "" )
-				done
-				LIST=("${new_list[@]}")
-				LIST_LENGTH=$((${#LIST[@]}/2));
-				exec 3>&1
-				TARGET_VERSION=$(dialog --cancel-label "Cancel" --backtitle "BACKTITLE" --no-collapse --title "Remove packages from repositories" --clear --menu "Delete" $((9+${LIST_LENGTH})) 82 65 "${LIST[@]}" 2>&1 1>&3)
-				exitstatus=$?;
-				exec 3>&-
-				if [[ $exitstatus -eq 0 ]]; then
-					for release in "${DISTROS[@]}"; do
-						aptly repo remove -config="${SCRIPTPATH}config/${REPO_CONFIG}"  "${release}" "$TARGET_VERSION"
-						aptly repo remove -config="${SCRIPTPATH}config/${REPO_CONFIG}"  "${release}-desktop" "$TARGET_VERSION"
-					done
-					aptly repo remove -config="${SCRIPTPATH}config/${REPO_CONFIG}" "utils" "$TARGET_VERSION"
-				else
-					exit 1
-				fi
-				aptly db cleanup -config="${SCRIPTPATH}config/${REPO_CONFIG}" > /dev/null 2>&1
-			done
-			;;
-
-		update)
-			# display full help test
-			# run repository update
-			addtorepo "update" ""
-			# add a key to repo
-			cp "${SCRIPTPATH}"config/armbian.key "${REPO_STORAGE}"/public/
-			exit 0
-			;;
-
-		purge)
-			for release in "${DISTROS[@]}"; do
-				repo-remove-old-packages "$release" "armhf" "5"
-				repo-remove-old-packages "$release" "arm64" "5"
-				repo-remove-old-packages "$release" "amd64" "5"
-				repo-remove-old-packages "$release" "all" "5"
-				aptly -config="${SCRIPTPATH}config/${REPO_CONFIG}" -passphrase="${GPG_PASS}" publish update "${release}" > /dev/null 2>&1
-			done
-			exit 0
-			;;
-
-                purgeedge)
-                        for release in "${DISTROS[@]}"; do
-				repo-remove-old-packages "$release" "armhf" "3" "edge"
-				repo-remove-old-packages "$release" "arm64" "3" "edge"
-				repo-remove-old-packages "$release" "amd64" "3" "edge"
-				repo-remove-old-packages "$release" "all" "3" "edge"
-				aptly -config="${SCRIPTPATH}config/${REPO_CONFIG}" -passphrase="${GPG_PASS}" publish update "${release}" > /dev/null 2>&1
-                        done
-                        exit 0
-                        ;;
-
-
-		purgesource)
-			for release in "${DISTROS[@]}"; do
-				aptly repo remove -config="${SCRIPTPATH}config/${REPO_CONFIG}" "${release}" 'Name (% *-source*)'
-				aptly -config="${SCRIPTPATH}config/${REPO_CONFIG}" -passphrase="${GPG_PASS}" publish update "${release}"  > /dev/null 2>&1
-			done
-			aptly db cleanup -config="${SCRIPTPATH}config/${REPO_CONFIG}" > /dev/null 2>&1
-			exit 0
-			;;
-		*)
-
-			echo -e "Usage: repository show | serve | unique | create | update | purge | purgesource\n"
-			echo -e "\n show           = display repository content"
-			echo -e "\n serve          = publish your repositories on current server over HTTP"
-			echo -e "\n unique         = manually select which package should be removed from all repositories"
-			echo -e "\n update         = updating repository"
-			echo -e "\n purge          = removes all but last 5 versions"
-			echo -e "\n purgeedge      = removes all but last 3 edge versions"
-			echo -e "\n purgesource    = removes all sources\n\n"
-			exit 0
-			;;
-
-	esac
-
-}
-
-
-
-
-# Removes old packages in the received repo
-#
-# $1: Repository
-# $2: Architecture
-# $3: Amount of packages to keep
-# $4: Additional search pattern
-repo-remove-old-packages() {
-	local repo=$1
-	local arch=$2
-	local keep=$3
-	for pkg in $(aptly repo search -config="${SCRIPTPATH}config/${REPO_CONFIG}" "${repo}" "Architecture ($arch)" | grep -v "ERROR: no results" | sort -t '.' -nk4 | grep -e "$4"); do
-		local pkg_name
-		count=0
-		pkg_name=$(echo "${pkg}" | cut -d_ -f1)
-		for subpkg in $(aptly repo search -config="${SCRIPTPATH}config/${REPO_CONFIG}" "${repo}" "Name ($pkg_name)"  | grep -v "ERROR: no results" | sort -rt '.' -nk4); do
-			((count+=1))
-			if [[ $count -gt $keep ]]; then
-			pkg_version=$(echo "${subpkg}" | cut -d_ -f2)
-			aptly repo remove -config="${SCRIPTPATH}config/${REPO_CONFIG}" "${repo}" "Name ($pkg_name), Version (= $pkg_version)"
-			fi
-		done
-    done
-}
-
-
-
-
-# wait_for_package_manager
-#
 # * installation will break if we try to install when package manager is running
-#
 wait_for_package_manager()
 {
 	# exit if package manager is running in the back
@@ -1131,8 +955,6 @@ wait_for_package_manager()
 		fi
 	done
 }
-
-
 
 # Installing debian packages in the orangepi build system.
 # The function accepts four optional parameters:
@@ -1240,12 +1062,6 @@ install_pkg_deb ()
 	rm $tmp_file
 }
 
-
-
-# prepare_host_basic
-#
-# * installs only basic packages
-#
 prepare_host_basic()
 {
 
@@ -1275,15 +1091,9 @@ prepare_host_basic()
 
 }
 
-
-
-
-# prepare_host
-#
 # * checks and installs necessary packages
 # * creates directory structure
 # * changes system settings
-#
 prepare_host()
 {
 	display_alert "Preparing" "host" "info"
@@ -1322,22 +1132,22 @@ prepare_host()
 	systemd-container u-boot-tools udev unzip uuid-dev wget whiptail zip      \
 	zlib1g-dev"
 
-  if [[ $(dpkg --print-architecture) == amd64 ]]; then
+    if [[ $(dpkg --print-architecture) == amd64 ]]; then
 
-	hostdeps+=" distcc lib32ncurses-dev lib32stdc++6 libc6-i386"
-	grep -q i386 <(dpkg --print-foreign-architectures) || dpkg --add-architecture i386
+        hostdeps+=" distcc lib32ncurses-dev lib32stdc++6 libc6-i386"
+        grep -q i386 <(dpkg --print-foreign-architectures) || dpkg --add-architecture i386
 
-  elif [[ $(dpkg --print-architecture) == arm64 ]]; then
+    elif [[ $(dpkg --print-architecture) == arm64 ]]; then
 
-	hostdeps+=" gcc-arm-linux-gnueabi gcc-arm-none-eabi libc6 libc6-amd64-cross qemu"
+        hostdeps+=" gcc-arm-linux-gnueabi gcc-arm-none-eabi libc6 libc6-amd64-cross qemu"
 
-  else
+    else
 
-	display_alert "Please read documentation to set up proper compilation environment"
-	display_alert "https://www.armbian.com/using-armbian-tools/"
-	exit_with_error "Running this tool on non x86_64 build host is not supported"
+        display_alert "Please read documentation to set up proper compilation environment"
+        display_alert "https://www.armbian.com/using-armbian-tools/"
+        exit_with_error "Running this tool on non x86_64 build host is not supported"
 
-  fi
+    fi
 
 	# Add support for Ubuntu 20.04, 21.04 and Mint 20.x
 	if [[ $HOSTRELEASE =~ ^(focal|hirsute|ulyana|ulyssa|bullseye|bookworm|uma)$ ]]; then
@@ -1380,14 +1190,8 @@ prepare_host()
 			NO_APT_CACHER=yes
 		fi
 		CONTAINER_COMPAT=yes
-		# trying to use nested containers is not a good idea, so don't permit EXTERNAL_NEW=compile
-		if [[ $EXTERNAL_NEW == compile ]]; then
-			display_alert "EXTERNAL_NEW=compile is not available when running in container, setting to prebuilt" "" "wrn"
-			EXTERNAL_NEW=prebuilt
-		fi
 		SYNC_CLOCK=no
 	fi
-
 
 	# Skip verification if you are working offline
 	if ! $offline; then
@@ -1441,7 +1245,7 @@ prepare_host()
 	fi
 	mkdir -p $DEST/debs/{extra,u-boot}  $DEST/{config,debug,patch,images} $USERPATCHES_PATH/overlay $EXTER/cache/{debs,sources,hash} $SRC/toolchains  $SRC/.tmp
 
-# build aarch64
+    # build aarch64
 	if [[ $(dpkg --print-architecture) == amd64 ]]; then
 		if [[ "${SKIP_EXTERNAL_TOOLCHAINS}" != "yes" ]]; then
 
@@ -1484,7 +1288,6 @@ prepare_host()
 				display_alert "Ignoring toolchains" "SKIP_EXTERNAL_TOOLCHAINS: ${SKIP_EXTERNAL_TOOLCHAINS}" "info"
 			fi
 		fi
-
 	fi # check offline
 
 	# enable arm binary format so that the cross-architecture chroot environment will work
@@ -1496,8 +1299,6 @@ prepare_host()
 			test -e /proc/sys/fs/binfmt_misc/qemu-aarch64 || update-binfmts --enable qemu-aarch64
 		fi
 	fi
-
-	[[ ! -f "${USERPATCHES_PATH}"/customize-image.sh ]] && cp "${EXTER}"/config/templates/customize-image.sh.template "${USERPATCHES_PATH}"/customize-image.sh
 
 	if [[ ! -f "${USERPATCHES_PATH}"/README ]]; then
 		rm -f "${USERPATCHES_PATH}"/readme.txt
