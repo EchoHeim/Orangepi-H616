@@ -122,8 +122,6 @@ Since the family can override values from the user configuration and the board c
 it is often used to in turn override those.
 POST_FAMILY_CONFIG
 
-# Myy : Menu configuration for choosing desktop configurations
-
 show_menu() {
 	provided_title=$1
 	provided_backtitle=$2
@@ -159,50 +157,6 @@ show_select_menu() {
 			  3>&1 1>&2 2>&3
 }
 
-# Myy : Once we got a list of selected groups, parse the PACKAGE_LIST inside configuration.sh
-
-DESKTOP_ELEMENTS_DIR="${EXTER}/config/desktop/${RELEASE}"
-DESKTOP_CONFIGS_DIR="${DESKTOP_ELEMENTS_DIR}/environments"
-DESKTOP_CONFIG_PREFIX="config_"
-DESKTOP_APPGROUPS_DIR="${DESKTOP_ELEMENTS_DIR}/appgroups"
-
-desktop_element_available_for_arch() {
-	local desktop_element_path="${1}"
-	local targeted_arch="${2}"
-
-	local arch_limitation_file="${1}/only_for"
-
-	echo "Checking if ${desktop_element_path} is available for ${targeted_arch} in ${arch_limitation_file}" >> "${DEST}"/${LOG_SUBPATH}/output.log
-	if [[ -f "${arch_limitation_file}" ]]; then
-		grep -- "${targeted_arch}" "${arch_limitation_file}" > /dev/null
-		return $?
-	else
-		return 0
-	fi
-}
-
-desktop_element_supported() {
-
-	local desktop_element_path="${1}"
-
-	local support_level_filepath="${desktop_element_path}/support"
-	if [[ -f "${support_level_filepath}" ]]; then
-		local support_level="$(cat "${support_level_filepath}")"
-		if [[ "${support_level}" != "supported" && "${EXPERT}" != "yes" ]]; then
-			return 65
-		fi
-
-		desktop_element_available_for_arch "${desktop_element_path}" "${ARCH}"
-		if [[ $? -ne 0 ]]; then
-			return 66
-		fi
-	else
-		return 64
-	fi
-
-	return 0
-
-}
 
 # Expected variables
 # - aggregated_content
@@ -291,22 +245,6 @@ ${EXTER}/config/optional/families/${LINUXFAMILY}/_packages
 ${EXTER}/config/optional/boards/${BOARD}/_packages
 "
 
-DESKTOP_ENVIRONMENTS_SEARCH_RELATIVE_DIRS="
-desktop/_all_distributions/environments/_all_environments
-desktop/_all_distributions/environments/${DESKTOP_ENVIRONMENT}
-desktop/_all_distributions/environments/${DESKTOP_ENVIRONMENT}/${DESKTOP_ENVIRONMENT_CONFIG_NAME}
-desktop/${RELEASE}/environments/_all_environments
-desktop/${RELEASE}/environments/${DESKTOP_ENVIRONMENT}
-desktop/${RELEASE}/environments/${DESKTOP_ENVIRONMENT}/${DESKTOP_ENVIRONMENT_CONFIG_NAME}
-"
-
-DESKTOP_APPGROUPS_SEARCH_RELATIVE_DIRS="
-desktop/_all_distributions/appgroups
-desktop/_all_distributions/environments/${DESKTOP_ENVIRONMENT}/appgroups
-desktop/${RELEASE}/appgroups
-desktop/${RELEASE}/environments/${DESKTOP_ENVIRONMENT}/appgroups
-"
-
 get_all_potential_paths() {
 	local root_dirs="${AGGREGATION_SEARCH_ROOT_ABSOLUTE_DIRS}"
 	local rel_dirs="${1}"
@@ -347,7 +285,6 @@ get_all_potential_paths() {
 # TODO :
 # ${4} could be removed by just adding the appropriate paths to ${3}
 # dynamically for each case
-# (debootstrap, cli, desktop environments, desktop appgroups, ...)
 
 aggregate_all_root_rel_sub() {
 	local separator="${2}"
@@ -372,11 +309,6 @@ aggregate_all_cli() {
 		sub_dirs_to_check+="config_${SELECTED_CONFIGURATION}"
 	fi
 	aggregate_all_root_rel_sub "${1}" "${2}" "${CLI_SEARCH_RELATIVE_DIRS}" "${sub_dirs_to_check}"
-}
-
-aggregate_all_desktop() {
-	aggregate_all_root_rel_sub "${1}" "${2}" "${DESKTOP_ENVIRONMENTS_SEARCH_RELATIVE_DIRS}" "."
-	aggregate_all_root_rel_sub "${1}" "${2}" "${DESKTOP_APPGROUPS_SEARCH_RELATIVE_DIRS}" "${DESKTOP_APPGROUPS_SELECTED}"
 }
 
 one_line() {
@@ -479,13 +411,11 @@ PACKAGE_LIST="$(cleanup_list PACKAGE_LIST)"
 # remove any packages defined in PACKAGE_LIST_RM in lib.config
 aggregated_content="${PACKAGE_LIST_RM} "
 aggregate_all_cli "packages.remove" " "
-aggregate_all_desktop "packages.remove" " "
 PACKAGE_LIST_RM="$(cleanup_list aggregated_content)"
 unset aggregated_content
 
 aggregated_content=""
 aggregate_all_cli "packages.uninstall" " "
-aggregate_all_desktop "packages.uninstall" " "
 PACKAGE_LIST_UNINSTALL="$(cleanup_list aggregated_content)"
 unset aggregated_content
 
@@ -554,9 +484,6 @@ Build target:
 Board: $BOARD
 Branch: $BRANCH
 Minimal: $BUILD_MINIMAL
-Desktop: $BUILD_DESKTOP
-Desktop Environment: $DESKTOP_ENVIRONMENT
-Software groups: $DESKTOP_APPGROUPS_SELECTED
 
 Kernel configuration:
 Repository: $KERNELSOURCE

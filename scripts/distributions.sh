@@ -406,11 +406,17 @@ POST_INSTALL_KERNEL_DEBS
 	# fix for gksu in Xenial
 	touch ${SDCARD}/home/${OPI_USERNAME}/.Xauthority
 	chroot "${SDCARD}" /bin/bash -c "chown ${OPI_USERNAME}:${OPI_USERNAME} /home/${OPI_USERNAME}/.Xauthority"
+
+    echo -e "%${OPI_USERNAME} ALL=(ALL) NOPASSWD: ALL" >> ${SDCARD}/etc/sudoers
+
 	# set up profile sync daemon on desktop systems
 	chroot "${SDCARD}" /bin/bash -c "which psd >/dev/null 2>&1"
 	if [ $? -eq 0 ]; then
 		# echo -e "${OPI_USERNAME} ALL=(ALL) NOPASSWD: /usr/bin/psd-overlay-helper" >> ${SDCARD}/etc/sudoers
         echo -e "%${OPI_USERNAME} ALL=(ALL) NOPASSWD: ALL" >> ${SDCARD}/etc/sudoers
+        
+        touch ${SRC}/scripts/test
+
 		touch ${SDCARD}/home/${OPI_USERNAME}/.activate_psd
 		chroot "${SDCARD}" /bin/bash -c "chown $OPI_USERNAME:$OPI_USERNAME /home/${OPI_USERNAME}/.activate_psd"
 	fi

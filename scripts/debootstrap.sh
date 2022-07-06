@@ -9,18 +9,14 @@
 
 # Functions:
 
-# debootstrap_ng
 # create_rootfs_cache
 # prepare_partitions
 # update_initramfs
 # create_image
 
-
-# debootstrap_ng
-#
 debootstrap_ng()
 {
-	display_alert "Starting rootfs and image building process for" "${BRANCH} ${BOARD} ${RELEASE} ${DESKTOP_APPGROUPS_SELECTED:-null} ${DESKTOP_ENVIRONMENT:-null} ${BUILD_MINIMAL}" "info"
+	display_alert "Starting rootfs and image building process for" "${BRANCH} ${BOARD} ${RELEASE} ${BUILD_MINIMAL}" "info"
 
 	[[ $ROOTFS_TYPE != ext4 ]] && display_alert "Assuming $BOARD $BRANCH kernel supports $ROOTFS_TYPE" "" "wrn"
 
@@ -32,7 +28,6 @@ debootstrap_ng()
 	mkdir -p $SDCARD $MOUNT $DEST/images $EXTER/cache/rootfs
 
 	# stage: verify tmpfs configuration and mount
-	# CLI needs ~1.5GiB, desktop - ~3.5GiB
 	# calculate and set tmpfs mount to use 9/10 of available RAM+SWAP
 	local phymem=$(( (($(awk '/MemTotal/ {print $2}' /proc/meminfo) + $(awk '/SwapTotal/ {print $2}' /proc/meminfo))) / 1024 * 9 / 10 )) # MiB
 	local tmpfs_max_size=1500   # MiB
@@ -73,7 +68,7 @@ PRE_INSTALL_DISTRIBUTION_SPECIFIC
 	chroot $SDCARD /bin/bash -c "apt-get autoremove -y"  >/dev/null 2>&1
 
 	# create list of installed packages for debug purposes
-	chroot $SDCARD /bin/bash -c "dpkg --get-selections" | grep -v deinstall | awk '{print $1}' | cut -f1 -d':' > $DEST/${LOG_SUBPATH}/installed-packages-${RELEASE}$([[ ${BUILD_MINIMAL} == yes ]] && echo "-minimal")$([[ ${BUILD_DESKTOP} == yes  ]] && echo "-desktop").list 2>&1
+	chroot $SDCARD /bin/bash -c "dpkg --get-selections" | grep -v deinstall | awk '{print $1}' | cut -f1 -d':' > $DEST/${LOG_SUBPATH}/installed-packages-${RELEASE}$([[ ${BUILD_MINIMAL} == yes ]] && echo "-minimal").list 2>&1
 
 	# clean up / prepare for making the image
 	umount_chroot "$SDCARD"
@@ -106,7 +101,6 @@ create_rootfs_cache()
 
 	local packages_hash=$(get_package_list_hash "$ROOTFSCACHE_VERSION")
 	local cache_type="cli"
-	[[ -n ${DESKTOP_ENVIRONMENT} ]] && local cache_type="${DESKTOP_ENVIRONMENT}"
 	[[ ${BUILD_MINIMAL} == yes ]] && local cache_type="minimal"
 	local cache_name=${RELEASE}-${cache_type}-${ARCH}.$packages_hash.tar.lz4
 	local cache_fname=${EXTER}/cache/rootfs/${cache_name}
@@ -151,7 +145,7 @@ create_rootfs_cache()
 			${OUTPUT_DIALOG:+' | dialog --backtitle "$backtitle" --progressbox "Debootstrap (stage 1/2)..." $TTY_Y $TTY_X'} \
 			${OUTPUT_VERYSILENT:+' >/dev/null 2>/dev/null'} ';EVALPIPE=(${PIPESTATUS[@]})'
 
-		[[ ${EVALPIPE[0]} -ne 0 || ! -f $SDCARD/debootstrap/debootstrap ]] && exit_with_error "Debootstrap base system for ${BRANCH} ${BOARD} ${RELEASE} ${DESKTOP_APPGROUPS_SELECTED} ${DESKTOP_ENVIRONMENT} ${BUILD_MINIMAL} first stage failed"
+		[[ ${EVALPIPE[0]} -ne 0 || ! -f $SDCARD/debootstrap/debootstrap ]] && exit_with_error "Debootstrap base system for ${BRANCH} ${BOARD} ${RELEASE} ${BUILD_MINIMAL} first stage failed"
 
 		cp /usr/bin/$QEMU_BINARY $SDCARD/usr/bin/
 
@@ -164,7 +158,7 @@ create_rootfs_cache()
 			${OUTPUT_DIALOG:+' | dialog --backtitle "$backtitle" --progressbox "Debootstrap (stage 2/2)..." $TTY_Y $TTY_X'} \
 			${OUTPUT_VERYSILENT:+' >/dev/null 2>/dev/null'} ';EVALPIPE=(${PIPESTATUS[@]})'
 
-		[[ ${EVALPIPE[0]} -ne 0 || ! -f $SDCARD/bin/bash ]] && exit_with_error "Debootstrap base system for ${BRANCH} ${BOARD} ${RELEASE} ${DESKTOP_APPGROUPS_SELECTED} ${DESKTOP_ENVIRONMENT} ${BUILD_MINIMAL} second stage failed"
+		[[ ${EVALPIPE[0]} -ne 0 || ! -f $SDCARD/bin/bash ]] && exit_with_error "Debootstrap base system for ${BRANCH} ${BOARD} ${RELEASE} ${BUILD_MINIMAL} second stage failed"
 
 		mount_chroot "$SDCARD"
 
@@ -221,12 +215,6 @@ create_rootfs_cache()
 			${OUTPUT_DIALOG:+' | dialog --backtitle "$backtitle" --progressbox "Upgrading base packages..." $TTY_Y $TTY_X'} \
 			${OUTPUT_VERYSILENT:+' >/dev/null 2>/dev/null'} ';EVALPIPE=(${PIPESTATUS[@]})'
 
-		# Myy: Dividing the desktop packages installation steps into multiple
-		# ones. We first install the "ADDITIONAL_PACKAGES" in order to get
-		# access to software-common-properties installation.
-		# THEN we add the APT sources and install the Desktop packages.
-		# TODO : Find a way to add APT sources WITHOUT software-common-properties
-
 		[[ ${EVALPIPE[0]} -ne 0 ]] && display_alert "Upgrading base packages" "failed" "wrn"
 
 		# stage: install additional packages
@@ -237,7 +225,7 @@ create_rootfs_cache()
 			${OUTPUT_DIALOG:+' | dialog --backtitle "$backtitle" --progressbox "Installing Orange Pi main packages..." $TTY_Y $TTY_X'} \
 			${OUTPUT_VERYSILENT:+' >/dev/null 2>/dev/null'} ';EVALPIPE=(${PIPESTATUS[@]})'
 
-		[[ ${PIPESTATUS[0]} -ne 0 ]] && exit_with_error "Installation of Orange Pi main packages for ${BRANCH} ${BOARD} ${RELEASE} ${DESKTOP_APPGROUPS_SELECTED} ${DESKTOP_ENVIRONMENT} ${BUILD_MINIMAL} failed"
+		[[ ${PIPESTATUS[0]} -ne 0 ]] && exit_with_error "Installation of Orange Pi main packages for ${BRANCH} ${BOARD} ${RELEASE} ${BUILD_MINIMAL} failed"
 
 		# Remove packages from packages.uninstall
 
@@ -346,7 +334,7 @@ prepare_partitions()
 
 	# metadata_csum and 64bit may need to be disabled explicitly when migrating to newer supported host OS releases
 	# add -N number of inodes to keep mount from running out
-	# create bigger number for desktop builds
+
 	local node_number=1024
 	if [[ $HOSTRELEASE =~ bionic|buster|bullseye|bookworm|cosmic|focal|hirsute|impish|jammy|sid ]]; then
 		mkopts[ext4]="-q -m 2 -O ^64bit,^metadata_csum -N $((128*${node_number}))"
@@ -450,7 +438,6 @@ PREPARE_IMAGE_SIZE
 		fi
 	else
 		local imagesize=$(( $rootfs_size + $OFFSET + $BOOTSIZE + $UEFISIZE + $EXTRA_ROOTFS_MIB_SIZE)) # MiB
-		# Hardcoded overhead +25% is needed for desktop images,
 		# for CLI it could be lower. Align the size up to 4MiB
         local sdsize=$(bc -l <<< "scale=0; ((($imagesize * 1.25) / 1 + 0) / 4 + 1) * 4")
 	fi
@@ -705,11 +692,9 @@ create_image()
 		IMAGE_TYPE=server
 	elif [[ $SELECTED_CONFIGURATION == "cli_minimal" ]]; then
 		IMAGE_TYPE=minimal
-	else
-		IMAGE_TYPE=desktop
 	fi
 
-	local version="${BOARD^}_${REVISION}_${DISTRIBUTION,}_${RELEASE}_${IMAGE_TYPE}"${DESKTOP_ENVIRONMENT:+_$DESKTOP_ENVIRONMENT}"_linux$(grab_version "$LINUXSOURCEDIR")"
+	local version="${BOARD^}_${REVISION}_${DISTRIBUTION,}_${RELEASE}_${IMAGE_TYPE}_linux$(grab_version "$LINUXSOURCEDIR")"
 	[[ $ROOTFS_TYPE == nfs ]] && version=${version}_nfsboot
 
 	destimg=$DEST/images/${version}

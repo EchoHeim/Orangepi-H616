@@ -48,7 +48,6 @@ titlestr="Choose an option"
 source "${SRC}"/scripts/debootstrap.sh	# system specific install
 source "${SRC}"/scripts/image-helpers.sh	# helpers for OS image building
 source "${SRC}"/scripts/distributions.sh	# system specific install
-source "${SRC}"/scripts/desktop.sh		# desktop specific install
 source "${SRC}"/scripts/compilation.sh	# patching and compilation of kernel, uboot, ATF
 source "${SRC}"/scripts/makeboarddeb.sh		# board support package
 source "${SRC}"/scripts/general.sh		# general functions
@@ -108,7 +107,6 @@ LINUXFAMILY="${BOARDFAMILY}"
 
 BRANCH="current"
 BUILD_MINIMAL="no"    # Just in case BUILD_MINIMAL is not defined
-BUILD_DESKTOP="no"
 
 RELEASE="bullseye"          # 发行版本 bookworm/bullseye/focal/jammy 可选   
 SELECTED_CONFIGURATION="cli_standard"
@@ -138,13 +136,10 @@ LINUXSOURCEDIR="${KERNELDIR}/$(branch2dir "${KERNELBRANCH}")"
 
 BSP_CLI_PACKAGE_NAME="orangepi-bsp-cli-${BOARD}"
 BSP_CLI_PACKAGE_FULLNAME="${BSP_CLI_PACKAGE_NAME}_${REVISION}_${ARCH}"
-BSP_DESKTOP_PACKAGE_NAME="orangepi-bsp-desktop-${BOARD}"
-BSP_DESKTOP_PACKAGE_FULLNAME="${BSP_DESKTOP_PACKAGE_NAME}_${REVISION}_${ARCH}"
 
 CHOSEN_UBOOT=linux-u-boot-${BRANCH}-${BOARD}
 CHOSEN_KERNEL=linux-image-${BRANCH}-${LINUXFAMILY}
 CHOSEN_ROOTFS=${BSP_CLI_PACKAGE_NAME}
-CHOSEN_DESKTOP=orangepi-${RELEASE}-desktop-${DESKTOP_ENVIRONMENT}
 CHOSEN_KSRC=linux-source-${BRANCH}-${LINUXFAMILY}
 
 do_default() {
@@ -201,7 +196,7 @@ if [[ $BUILD_OPT == u-boot || $BUILD_OPT == image ]]; then
 	fi
 
 	if [[ $BUILD_OPT == "u-boot" ]]; then
-		unset BUILD_MINIMAL BUILD_DESKTOP COMPRESS_OUTPUTIMAGE
+		unset BUILD_MINIMAL COMPRESS_OUTPUTIMAGE
 		display_alert "U-boot build done" "@host" "info"
 		display_alert "Target directory" "${DEB_STORAGE}/u-boot" "info"
 		display_alert "File name" "${CHOSEN_UBOOT}_${REVISION}_${ARCH}.deb" "info"
@@ -217,7 +212,7 @@ if [[ $BUILD_OPT == kernel || $BUILD_OPT == image ]]; then
 	fi
 
 	if [[ $BUILD_OPT == "kernel" ]]; then
-		unset BUILD_MINIMAL BUILD_DESKTOP COMPRESS_OUTPUTIMAGE
+		unset BUILD_MINIMAL COMPRESS_OUTPUTIMAGE
 		display_alert "Kernel build done" "@host" "info"
 		display_alert "Target directory" "${DEB_STORAGE}/" "info"
 		display_alert "File name" "${CHOSEN_KERNEL}_${REVISION}_${ARCH}.deb" "info"
@@ -230,12 +225,6 @@ if [[ $BUILD_OPT == rootfs || $BUILD_OPT == image ]]; then
 	
 	# create board support package
 	[[ -n $RELEASE && ! -f ${DEB_STORAGE}/$RELEASE/${BSP_CLI_PACKAGE_FULLNAME}.deb ]] && create_board_package
-
-	# create desktop package
-	#[[ -n $RELEASE && $DESKTOP_ENVIRONMENT && ! -f ${DEB_STORAGE}/$RELEASE/${CHOSEN_DESKTOP}_${REVISION}_all.deb ]] && create_desktop_package
-	#[[ -n $RELEASE && $DESKTOP_ENVIRONMENT && ! -f ${DEB_STORAGE}/${RELEASE}/${BSP_DESKTOP_PACKAGE_FULLNAME}.deb ]] && create_bsp_desktop_package
-	# [[ -n $RELEASE && $DESKTOP_ENVIRONMENT ]] && create_desktop_package
-	# [[ -n $RELEASE && $DESKTOP_ENVIRONMENT ]] && create_bsp_desktop_package
 
 	# build additional packages
 	[[ $EXTERNAL_NEW == compile ]] && chroot_build_packages
@@ -252,19 +241,11 @@ end=$(date +%s)
 runtime=$(((end-start)/60))
 display_alert "Runtime" "$runtime min" "info"
 
-# Make it easy to repeat build by displaying build options used
-[ "$(systemd-detect-virt)" == 'docker' ] && BUILD_CONFIG='docker'
-
 display_alert "Repeat Build Options" "sudo ./build.sh ${BUILD_CONFIG} BOARD=${BOARD} BRANCH=${BRANCH} \
 $([[ -n $BUILD_OPT ]] && echo "BUILD_OPT=${BUILD_OPT} ")\
 $([[ -n $RELEASE ]] && echo "RELEASE=${RELEASE} ")\
 $([[ -n $BUILD_MINIMAL ]] && echo "BUILD_MINIMAL=${BUILD_MINIMAL} ")\
-$([[ -n $BUILD_DESKTOP ]] && echo "BUILD_DESKTOP=${BUILD_DESKTOP} ")\
 $([[ -n $KERNEL_CONFIGURE ]] && echo "KERNEL_CONFIGURE=${KERNEL_CONFIGURE} ")\
-$([[ -n $DESKTOP_ENVIRONMENT ]] && echo "DESKTOP_ENVIRONMENT=${DESKTOP_ENVIRONMENT} ")\
-$([[ -n $DESKTOP_ENVIRONMENT_CONFIG_NAME  ]] && echo "DESKTOP_ENVIRONMENT_CONFIG_NAME=${DESKTOP_ENVIRONMENT_CONFIG_NAME} ")\
-$([[ -n $DESKTOP_APPGROUPS_SELECTED ]] && echo "DESKTOP_APPGROUPS_SELECTED=\"${DESKTOP_APPGROUPS_SELECTED}\" ")\
-$([[ -n $DESKTOP_APT_FLAGS_SELECTED ]] && echo "DESKTOP_APT_FLAGS_SELECTED=\"${DESKTOP_APT_FLAGS_SELECTED}\" ")\
 $([[ -n $COMPRESS_OUTPUTIMAGE ]] && echo "COMPRESS_OUTPUTIMAGE=${COMPRESS_OUTPUTIMAGE} ")\
 " "ext"
 
