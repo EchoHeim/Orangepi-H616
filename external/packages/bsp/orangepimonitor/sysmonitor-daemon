@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# orangepimonitor-daemon
+# sysmonitor-daemon
 #
 # This script relies on information gathered in armhwinfo. It
 # calls armhwinfo in query mode and relies then on the exported
@@ -8,10 +8,10 @@
 #
 # The purpose is to create an environment for rpimonitord so that 
 # relevant hardware informations can be monitored easily. This 
-# script starts uses configuration files in /etc/orangepimonitor/,
-# collects data sources below /etc/orangepimonitor/datasources/ and
+# script starts uses configuration files in /etc/sysmonitor/,
+# collects data sources below /etc/sysmonitor/datasources/ and
 # adjusts templates for RPi-Monitor on the fly. Only if the file
-# /etc/orangepimonitor/start-monitoring exists this script relinks
+# /etc/sysmonitor/start-monitoring exists this script relinks
 # /etc/rpimonitor/data.conf and starts rpimonitord if not already
 # running.
 #
@@ -20,13 +20,13 @@
 # data on its own and to write it to the approriate file. As an
 # example the SoC's temperature: Running on an AXP209 based board 
 # the script will check /sys/class/thermal/thermal_zone0/temp and
-# if existing link it to /etc/orangepimonitor/datasources/soctemp.
+# if existing link it to /etc/sysmonitor/datasources/soctemp.
 # In case it does not exist the script will create a normal file
 # at this location and writes the thermal value to it using the 
 # sunxi_axp209_temp binary in an endless loop.
 #
 # At least the following files/symlinks will be provided below
-# /etc/orangepimonitor/datasources/ depending on SoC/PMIC in question:
+# /etc/sysmonitor/datasources/ depending on SoC/PMIC in question:
 #
 # soctemp (SoC's internal temp in degree Celsius * 1000)
 # pmictemp (PMIC's internal temp in degree Celsius * 1000)
@@ -38,7 +38,7 @@
 # battery_current (battery current in A * 1000000)
 #
 # When extended debugging has been chosen (using _orangepi-monitoring_
-# this can be configured. Then /etc/orangepimonitor/start-monitoring
+# this can be configured. Then /etc/sysmonitor/start-monitoring
 # contains DEBUG) this script will also provide a few more files:
 #
 # cpustat (cpu_stat,system_stat,user_stat,nice_stat,iowait_stat,irq_stat
@@ -49,9 +49,9 @@
 # Disk monitoring: For configured disks the following parameters can be
 # monitored: temperature, S.M.A.R.T. health, load cycle count and CRC
 # errors indicating connection/cable problems. The config file used is
-# /etc/orangepimonitoring/disks.conf
+# /etc/sysmonitoring/disks.conf
 #
-# Filesystem monitoring: In /etc/orangepimonitoring/filesystems.conf
+# Filesystem monitoring: In /etc/sysmonitoring/filesystems.conf
 # mountpoints and trigger values can be defined that will be used to
 # create the template stuff for these fs at startup of this script.
 #
@@ -59,7 +59,7 @@
 # called orangepi-monitoring. The latter will also check for connected 
 # disks, get their name and GUID and let the user choose whether the
 # disk should be monitored or not. The information has to be stored in
-# /etc/orangepimonitor/disks.conf relying on the GUIDs of the disks.
+# /etc/sysmonitor/disks.conf relying on the GUIDs of the disks.
 
  # define some variables:
 CheckInterval=7.5      # time in seconds between two checks
@@ -119,7 +119,7 @@ Main() {
 
 	exit 0
 	
-	# Decide depending on existence of /etc/orangepimonitor/start-monitoring
+	# Decide depending on existence of /etc/sysmonitor/start-monitoring
 	ShouldMonitoringBeStarted
 	
 	# Provide missing data in daemon mode
@@ -163,81 +163,81 @@ LoopEndlessly() {
 } # LoopEndlessly
 
 CheckDisks() {
-	# To be done based on new /etc/orangepimonitoring/disks.conf config file
+	# To be done based on new /etc/sysmonitoring/disks.conf config file
 	:
 } # CheckDisks
 
 DealWithAXP209() {
 	# check existence of sysfs nodes
 	if [ -f /sys/devices/virtual/thermal/thermal_zone0/temp ]; then
-		ln -fs /sys/devices/virtual/thermal/thermal_zone0/temp /etc/orangepimonitor/datasources/soctemp
+		ln -fs /sys/devices/virtual/thermal/thermal_zone0/temp /etc/sysmonitor/datasources/soctemp
 	else
-		if [ -L /etc/orangepimonitor/datasources/soctemp ]; then
-			rm -f /etc/orangepimonitor/datasources/soctemp
+		if [ -L /etc/sysmonitor/datasources/soctemp ]; then
+			rm -f /etc/sysmonitor/datasources/soctemp
 		fi
-		echo -n 25000 >/etc/orangepimonitor/datasources/soctemp
+		echo -n 25000 >/etc/sysmonitor/datasources/soctemp
 		export GetSoCTemp="${ARCH}-${BOARD_NAME}"
 	fi
 	if [ -d /sys/devices/platform/soc@01c00000/1c2ac00.i2c/i2c-0/0-0034 ]; then
 		# mainline kernel and 'axp209 mainline sysfs interface' patch applied
-		ln -fs /sys/power/axp_pmu/ac/voltage /etc/orangepimonitor/datasources/ac_voltage
-		ln -fs /sys/power/axp_pmu/ac/amperage /etc/orangepimonitor/datasources/ac_current
-		ln -fs /sys/power/axp_pmu/vbus/voltage /etc/orangepimonitor/datasources/usb_voltage
-		ln -fs /sys/power/axp_pmu/vbus/amperage /etc/orangepimonitor/datasources/usb_current
-		ln -fs /sys/power/axp_pmu/battery/voltage /etc/orangepimonitor/datasources/battery_voltage
-		ln -fs /sys/power/axp_pmu/battery/amperage /etc/orangepimonitor/datasources/battery_current
-		ln -fs /sys/power/axp_pmu/pmu/temp /etc/orangepimonitor/datasources/pmictemp
-		ln -fs /sys/power/axp_pmu/battery/capacity /etc/orangepimonitor/datasources/battery_percent
-		ln -fs /sys/power/axp_pmu/battery/charging /etc/orangepimonitor/datasources/battery_charging
-		ln -fs /sys/power/axp_pmu/charger/amperage /etc/orangepimonitor/datasources/charger_current
-		ln -fs /sys/power/axp_pmu/battery/connected /etc/orangepimonitor/datasources/battery_connected
-		ln -fs /sys/power/axp_pmu/battery/charge /etc/orangepimonitor/datasources/battery_charge
+		ln -fs /sys/power/axp_pmu/ac/voltage /etc/sysmonitor/datasources/ac_voltage
+		ln -fs /sys/power/axp_pmu/ac/amperage /etc/sysmonitor/datasources/ac_current
+		ln -fs /sys/power/axp_pmu/vbus/voltage /etc/sysmonitor/datasources/usb_voltage
+		ln -fs /sys/power/axp_pmu/vbus/amperage /etc/sysmonitor/datasources/usb_current
+		ln -fs /sys/power/axp_pmu/battery/voltage /etc/sysmonitor/datasources/battery_voltage
+		ln -fs /sys/power/axp_pmu/battery/amperage /etc/sysmonitor/datasources/battery_current
+		ln -fs /sys/power/axp_pmu/pmu/temp /etc/sysmonitor/datasources/pmictemp
+		ln -fs /sys/power/axp_pmu/battery/capacity /etc/sysmonitor/datasources/battery_percent
+		ln -fs /sys/power/axp_pmu/battery/charging /etc/sysmonitor/datasources/battery_charging
+		ln -fs /sys/power/axp_pmu/charger/amperage /etc/sysmonitor/datasources/charger_current
+		ln -fs /sys/power/axp_pmu/battery/connected /etc/sysmonitor/datasources/battery_connected
+		ln -fs /sys/power/axp_pmu/battery/charge /etc/sysmonitor/datasources/battery_charge
 	fi
 	if [ -d /sys/devices/platform/sunxi-i2c.0/i2c-0/0-0034/axp20-supplyer.28/power_supply ]; then
 		# sunxi 3.4 kernel
 		SysFSPrefix=/sys/devices/platform/sunxi-i2c.0/i2c-0/0-0034/axp20-supplyer.28/power_supply
-		ln -fs "${SysFSPrefix}"/ac/voltage_now /etc/orangepimonitor/datasources/ac_voltage
-		ln -fs "${SysFSPrefix}"/ac/current_now /etc/orangepimonitor/datasources/ac_current
-		ln -fs "${SysFSPrefix}"/usb/voltage_now /etc/orangepimonitor/datasources/usb_voltage
-		ln -fs "${SysFSPrefix}"/usb/current_now /etc/orangepimonitor/datasources/usb_current
-		ln -fs "${SysFSPrefix}"/battery/voltage_now /etc/orangepimonitor/datasources/battery_voltage
-		ln -fs "${SysFSPrefix}"/battery/current_now /etc/orangepimonitor/datasources/battery_current
-		ln -fs /sys/devices/platform/sunxi-i2c.0/i2c-0/0-0034/temp1_input /etc/orangepimonitor/datasources/pmictemp
-		ln -fs /sys/class/power_supply/battery/capacity /etc/orangepimonitor/datasources/battery_percent
-		ln -fs /sys/class/power_supply/battery/charging /etc/orangepimonitor/datasources/battery_charging
-		ln -fs /sys/class/power_supply/battery/connected /etc/orangepimonitor/datasources/battery_connected
-		ln -fs /sys/class/power_supply/battery/charge /etc/orangepimonitor/datasources/battery_charge
+		ln -fs "${SysFSPrefix}"/ac/voltage_now /etc/sysmonitor/datasources/ac_voltage
+		ln -fs "${SysFSPrefix}"/ac/current_now /etc/sysmonitor/datasources/ac_current
+		ln -fs "${SysFSPrefix}"/usb/voltage_now /etc/sysmonitor/datasources/usb_voltage
+		ln -fs "${SysFSPrefix}"/usb/current_now /etc/sysmonitor/datasources/usb_current
+		ln -fs "${SysFSPrefix}"/battery/voltage_now /etc/sysmonitor/datasources/battery_voltage
+		ln -fs "${SysFSPrefix}"/battery/current_now /etc/sysmonitor/datasources/battery_current
+		ln -fs /sys/devices/platform/sunxi-i2c.0/i2c-0/0-0034/temp1_input /etc/sysmonitor/datasources/pmictemp
+		ln -fs /sys/class/power_supply/battery/capacity /etc/sysmonitor/datasources/battery_percent
+		ln -fs /sys/class/power_supply/battery/charging /etc/sysmonitor/datasources/battery_charging
+		ln -fs /sys/class/power_supply/battery/connected /etc/sysmonitor/datasources/battery_connected
+		ln -fs /sys/class/power_supply/battery/charge /etc/sysmonitor/datasources/battery_charge
 	fi
 	# relink template
 	if [ "X${DebugMode}" = "XDEBUG" ]; then
-		ln -sf /etc/orangepimonitor/templates/axp209_template_debug.conf /etc/orangepimonitor/templates/cpu_pmic.conf
+		ln -sf /etc/sysmonitor/templates/axp209_template_debug.conf /etc/sysmonitor/templates/cpu_pmic.conf
 	else
-		ln -sf /etc/orangepimonitor/templates/axp209_template.conf /etc/orangepimonitor/templates/cpu_pmic.conf
+		ln -sf /etc/sysmonitor/templates/axp209_template.conf /etc/sysmonitor/templates/cpu_pmic.conf
 	fi
 } # DealWithAXP209
 
 DealWithNewBoard() {
 	# check existence of sysfs nodes
 	if [ -f /sys/devices/virtual/thermal/thermal_zone0/temp ]; then
-		ln -fs /sys/devices/virtual/thermal/thermal_zone0/temp /etc/orangepimonitor/datasources/soctemp
+		ln -fs /sys/devices/virtual/thermal/thermal_zone0/temp /etc/sysmonitor/datasources/soctemp
 	elif [ -f /sys/devices/virtual/thermal/thermal_zone1/temp ]; then
-		ln -fs /sys/devices/virtual/thermal/thermal_zone1/temp /etc/orangepimonitor/datasources/soctemp
+		ln -fs /sys/devices/virtual/thermal/thermal_zone1/temp /etc/sysmonitor/datasources/soctemp
 	fi
 	# relink template
 	if [ "X${DebugMode}" = "XDEBUG" ]; then
-		ln -sf /etc/orangepimonitor/templates/unknown_board_template_debug.conf /etc/orangepimonitor/templates/cpu_pmic.conf
+		ln -sf /etc/sysmonitor/templates/unknown_board_template_debug.conf /etc/sysmonitor/templates/cpu_pmic.conf
 	else
-		ln -sf /etc/orangepimonitor/templates/unknown_board_template.conf /etc/orangepimonitor/templates/cpu_pmic.conf
+		ln -sf /etc/sysmonitor/templates/unknown_board_template.conf /etc/sysmonitor/templates/cpu_pmic.conf
 	fi
 } # DealWithNewBoard
 
 CreateTemplates() {
 	# check whether templates we write aren't symlinks to somewhere else
 	for i in orangepi.conf uptime.conf version.conf ; do
-		if [ -L /etc/orangepimonitor/templates/${i} ]; then
-			rm /etc/orangepimonitor/templates/${i}
-			touch /etc/orangepimonitor/templates/${i}
-			chmod 711 /etc/orangepimonitor/templates/${i}
+		if [ -L /etc/sysmonitor/templates/${i} ]; then
+			rm /etc/sysmonitor/templates/${i}
+			touch /etc/sysmonitor/templates/${i}
+			chmod 711 /etc/sysmonitor/templates/${i}
 		fi
 	done
 
@@ -246,7 +246,7 @@ CreateTemplates() {
 		if [ -L /usr/share/rpimonitor/web/img/orangepi.png ]; then
 			rm /usr/share/rpimonitor/web/img/orangepi.png
 		fi
-		cp -p /etc/orangepimonitor/templates/orangepi.png /usr/share/rpimonitor/web/img/
+		cp -p /etc/sysmonitor/templates/orangepi.png /usr/share/rpimonitor/web/img/
 	fi
 	
 	# create main template
@@ -257,39 +257,39 @@ web.status.1.name=$BOARD_NAME
 web.statistics.1.name=$BOARD_NAME
 web.addons.1.name=Addons
 web.addons.1.addons=about
-include=/etc/orangepimonitor/templates/version.conf
-include=/etc/orangepimonitor/templates/uptime.conf
-include=/etc/orangepimonitor/templates/cpu_pmic.conf
-include=/etc/rpimonitor/template/memory.conf" >/etc/orangepimonitor/orangepi.conf
+include=/etc/sysmonitor/templates/version.conf
+include=/etc/sysmonitor/templates/uptime.conf
+include=/etc/sysmonitor/templates/cpu_pmic.conf
+include=/etc/rpimonitor/template/memory.conf" >/etc/sysmonitor/orangepi.conf
 	
 	# remove firmware line in version info:
-	grep -v "Firmware" /etc/rpimonitor/template/version.conf | sed 's|line.5|line.4|' >/etc/orangepimonitor/templates/version.conf	
+	grep -v "Firmware" /etc/rpimonitor/template/version.conf | sed 's|line.5|line.4|' >/etc/sysmonitor/templates/version.conf	
 	
 	# uptime template with correct machine name:
-	sed "s/Raspberry Pi/$ID/" < /etc/rpimonitor/template/uptime.conf >/etc/orangepimonitor/templates/uptime.conf
+	sed "s/Raspberry Pi/$ID/" < /etc/rpimonitor/template/uptime.conf >/etc/sysmonitor/templates/uptime.conf
 
 	# check swap settings. In case we're using swap then add template
 	HowManySwapDevices=$(swapon -s | wc -l)
 	if [[ ${HowManySwapDevices} -gt 1 ]]; then
-		echo "include=/etc/rpimonitor/template/swap.conf" >>/etc/orangepimonitor/orangepi.conf
+		echo "include=/etc/rpimonitor/template/swap.conf" >>/etc/sysmonitor/orangepi.conf
 	fi
 	
-	echo "include=/etc/orangepimonitor/template/filesystems.conf
-include=/etc/orangepimonitor/template/disks.conf
-include=/etc/rpimonitor/template/network.conf" >>/etc/orangepimonitor/orangepi.conf
+	echo "include=/etc/sysmonitor/template/filesystems.conf
+include=/etc/sysmonitor/template/disks.conf
+include=/etc/rpimonitor/template/network.conf" >>/etc/sysmonitor/orangepi.conf
 
 	UpdateFileSystems
 	UpdateDisks
-} #
+}
 
 UpdateFileSystems() {
-	# Generates /etc/orangepimonitor/template/filesystems.conf dynamically
-	# based on the contents of /etc/orangepimonitoring/filesystems.conf
+	# Generates /etc/sysmonitor/template/filesystems.conf dynamically
+	# based on the contents of /etc/sysmonitoring/filesystems.conf
 	
 	# if not existing, create config file with single entry for /
-	if [ ! -f /etc/orangepimonitoring/filesystems.conf ]; then
-		echo '/' >/etc/orangepimonitoring/filesystems.conf
-		chmod 711 /etc/orangepimonitoring/filesystems.conf
+	if [ ! -f /etc/sysmonitoring/filesystems.conf ]; then
+		echo '/' >/etc/sysmonitoring/filesystems.conf
+		chmod 711 /etc/sysmonitoring/filesystems.conf
 	fi
 	
 	# Update template:
@@ -297,21 +297,21 @@ UpdateFileSystems() {
 } # UpdateFileSystems
 
 UpdateDisks() {
-	# Generates /etc/orangepimonitor/template/disks.conf dynamically
-	# based on the contents of /etc/orangepimonitor/disks.conf. The
+	# Generates /etc/sysmonitor/template/disks.conf dynamically
+	# based on the contents of /etc/sysmonitor/disks.conf. The
 	# current mapping between GUIDs and /dev/sd* nodes will be stored
-	# in /etc/orangepimonitor/datasources/disk-by-guid
+	# in /etc/sysmonitor/datasources/disk-by-guid
 	
 	# ensure lookup file is empty:
-	if [ -L /etc/orangepimonitor/datasources/disk-by-guid ]; then
-		rm -f /etc/orangepimonitor/datasources/disk-by-guid
+	if [ -L /etc/sysmonitor/datasources/disk-by-guid ]; then
+		rm -f /etc/sysmonitor/datasources/disk-by-guid
 	fi	
-	echo -n "" >/etc/orangepimonitor/datasources/disk-by-guid
-	chmod 711 /etc/orangepimonitor/datasources/disk-by-guid
+	echo -n "" >/etc/sysmonitor/datasources/disk-by-guid
+	chmod 711 /etc/sysmonitor/datasources/disk-by-guid
 	
 	OIFS=${IFS}
 	IFS=:
-	cat /etc/orangepimonitor/disks.conf | while read ; do
+	cat /etc/sysmonitor/disks.conf | while read ; do
 		IFS=:
 		set ${REPLY}
 		GUID="$1"
@@ -325,7 +325,7 @@ UpdateDisks() {
 		# try to resolve device node (when not present, then disk's
 		# not mounted -- we then create the entry without device node)
 		DeviceNode="$(ResolveGUID ${GUID})"
-		echo -e "${GUID}\t${DiskName}\t${DeviceNode}" >>/etc/orangepimonitor/datasources/disk-by-guid
+		echo -e "${GUID}\t${DiskName}\t${DeviceNode}" >>/etc/sysmonitor/datasources/disk-by-guid
 
 		# create template stuff for every listed disk
 		:
@@ -361,20 +361,20 @@ PreRequisits() {
 		. /etc/init.d/armhwinfo start >/dev/null 2>&1
 	fi
 	
-	# check/create /etc/orangepimonitor and /etc/orangepimonitor/datasources
-	if [ ! -d /etc/orangepimonitor ]; then
-		mkdir -p -m 755 /etc/orangepimonitor
+	# check/create /etc/sysmonitor and /etc/sysmonitor/datasources
+	if [ ! -d /etc/sysmonitor ]; then
+		mkdir -p -m 755 /etc/sysmonitor
 	else
-		chmod 755 /etc/orangepimonitor
+		chmod 755 /etc/sysmonitor
 	fi
-	if [ ! -d /etc/orangepimonitor/datasources ]; then
-		mkdir -p -m 755 /etc/orangepimonitor/datasources
+	if [ ! -d /etc/sysmonitor/datasources ]; then
+		mkdir -p -m 755 /etc/sysmonitor/datasources
 	else
-		chmod 755 /etc/orangepimonitor/datasources
+		chmod 755 /etc/sysmonitor/datasources
 	fi
 	
 	# check whether we should do debug monitoring or normal
-	read DebugMode </etc/orangepimonitor/start-monitoring
+	read DebugMode </etc/sysmonitor/start-monitoring
 
 	# set default variables
 	unset LANG

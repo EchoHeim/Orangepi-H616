@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# orangepimonitor
+# sysmonitor
 #
 # This script serves different purposes based on how it is called:
 #
@@ -18,16 +18,16 @@
 # The second part is WiP and all the user interaction part
 # still completely missing.
 #
-# This script is used to configure orangepimonitor behaviour.
+# This script is used to configure sysmonitor behaviour.
 # It will ask the user whether to activate monitoring or not,
 # whether to enable debug monitoring and also how to deal with
 # connected disks. In fact it walks through the list of available
 # disks, checks them, tries to patch hddtemp.db if necessary
-# and provides a proposal for /etc/orangepimonitor/disks.conf
+# and provides a proposal for /etc/sysmonitor/disks.conf
 # when a new disk is found.
 #
 # In case monitoring should be activated the following file 
-# will be created: /etc/orangepimonitor/start-monitoring. If 
+# will be created: /etc/sysmonitor/start-monitoring. If 
 # debug output has been chosen, then DEBUG will be written to 
 # the file.
 #
@@ -35,16 +35,16 @@
 # installed and patches smartmontools' update-smart-drivedb 
 # script if necessary. For disks the 'device model' will be
 # shown but internally we rely always on the GUID. This is the
-# key for entry in /etc/orangepimonitor/disks.conf
+# key for entry in /etc/sysmonitor/disks.conf
 #
 # When the script exits and the user activated monitoring it
 # recommends doing a restart since on the next reboot the
 # setup-orangepi-monitoring-environment script will configure 
 # monitoring sources and decides based on the existence and 
-# contents of /etc/orangepimonitor/start-monitoring whether 
+# contents of /etc/sysmonitor/start-monitoring whether 
 # rpimonitord should be started or not.
 #
-# The format of /etc/orangepimonitor/disks.conf is as follows:
+# The format of /etc/sysmonitor/disks.conf is as follows:
 #
 # ${GUID}:${Name}:${smartctl prefix}:${temp call}:${CRC}:${LCC}
 #
@@ -103,14 +103,14 @@ Main() {
 	PreRequisits
 	
 	# check whether user runs rpimonitord on his own or we activated it
-	if [ -f /etc/orangepimonitor/start-monitoring ]; then
+	if [ -f /etc/sysmonitor/start-monitoring ]; then
 		# we should already provide monitoring, check whether DEBUG
 		# is also set
-		OrangePiMonitoring=TRUE
-		read DebugMode </etc/orangepimonitor/start-monitoring 2>/dev/null
+		SYSMonitoring=TRUE
+		read DebugMode </etc/sysmonitor/start-monitoring 2>/dev/null
 	fi
 	
-	# check whether rpimonitord is running and compare with ${OrangePiMonitoring}
+	# check whether rpimonitord is running and compare with ${SYSMonitoring}
 	# In case the user chose to run rpimonitord on his own, we skip the config
 	# part and only output disk info
 	:
@@ -201,7 +201,7 @@ ParseOptions() {
 					cd /etc/rpimonitor/
 					ln -sf /etc/rpimonitor/template/orangepi.conf data.conf
 					# fix temperature everywhere
-					sed -i -e 's|^dynamic.12.source=.*|dynamic.12.source=/etc/orangepimonitor/datasources/soctemp|' \
+					sed -i -e 's|^dynamic.12.source=.*|dynamic.12.source=/etc/sysmonitor/datasources/soctemp|' \
 						-e 's|^dynamic.12.postprocess=.*|dynamic.12.postprocess=sprintf("%.1f", $1/1000)|' \
 						/etc/rpimonitor/template/temperature.conf
 					# monitor big cores on big.LITTLE
@@ -282,19 +282,19 @@ DisplayUsage() {
 		echo -e "\nDetailed Description:"
 		grep "^#" "$0" | grep -v "^#\!/bin/bash" | sed 's/^#//'
 	fi
-	echo -e "\n Use ${BOLD}orangepimonitor${NC} for the following tasks:\n"
-	echo -e " orangepimonitor ${BOLD}-c /path/to/test${NC} performs disk health/performance tests"
-	echo -e " orangepimonitor ${BOLD}-d${NC} monitors writes to \$device"
-	echo -e " orangepimonitor ${BOLD}-D${NC} tries to upload debug disk info to improve orangepimonitor"
-	echo -e " orangepimonitor ${BOLD}-m${NC} provides simple CLI monitoring - scrolling output"
-	echo -e " orangepimonitor ${BOLD}-M${NC} provides simple CLI monitoring - fixed-line output"
-	echo -e " orangepimonitor ${BOLD}-n${NC} provides simple CLI network monitoring - scrolling output"
-	echo -e " orangepimonitor ${BOLD}-N${NC} provides simple CLI network monitoring - fixed-line output"
-	echo -e " orangepimonitor ${BOLD}-p${NC} tries to install cpuminer for performance measurements"
-	echo -e " orangepimonitor ${BOLD}-r${NC} tries to install RPi-Monitor"
-	echo -e " orangepimonitor ${BOLD}-u${NC} tries to upload orangepi-hardware-monitor.log for support purposes"
-	echo -e " orangepimonitor ${BOLD}-v${NC} tries to verify installed package integrity"
-	echo -e " orangepimonitor ${BOLD}-z${NC} runs a quick 7-zip benchmark to estimate CPU performance\n"
+	echo -e "\n Use ${BOLD}sysmonitor${NC} for the following tasks:\n"
+	echo -e " sysmonitor ${BOLD}-c /path/to/test${NC} performs disk health/performance tests"
+	echo -e " sysmonitor ${BOLD}-d${NC} monitors writes to \$device"
+	echo -e " sysmonitor ${BOLD}-D${NC} tries to upload debug disk info to improve sysmonitor"
+	echo -e " sysmonitor ${BOLD}-m${NC} provides simple CLI monitoring - scrolling output"
+	echo -e " sysmonitor ${BOLD}-M${NC} provides simple CLI monitoring - fixed-line output"
+	echo -e " sysmonitor ${BOLD}-n${NC} provides simple CLI network monitoring - scrolling output"
+	echo -e " sysmonitor ${BOLD}-N${NC} provides simple CLI network monitoring - fixed-line output"
+	echo -e " sysmonitor ${BOLD}-p${NC} tries to install cpuminer for performance measurements"
+	echo -e " sysmonitor ${BOLD}-r${NC} tries to install RPi-Monitor"
+	echo -e " sysmonitor ${BOLD}-u${NC} tries to upload orangepi-hardware-monitor.log for support purposes"
+	echo -e " sysmonitor ${BOLD}-v${NC} tries to verify installed package integrity"
+	echo -e " sysmonitor ${BOLD}-z${NC} runs a quick 7-zip benchmark to estimate CPU performance\n"
 	echo -e "############################################################################\n"
 } # DisplayUsage
 
@@ -308,7 +308,7 @@ MonitorMode() {
 	# - PMIC temperature if available
 	# - DC-IN voltage if available
 
-	# Allow orangepimonitor to return back to orangepi-config
+	# Allow sysmonitor to return back to orangepi-config
 	trap "echo ; exit 0" 0 1 2 3 15
 	
 	# Try to renice to 19 to not interfere with OS behaviour
@@ -326,7 +326,7 @@ MonitorMode() {
 
 	SleepInterval=${interval:-5}
 
-	Sensors="/etc/orangepimonitor/datasources/"
+	Sensors="/etc/sysmonitor/datasources/"
 	if [ -f /sys/devices/system/cpu/cpu4/cpufreq/cpuinfo_cur_freq ]; then
 		DisplayHeader="Time       big.LITTLE   load %cpu %sys %usr %nice %io %irq"
 		CPUs=biglittle
@@ -437,7 +437,7 @@ CheckDCINVoltage() {
 
 ProcessStats() {
 	if [ -f /tmp/cpustat ]; then
-		# RPi-Monitor/OrangePimonitor already running and providing processed values
+		# RPi-Monitor/sysmonitor already running and providing processed values
 		set $(awk -F" " '{print $1"\t"$2"\t"$3"\t"$4"\t"$5"\t"$6}' </tmp/cpustat)
 		CPULoad=$1
 		SystemLoad=$2
@@ -515,7 +515,7 @@ CheckDisks() {
 	# then gets the name hddtemp expects, the model name from smartctl, looks whether
 	# the drive only lists one temperature value and patches hddtemp.db if necessary
 	# and also tries to get CRC and LCC S.M.A.R.T. attributes to provide the user
-	# with the necessary config file contents for /etc/orangepimonitor/disks.conf:
+	# with the necessary config file contents for /etc/sysmonitor/disks.conf:
 	
 	ls /sys/block/sd* >/dev/null 2>&1 || exit 0
 	
@@ -597,16 +597,16 @@ CheckDisks() {
 		FirmwareUpdate="$(grep "^http" "${MyTempDir}/smartctl.txt")"
 		
 		# Check whether the disk (based on GUID) is already configured in our config file
-		# /etc/orangepimonitor/disks.conf or not
+		# /etc/sysmonitor/disks.conf or not
 		
-		grep -q "^${GUID}:" /etc/orangepimonitor/disks.conf >/dev/null 2>/dev/null
+		grep -q "^${GUID}:" /etc/sysmonitor/disks.conf >/dev/null 2>/dev/null
 		case $? in
 			0)
 				# already listed, we provide just infos:
-				echo -e "Disk is already configured by the following monitoring config:\n$(grep "^${GUID}:" /etc/orangepimonitor/disks.conf)\n"
+				echo -e "Disk is already configured by the following monitoring config:\n$(grep "^${GUID}:" /etc/sysmonitor/disks.conf)\n"
 				;;
 			*)
-				# new disk, we recommend an entry for /etc/orangepimonitor/disks.conf
+				# new disk, we recommend an entry for /etc/sysmonitor/disks.conf
 				echo -e "Disk not configured for monitoring. We were able to extract the following \ninformation:\n   GUID: ${GUID}"
 				if [ "X${SMARTPrefix}" != "X" ]; then
 					echo -e "   QueryMode: -d ${SMARTPrefix}"
@@ -614,10 +614,10 @@ CheckDisks() {
 				echo -e "   hddtemp: ${HddtempStatus}\n   CRC attribute: ${CRCAttribute}\n   LCC Attribute: ${LCCAttribute}"
 				case ${HddtempStatus} in
 					"will work")
-						echo -e "If you want to monitor the disk please add to /etc/orangepimonitor/disks.conf:\n${GUID}:${DeviceModel}:${SMARTPrefix}::${CRCAttribute}:${LCCAttribute}"
+						echo -e "If you want to monitor the disk please add to /etc/sysmonitor/disks.conf:\n${GUID}:${DeviceModel}:${SMARTPrefix}::${CRCAttribute}:${LCCAttribute}"
 						;;
 					*)
-						echo -e "Proposal for /etc/orangepimonitor/disks.conf:\n${GUID}:${DeviceModel}:${SMARTPrefix}:FIXME:${CRCAttribute}:${LCCAttribute}"
+						echo -e "Proposal for /etc/sysmonitor/disks.conf:\n${GUID}:${DeviceModel}:${SMARTPrefix}:FIXME:${CRCAttribute}:${LCCAttribute}"
 						echo -e "You have to figure out how to query the disk for its thermal sensor."
 						echo -e "Please check the output of \"hddtemp --debug ${DeviceNode}\" and smartctl\n"
 						;;
@@ -903,8 +903,8 @@ CollectSupportInfo() {
 	echo -e "\n"
 	for sysfsnode in /proc/sys/vm/* ; do sysctl $(echo ${sysfsnode} | sed 's|/proc/sys/vm/|vm.|'); done
 	echo -e "\n### interrupts:\n$(cat /proc/interrupts)"
-	ls /tmp/orangepimonitor_checks_* >/dev/null 2>&1 || return
-	for file in /tmp/orangepimonitor_checks_* ; do
+	ls /tmp/sysmonitor_checks_* >/dev/null 2>&1 || return
+	for file in /tmp/sysmonitor_checks_* ; do
 		echo -e "\n### \c"
 		ls "${file}" | cut -f1 -d.
 		echo
@@ -942,7 +942,7 @@ CheckCard() {
 	TestDir="$(mktemp -d "${TargetDir}/cardtest.XXXXXX" || exit 1)"
 	date "+%s" >"${TestDir}/.starttime" || exit 1
 	trap "rm -rf \"${TestDir}\" ; exit 0" 0 1 2 3 15
-	LogFile="$(mktemp /tmp/orangepimonitor_checks_${DeviceName##*/}_${FileSystem}.XXXXXX)"
+	LogFile="$(mktemp /tmp/sysmonitor_checks_${DeviceName##*/}_${FileSystem}.XXXXXX)"
 	
 	# start actual test, create a small file for some space reserve
 	fallocate -l 32M "${TestDir}/empty.32m" 2>/dev/null || dd if=/dev/zero of="${TestDir}/empty.32m" bs=1M count=32 status=noxfer >/dev/null 2>&1
@@ -1069,7 +1069,7 @@ VerifyInstallation() {
 
 NetworkMonitorMode() {
 
-	# Allow orangepimonitor to return back to orangepi-config
+	# Allow sysmonitor to return back to orangepi-config
 	trap "echo ; exit 0" 0 1 2 3 15
 	
 	# Count interfaces - multiple routes causing interfaces to show up more than once, filtering...
@@ -1196,7 +1196,7 @@ Run7ZipBenchmark() {
 	# Send CLI monitoring to the background to be able to spot throttling and other problems
 	MonitoringOutput="$(mktemp /tmp/${0##*/}.XXXXXX)"
 	trap "rm \"${MonitoringOutput}\" ; exit 0" 0 1 2 3 15
-	orangepimonitor -m >${MonitoringOutput} &
+	sysmonitor -m >${MonitoringOutput} &
 	MonitoringPID=$!
 	# run 7-zip benchmarks after waiting 10 seconds to spot whether the system was idle before.
 	# We run the benchmark a single time by default unless otherwise specified on the command line

@@ -48,17 +48,17 @@ function display() {
 } # display
 
 function getboardtemp() {
-	if [ -f /etc/orangepimonitor/datasources/soctemp ]; then
-		read raw_temp </etc/orangepimonitor/datasources/soctemp 2>/dev/null
+	if [ -f /etc/sysmonitor/datasources/soctemp ]; then
+		read raw_temp </etc/sysmonitor/datasources/soctemp 2>/dev/null
 		if [ ! -z $(echo "$raw_temp" | grep -o "^[1-9][0-9]*\.\?[0-9]*$") ] && (( $(echo "${raw_temp} < 200" |bc -l) )); then
 			# Allwinner legacy kernels output degree C
 			board_temp=${raw_temp}
 		else
 			board_temp=$(awk '{printf("%d",$1/1000)}' <<<${raw_temp})
 		fi
-	elif [ -f /etc/orangepimonitor/datasources/pmictemp ]; then
+	elif [ -f /etc/sysmonitor/datasources/pmictemp ]; then
 		# fallback to PMIC temperature
-		board_temp=$(awk '{printf("%d",$1/1000)}' </etc/orangepimonitor/datasources/pmictemp)
+		board_temp=$(awk '{printf("%d",$1/1000)}' </etc/sysmonitor/datasources/pmictemp)
 	fi
 	# Some boards, such as the Orange Pi Zero LTS, report shifted CPU temperatures
 	board_temp=$((board_temp + CPU_TEMP_OFFSET))
@@ -101,8 +101,8 @@ function batteryinfo() {
 function ambienttemp() {
 	# define where w1 usually shows up
         W1_DIR="/sys/devices/w1_bus_master1/"
-	if [ -f /etc/orangepimonitor/datasources/ambienttemp ]; then
-		read raw_temp </etc/orangepimonitor/datasources/ambienttemp 2>/dev/null
+	if [ -f /etc/sysmonitor/datasources/ambienttemp ]; then
+		read raw_temp </etc/sysmonitor/datasources/ambienttemp 2>/dev/null
 		amb_temp=$(awk '{printf("%d",$1/1000)}' <<<${raw_temp})
 		echo $amb_temp
 	elif [[ -d $W1_DIR && $ONE_WIRE == yes ]]; then

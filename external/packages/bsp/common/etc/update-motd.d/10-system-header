@@ -22,5 +22,5 @@ done
 . /etc/board-release
 
 KERNELID=$(uname -r)
-TERM=linux toilet -f standard -F metal $(echo $BOARD_NAME | sed 's/Orange Pi/OPi/')
-echo -e "Welcome to \e[0;91mOrange Pi ${VERSION} ${DISTRIBUTION_CODENAME^}\x1B[0m with $([[ $BRANCH == edge ]] && echo -e "\e[0;91mbleeding\x1B[0m edge " )\e[0;91mLinux $KERNELID\x1B[0m\n"
+TERM=linux toilet -f standard -F metal $BOARD_NAME
+echo -e "Welcome to \e[0;91m$BOARD_NAME ${VERSION} ${DISTRIBUTION_CODENAME^}\x1B[0m with $([[ $BRANCH == edge ]] && echo -e "\e[0;91mbleeding\x1B[0m edge " )\e[0;91mLinux $KERNELID\x1B[0m\n"

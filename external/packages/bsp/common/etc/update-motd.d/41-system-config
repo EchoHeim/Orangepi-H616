@@ -26,6 +26,4 @@ done
 # 	fi
 # fi
 
-echo -e "[\e[31m Welcome to biqu board\e[0m: \e[1m\n"
-
 exit 0

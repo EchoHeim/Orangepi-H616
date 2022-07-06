@@ -21,37 +21,37 @@
 
 prepare_temp_monitoring() {
 	# still an ugly hack but better do it just once at startup instead of every login
-	[ -d /etc/orangepimonitor/datasources ] || mkdir -p -m775 /etc/orangepimonitor/datasources
+	[ -d /etc/sysmonitor/datasources ] || mkdir -p -m775 /etc/sysmonitor/datasources
 
 	# PMIC check
 	if [[ -f /sys/power/axp_pmu/pmu/temp ]]; then
-		ln -fs /sys/power/axp_pmu/pmu/temp /etc/orangepimonitor/datasources/pmictemp
+		ln -fs /sys/power/axp_pmu/pmu/temp /etc/sysmonitor/datasources/pmictemp
 	elif [[ -f /sys/devices/platform/sunxi-i2c.0/i2c-0/0-0034//temp1_input ]]; then
 		ln -fs /sys/devices/platform/sunxi-i2c.0/i2c-0/0-0034/temp1_input \
-			/etc/orangepimonitor/datasources/pmictemp
+			/etc/sysmonitor/datasources/pmictemp
 	elif [[ -f /sys/devices/b0170000.i2c/i2c-0/0-0065/atc2603c-hwmon.0/ic_temperature ]]; then
 		ln -fs /sys/devices/b0170000.i2c/i2c-0/0-0065/atc2603c-hwmon.0/ic_temperature \
-			/etc/orangepimonitor/datasources/pmictemp
+			/etc/sysmonitor/datasources/pmictemp
 	elif [[ -f /sys/class/axppower/ic_temp ]]; then
-		ln -fs /sys/class/axppower/ic_temp /etc/orangepimonitor/datasources/pmictemp
+		ln -fs /sys/class/axppower/ic_temp /etc/sysmonitor/datasources/pmictemp
 	fi
 
 	# SoC temp: check sun7i legacy exception first, then standard path(s)
 	if [[ -d "/sys/devices/platform/a20-tp-hwmon" ]]; then
 		# sun7i legacy
-		ln -fs /sys/devices/platform/a20-tp-hwmon/temp1_input /etc/orangepimonitor/datasources/soctemp
+		ln -fs /sys/devices/platform/a20-tp-hwmon/temp1_input /etc/sysmonitor/datasources/soctemp
 	elif [[ -f /sys/class/hwmon/hwmon0/temp1_input && ${BOARDFAMILY} != "mvebu" ]]; then
 		# usual convention with modern kernels
-		ln -fs /sys/class/hwmon/hwmon0/temp1_input /etc/orangepimonitor/datasources/soctemp
+		ln -fs /sys/class/hwmon/hwmon0/temp1_input /etc/sysmonitor/datasources/soctemp
 	else
 		# all other boards/kernels use the same sysfs node except of Actions Semi S500:
 		[[ ${BOARDFAMILY} == s500 ]] && THERMAL_ZONE="thermal_zone1" || THERMAL_ZONE="thermal_zone0"
-		ln -fs /sys/devices/virtual/thermal/${THERMAL_ZONE}/temp /etc/orangepimonitor/datasources/soctemp
+		ln -fs /sys/devices/virtual/thermal/${THERMAL_ZONE}/temp /etc/sysmonitor/datasources/soctemp
 	fi
 
 	# Ambient temp
 	if [[ ${BOARD} == "helios4" && -f /dev/thermal-board/temp1_input ]]; then
-		ln -fs /dev/thermal-board/temp1_input /etc/orangepimonitor/datasources/ambienttemp
+		ln -fs /dev/thermal-board/temp1_input /etc/sysmonitor/datasources/ambienttemp
 	fi
 } # prepare_temp_monitoring
 
@@ -101,7 +101,7 @@ log_hardware_info() {
 	[[ -e /boot/script.bin ]] && echo -e "\n### /boot/script.bin --> $(readlink /boot/script.bin)" >>${Log}
 	get_flash_information >>${Log}
 	echo -e "\n### Boot system health:\n" >>${Log}
-	orangepimonitor -s | egrep "^Time|^[0-9]" >>${Log}
+	sysmonitor -s | egrep "^Time|^[0-9]" >>${Log}
 } # log_hardware_info
 
 get_flash_information() {
@@ -130,7 +130,7 @@ check_sd_card_speed() {
 				Readspeed=$1
 				Writespeed=$2
 				if [ ${Readspeed} -lt 500 -o ${Writespeed} -lt 250 ]; then
-					show_motd_warning "Your SD card seems to be very slow. Please check performance using orangepimonitor -c"
+					show_motd_warning "Your SD card seems to be very slow. Please check performance using sysmonitor -c"
 				fi
 			fi
 		fi
