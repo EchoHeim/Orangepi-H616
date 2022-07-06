@@ -35,7 +35,7 @@ debootstrap_ng()
 	# CLI needs ~1.5GiB, desktop - ~3.5GiB
 	# calculate and set tmpfs mount to use 9/10 of available RAM+SWAP
 	local phymem=$(( (($(awk '/MemTotal/ {print $2}' /proc/meminfo) + $(awk '/SwapTotal/ {print $2}' /proc/meminfo))) / 1024 * 9 / 10 )) # MiB
-	if [[ $BUILD_DESKTOP == yes ]]; then local tmpfs_max_size=3500; else local tmpfs_max_size=1500; fi # MiB
+	local tmpfs_max_size=1500   # MiB
 	if [[ $FORCE_USE_RAMDISK == no ]]; then	local use_tmpfs=no
 	elif [[ $FORCE_USE_RAMDISK == yes || $phymem -gt $tmpfs_max_size ]]; then
 		local use_tmpfs=yes
@@ -106,7 +106,6 @@ create_rootfs_cache()
 
 	local packages_hash=$(get_package_list_hash "$ROOTFSCACHE_VERSION")
 	local cache_type="cli"
-	[[ ${BUILD_DESKTOP} == yes ]] && local cache_type="xfce-desktop"
 	[[ -n ${DESKTOP_ENVIRONMENT} ]] && local cache_type="${DESKTOP_ENVIRONMENT}"
 	[[ ${BUILD_MINIMAL} == yes ]] && local cache_type="minimal"
 	local cache_name=${RELEASE}-${cache_type}-${ARCH}.$packages_hash.tar.lz4
@@ -240,35 +239,6 @@ create_rootfs_cache()
 
 		[[ ${PIPESTATUS[0]} -ne 0 ]] && exit_with_error "Installation of Orange Pi main packages for ${BRANCH} ${BOARD} ${RELEASE} ${DESKTOP_APPGROUPS_SELECTED} ${DESKTOP_ENVIRONMENT} ${BUILD_MINIMAL} failed"
 
-		if [[ $BUILD_DESKTOP == "yes" ]]; then
-			# FIXME Myy : Are we keeping this only for Desktop users,
-			# or should we extend this to CLI users too ?
-			# There might be some clunky boards that require Debian packages from
-			# specific repos...
-			display_alert "Adding apt sources for Desktop packages"
-			add_desktop_package_sources
-
-			local apt_desktop_install_flags=""
-			if [[ ! -z ${DESKTOP_APT_FLAGS_SELECTED+x} ]]; then
-				for flag in ${DESKTOP_APT_FLAGS_SELECTED}; do
-					apt_desktop_install_flags+=" --install-${flag}"
-				done
-			else
-				# Myy : Using the previous default option, if the variable isn't defined
-				# And ONLY if it's not defined !
-				apt_desktop_install_flags+=" --no-install-recommends"
-			fi
-
-			display_alert "Installing the desktop packages for" "Orange Pi" "info"
-			eval 'LC_ALL=C LANG=C chroot $SDCARD /bin/bash -e -c "DEBIAN_FRONTEND=noninteractive apt-get -y -q \
-				$apt_extra $apt_extra_progress install ${apt_desktop_install_flags} $PACKAGE_LIST_DESKTOP"' \
-				${PROGRESS_LOG_TO_FILE:+' | tee -a $DEST/${LOG_SUBPATH}/debootstrap.log'} \
-				${OUTPUT_DIALOG:+' | dialog --backtitle "$backtitle" --progressbox "Installing Orange Pi desktop packages..." $TTY_Y $TTY_X'} \
-				${OUTPUT_VERYSILENT:+' >/dev/null 2>/dev/null'} ';EVALPIPE=(${PIPESTATUS[@]})'
-
-			[[ ${PIPESTATUS[0]} -ne 0 ]] && exit_with_error "Installation of Orange Pi desktop packages for ${BRANCH} ${BOARD} ${RELEASE} ${DESKTOP_APPGROUPS_SELECTED} ${DESKTOP_ENVIRONMENT} ${BUILD_MINIMAL} failed"
-		fi
-
 		# Remove packages from packages.uninstall
 
 		display_alert "Uninstall packages" "$PACKAGE_LIST_UNINSTALL" "info"
@@ -302,12 +272,6 @@ create_rootfs_cache()
 
 		# create list of installed packages for debug purposes
 		chroot $SDCARD /bin/bash -c "dpkg --get-selections" | grep -v deinstall | awk '{print $1}' | cut -f1 -d':' > ${cache_fname}.list 2>&1
-
-		# creating xapian index that synaptic runs faster
-		if [[ $BUILD_DESKTOP == yes ]]; then
-			display_alert "Recreating Synaptic search index" "Please wait" "info"
-			chroot $SDCARD /bin/bash -c "[[ -f /usr/sbin/update-apt-xapian-index ]] && /usr/sbin/update-apt-xapian-index -u"
-		fi
 
 		# this is needed for the build process later since resolvconf generated file in /run is not saved
 		rm $SDCARD/etc/resolv.conf
@@ -383,7 +347,7 @@ prepare_partitions()
 	# metadata_csum and 64bit may need to be disabled explicitly when migrating to newer supported host OS releases
 	# add -N number of inodes to keep mount from running out
 	# create bigger number for desktop builds
-	if [[ $BUILD_DESKTOP == yes ]]; then local node_number=4096; else local node_number=1024; fi
+	local node_number=1024
 	if [[ $HOSTRELEASE =~ bionic|buster|bullseye|bookworm|cosmic|focal|hirsute|impish|jammy|sid ]]; then
 		mkopts[ext4]="-q -m 2 -O ^64bit,^metadata_csum -N $((128*${node_number}))"
 	elif [[ $HOSTRELEASE == xenial ]]; then
@@ -488,11 +452,7 @@ PREPARE_IMAGE_SIZE
 		local imagesize=$(( $rootfs_size + $OFFSET + $BOOTSIZE + $UEFISIZE + $EXTRA_ROOTFS_MIB_SIZE)) # MiB
 		# Hardcoded overhead +25% is needed for desktop images,
 		# for CLI it could be lower. Align the size up to 4MiB
-		if [[ $BUILD_DESKTOP == yes ]]; then
-			local sdsize=$(bc -l <<< "scale=0; ((($imagesize * 1.30) / 1 + 0) / 4 + 1) * 4")
-		else
-			local sdsize=$(bc -l <<< "scale=0; ((($imagesize * 1.25) / 1 + 0) / 4 + 1) * 4")
-		fi
+        local sdsize=$(bc -l <<< "scale=0; ((($imagesize * 1.25) / 1 + 0) / 4 + 1) * 4")
 	fi
 
 	# stage: create blank image

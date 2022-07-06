@@ -396,15 +396,6 @@ PACKAGE_LIST_ADDITIONAL="$(one_line aggregate_all_cli "packages.additional" " ")
 LOG_OUTPUT_FILE="$SRC/output/${LOG_SUBPATH}/debootstrap-list.log"
 show_checklist_variables "DEBOOTSTRAP_LIST DEBOOTSTRAP_COMPONENTS PACKAGE_LIST PACKAGE_LIST_ADDITIONAL PACKAGE_LIST_UNINSTALL"
 
-# Dependent desktop packages
-# Myy : Sources packages from file here
-
-# Myy : FIXME Rename aggregate_all to aggregate_all_desktop
-if [[ $BUILD_DESKTOP == "yes" ]]; then
-	PACKAGE_LIST_DESKTOP+="$(one_line aggregate_all_desktop "packages" " ")"
-	echo -e "\nGroups selected ${DESKTOP_APPGROUPS_SELECTED} -> PACKAGES :" >> "${LOG_OUTPUT_FILE}"
-	show_checklist_variables PACKAGE_LIST_DESKTOP
-fi
 unset LOG_OUTPUT_FILE
 
 DEBIAN_MIRROR='deb.debian.org/debian'

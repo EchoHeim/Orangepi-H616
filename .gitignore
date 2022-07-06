@@ -19,6 +19,9 @@ output
 
 toolchains/gcc-arm-9.2-2019.12-x86_64-aarch64-none-linux-gnu/libexec/
 
+kernel/*.changes
+kernel/*.buildinfo
+
 external/cache/.gpg
 external/cache/hash
 external/cache/rootfs

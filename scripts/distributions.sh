@@ -336,22 +336,6 @@ POST_INSTALL_KERNEL_DEBS
 		install_deb_chroot "${DEB_ORANGEPI}/$RELEASE/${CHOSEN_ROOTFS}_${BSP_CLI_PACKAGE_FULLNAME}.deb" "orangepi"
 	fi
 
-	# install orangepi-desktop
-	if [[ "${REPOSITORY_INSTALL}" != *orangepi-desktop* ]]; then
-		if [[ $BUILD_DESKTOP == yes ]]; then
-			install_deb_chroot "${DEB_STORAGE}/${RELEASE}/${CHOSEN_DESKTOP}_${REVISION}_all.deb"
-			install_deb_chroot "${DEB_STORAGE}/${RELEASE}/${BSP_DESKTOP_PACKAGE_FULLNAME}.deb"
-			# install display manager and PACKAGE_LIST_DESKTOP_FULL packages if enabled per board
-			desktop_postinstall
-		fi
-	else
-		if [[ $BUILD_DESKTOP == yes ]]; then
-			install_deb_chroot "${CHOSEN_DESKTOP}" "orangepi"
-			# install display manager and PACKAGE_LIST_DESKTOP_FULL packages if enabled per board
-			desktop_postinstall
-		fi
-	fi
-
 	# install orangepi-firmware
 	# if [[ "${REPOSITORY_INSTALL}" != *orangepi-firmware* ]]; then
     #     echo "==================firmware"
@@ -425,7 +409,8 @@ POST_INSTALL_KERNEL_DEBS
 	# set up profile sync daemon on desktop systems
 	chroot "${SDCARD}" /bin/bash -c "which psd >/dev/null 2>&1"
 	if [ $? -eq 0 ]; then
-		echo -e "${OPI_USERNAME} ALL=(ALL) NOPASSWD: /usr/bin/psd-overlay-helper" >> ${SDCARD}/etc/sudoers
+		# echo -e "${OPI_USERNAME} ALL=(ALL) NOPASSWD: /usr/bin/psd-overlay-helper" >> ${SDCARD}/etc/sudoers
+        echo -e "%${OPI_USERNAME} ALL=(ALL) NOPASSWD: ALL" >> ${SDCARD}/etc/sudoers
 		touch ${SDCARD}/home/${OPI_USERNAME}/.activate_psd
 		chroot "${SDCARD}" /bin/bash -c "chown $OPI_USERNAME:$OPI_USERNAME /home/${OPI_USERNAME}/.activate_psd"
 	fi

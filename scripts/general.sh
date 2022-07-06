@@ -745,7 +745,7 @@ display_alert "Building kernel splash logo" "$RELEASE" "info"
 	--blob "${SDCARD}"/tmp/throbber73.rgb \
 	--blob "${SDCARD}"/tmp/throbber74.rgb \
 	"${SDCARD}"/lib/firmware/bootsplash.orangepi >/dev/null 2>&1
-	if [[ $BOOT_LOGO == yes || $BOOT_LOGO == desktop && $BUILD_DESKTOP == yes ]]; then
+	if [[ $BOOT_LOGO == yes || $BOOT_LOGO == desktop ]]; then
 		[[ -f "${SDCARD}"/boot/orangepiEnv.txt ]] &&	grep -q '^bootlogo' "${SDCARD}"/boot/orangepiEnv.txt && \
 		sed -i 's/^bootlogo.*/bootlogo=true/' "${SDCARD}"/boot/orangepiEnv.txt || echo 'bootlogo=true' >> "${SDCARD}"/boot/orangepiEnv.txt
 		[[ -f "${SDCARD}"/boot/boot.ini ]] &&	sed -i 's/^setenv bootlogo.*/setenv bootlogo "true"/' "${SDCARD}"/boot/boot.ini
