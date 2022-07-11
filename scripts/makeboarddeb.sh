@@ -52,10 +52,10 @@ create_board_package()
 	Section: kernel
 	Priority: optional
 	Depends: bash, linux-base, u-boot-tools, initramfs-tools, lsb-release, fping
-	Provides: linux-${RELEASE}-root-legacy-$BOARD, linux-${RELEASE}-root-current-$BOARD, linux-${RELEASE}-root-next-$BOARD
+	Provides: linux-${RELEASE}-root-$BOARD, linux-${RELEASE}-root-current-$BOARD, linux-${RELEASE}-root-next-$BOARD
 	Suggests: orangepi-config
-	Replaces: zram-config, base-files, orangepi-tools-$RELEASE, linux-${RELEASE}-root-legacy-$BOARD (<< $REVISION~), linux-${RELEASE}-root-current-$BOARD (<< $REVISION~), linux-${RELEASE}-root-next-$BOARD (<< $REVISION~)
-	Breaks: linux-${RELEASE}-root-legacy-$BOARD (<< $REVISION~), linux-${RELEASE}-root-current-$BOARD (<< $REVISION~), linux-${RELEASE}-root-next-$BOARD (<< $REVISION~)
+	Replaces: zram-config, base-files, orangepi-tools-$RELEASE, linux-${RELEASE}-root-$BOARD (<< $REVISION~), linux-${RELEASE}-root-current-$BOARD (<< $REVISION~), linux-${RELEASE}-root-next-$BOARD (<< $REVISION~)
+	Breaks: linux-${RELEASE}-root-$BOARD (<< $REVISION~), linux-${RELEASE}-root-current-$BOARD (<< $REVISION~), linux-${RELEASE}-root-next-$BOARD (<< $REVISION~)
 	Recommends: bsdutils, parted, util-linux, toilet
 	Description: OrangePi board support files for $BOARD
 	EOF
@@ -266,30 +266,6 @@ create_board_package()
 	# this is required for NFS boot to prevent deconfiguring the network on shutdown
 	sed -i 's/#no-auto-down/no-auto-down/g' "${destination}"/etc/network/interfaces.default
 
-	if [[ ( $LINUXFAMILY == sun8i ) && $BRANCH == legacy ]]; then
-		# add mpv config for vdpau_sunxi
-		mkdir -p "${destination}"/etc/mpv/
-		cp "${EXTER}"/packages/bsp/mpv/mpv_sunxi.conf "${destination}"/etc/mpv/mpv.conf
-		echo "export VDPAU_OSD=1" > "${destination}"/etc/profile.d/90-vdpau.sh
-		chmod 755 "${destination}"/etc/profile.d/90-vdpau.sh
-	fi
-	if [[ $LINUXFAMILY == sunxi* ]]; then
-		# add mpv config for x11 output - slow, but it works compared to no config at all
-		# TODO: Test which output driver is better with DRM
-		mkdir -p "${destination}"/etc/mpv/
-		cp "${EXTER}"/packages/bsp/mpv/mpv_mainline.conf "${destination}"/etc/mpv/mpv.conf
-	fi
-
-	case $RELEASE in
-	xenial)
-		if [[ $BRANCH == legacy && $LINUXFAMILY == sun8i ]]; then
-			# this is required only for old kernels
-			# not needed for Stretch since there will be no Stretch images with kernels < 4.4
-			mkdir -p "${destination}"/lib/systemd/system/haveged.service.d/
-			cp "${EXTER}"/packages/bsp/10-no-new-privileges.conf "${destination}"/lib/systemd/system/haveged.service.d/
-		fi
-	;;
-	esac
 	# execute $LINUXFAMILY-specific tweaks
 	[[ $(type -t family_tweaks_bsp) == function ]] && family_tweaks_bsp
 

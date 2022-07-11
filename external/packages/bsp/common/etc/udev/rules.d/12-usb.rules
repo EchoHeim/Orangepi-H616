@@ -1,0 +1,9 @@
+###########---USB---################
+#----------------------------------#
+KERNEL=="sd[a-z]*", SUBSYSTEM=="block", ACTION=="add", RUN+="/home/biqu/scripts/usb_udev.sh usb %k"
+KERNEL=="sd[a-z]*", SUBSYSTEM=="block", ACTION=="remove", RUN+="/home/biqu/scripts/usb_udev.sh usb %k", OPTIONS="last_rule"
+
+#########--USB camera--##############
+#----------------------------------#
+KERNEL=="video[0-9]*", ACTION=="add", RUN+="/home/biqu/scripts/usb_udev.sh sd %k" 
+KERNEL=="video[0-9]*", ACTION=="remove", RUN+="/home/biqu/scripts/usb_udev.sh sd %k", OPTIONS="last_rule"

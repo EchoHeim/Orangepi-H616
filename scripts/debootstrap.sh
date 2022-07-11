@@ -85,7 +85,7 @@ PRE_INSTALL_DISTRIBUTION_SPECIFIC
 
 	# remove exit trap
 	trap - INT TERM EXIT
-} #############################################################################
+}
 
 # create_rootfs_cache
 #
@@ -93,7 +93,6 @@ PRE_INSTALL_DISTRIBUTION_SPECIFIC
 #
 create_rootfs_cache()
 {
-
 	local packages_hash=$(get_package_list_hash "$ROOTFSCACHE_VERSION")
 	local cache_type="cli"
 	[[ ${BUILD_MINIMAL} == yes ]] && local cache_type="minimal"
