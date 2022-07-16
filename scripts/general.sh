@@ -1300,15 +1300,6 @@ prepare_host()
 		fi
 	fi
 
-	if [[ ! -f "${USERPATCHES_PATH}"/README ]]; then
-		rm -f "${USERPATCHES_PATH}"/readme.txt
-		echo 'Please read documentation about customizing build configuration' > "${USERPATCHES_PATH}"/README
-		echo 'https:/www.orangepi.org' >> "${USERPATCHES_PATH}"/README
-
-		# create patches directory structure under USERPATCHES_PATH
-		find $EXTER/patch -maxdepth 2 -type d ! -name . | sed "s%/.*patch%/$USERPATCHES_PATH%" | xargs mkdir -p
-	fi
-
 	# check free space (basic)
 	local freespace=$(findmnt --target "${SRC}" -n -o AVAIL -b 2>/dev/null) # in bytes
 	if [[ -n $freespace && $(( $freespace / 1073741824 )) -lt 10 ]]; then

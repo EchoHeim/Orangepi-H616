@@ -103,11 +103,7 @@ install_common()
 	local bootscript_dst=${BOOTSCRIPT##*:}
 
     if [[ "${BOOTCONFIG}" != "none" ]]; then
-        if [ -f "${USERPATCHES_PATH}/bootscripts/${bootscript_src}" ]; then
-            cp "${USERPATCHES_PATH}/bootscripts/${bootscript_src}" "${SDCARD}/boot/${bootscript_dst}"
-        else
-            cp "${EXTER}/config/bootscripts/${bootscript_src}" "${SDCARD}/boot/${bootscript_dst}"
-        fi
+        cp "${EXTER}/config/bootscripts/${bootscript_src}" "${SDCARD}/boot/${bootscript_dst}"
     fi
 
     cp "${EXTER}/config/bootenv/${BOOTENV_FILE}" "${SDCARD}"/boot/orangepiEnv.txt
@@ -116,11 +112,7 @@ install_common()
     # instead of copying sunxi-specific template
     if [[ $ROOTFS_TYPE == nfs ]]; then
         display_alert "Copying NFS boot script template"
-        if [[ -f $USERPATCHES_PATH/nfs-boot.cmd ]]; then
-            cp "$USERPATCHES_PATH"/nfs-boot.cmd "${SDCARD}"/boot/boot.cmd
-        else
-            cp "${EXTER}"/config/templates/nfs-boot.cmd.template "${SDCARD}"/boot/boot.cmd
-        fi
+        cp "${EXTER}"/config/templates/nfs-boot.cmd.template "${SDCARD}"/boot/boot.cmd
     fi
 
     echo "overlay_prefix=$OVERLAY_PREFIX" >> "${SDCARD}"/boot/orangepiEnv.txt

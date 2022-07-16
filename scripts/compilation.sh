@@ -412,13 +412,8 @@ compile_kernel()
 		display_alert "Using previous kernel config" "${DEST}/config/$LINUXCONFIG.config" "info"
 		cp -p "${DEST}/config/${LINUXCONFIG}.config" .config
 	else
-		if [[ -f $USERPATCHES_PATH/$LINUXCONFIG.config ]]; then
-			display_alert "Using kernel config provided by user" "userpatches/$LINUXCONFIG.config" "info"
-			cp -p "${USERPATCHES_PATH}/${LINUXCONFIG}.config" .config
-		else
-			display_alert "Using kernel config file" "${EXTER}/config/kernel/$LINUXCONFIG.config" "info"
-			cp -p "${EXTER}/config/kernel/${LINUXCONFIG}.config" .config
-		fi
+		display_alert "Using kernel config file" "${EXTER}/config/kernel/$LINUXCONFIG.config" "info"
+		cp -p "${EXTER}/config/kernel/${LINUXCONFIG}.config" .config
 	fi
 
 	call_extension_method "custom_kernel_config" << 'CUSTOM_KERNEL_CONFIG'
@@ -594,10 +589,6 @@ find_toolchain()
 # <description>: additional description text
 #
 # priority:
-# $USERPATCHES_PATH/<dest>/<family>/target_<target>
-# $USERPATCHES_PATH/<dest>/<family>/board_<board>
-# $USERPATCHES_PATH/<dest>/<family>/branch_<branch>
-# $USERPATCHES_PATH/<dest>/<family>
 # $EXTER/patch/<dest>/<family>/target_<target>
 # $EXTER/patch/<dest>/<family>/board_<board>
 # $EXTER/patch/<dest>/<family>/branch_<branch>

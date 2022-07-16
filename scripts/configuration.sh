@@ -96,11 +96,6 @@ ATF_COMPILE=yes
 
 source "${EXTER}/config/sources/families/${LINUXFAMILY}.conf"
 
-if [[ -f $USERPATCHES_PATH/sources/families/$LINUXFAMILY.conf ]]; then
-	display_alert "Adding user provided $LINUXFAMILY overrides"
-	source "$USERPATCHES_PATH/sources/families/${LINUXFAMILY}.conf"
-fi
-
 # load architecture defaults
 source "${EXTER}/config/sources/${ARCH}.conf"
 
@@ -363,13 +358,6 @@ if [[ -z ${ARMBIAN_MIRROR} ]]; then
 	done
 fi
 
-# For (late) user override.
-# Notice: it is too late to define hook functions or add extensions in lib.config, since the extension initialization already ran by now.
-#         in case the user tries to use them in lib.config, hopefully they'll be detected as "wishful hooking" and the user will be wrn'ed.
-if [[ -f $USERPATCHES_PATH/lib.config ]]; then
-	display_alert "Using user configuration override" "$USERPATCHES_PATH/lib.config" "info"
-	source "$USERPATCHES_PATH"/lib.config
-fi
 
 call_extension_method "user_config" << 'USER_CONFIG'
 *Invoke function with user override*
