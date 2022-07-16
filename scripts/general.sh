@@ -703,7 +703,10 @@ prepare_host()
 		if [[ $NO_APT_CACHER != no ]]; then
 			display_alert "apt-cacher is disabled in containers, set NO_APT_CACHER=no to override" "" "wrn"
 			NO_APT_CACHER=yes
-		fi
+            echo "apt-cacher is dis------------------------------abled in containers" >> ~/test.txt
+		else
+            echo "apt-cacher is disabled in containers===========================" >> ~/test.txt
+        fi
 		CONTAINER_COMPAT=yes
 		SYNC_CLOCK=no
 	fi

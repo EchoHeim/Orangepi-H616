@@ -25,8 +25,6 @@ CONFIG="userpatches/config-default.conf"
 CONFIG_FILE="$(realpath "${CONFIG}")"
 CONFIG_PATH=$(dirname "${CONFIG_FILE}")
 
-source "${SRC}"/scripts/extensions.sh
-
 display_alert "Using config file" "${CONFIG_FILE}" "info"
 pushd "${CONFIG_PATH}" > /dev/null || exit
 

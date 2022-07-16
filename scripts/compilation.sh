@@ -124,7 +124,6 @@ compile_uboot()
 	# read uboot version
 	local version hash
 	version=$(grab_version "$ubootdir")
-	hash=$(improved_git --git-dir="$ubootdir"/.git rev-parse HEAD)
 
 	display_alert "Compiling u-boot" "v$version" "info"
 
@@ -163,10 +162,6 @@ compile_uboot()
 		target_make=$(cut -d';' -f1 <<< "${target}")
 		target_patchdir=$(cut -d';' -f2 <<< "${target}")
 		target_files=$(cut -d';' -f3 <<< "${target}")
-
-		# needed for multiple targets and for calling compile_uboot directly
-		#display_alert "Checking out to clean sources"
-		#improved_git checkout -f -q HEAD
 
 		if [[ $CLEAN_LEVEL == *make* ]]; then
 			display_alert "Cleaning" "$BOOTSOURCEDIR" "info"
@@ -368,7 +363,6 @@ compile_kernel()
 	version=$(grab_version "$kerneldir")
 
 	# read kernel git hash
-	hash=$(improved_git --git-dir="$kerneldir"/.git rev-parse HEAD)
 
 	# Apply a series of patches if a series file exists
 	if test -f "${EXTER}"/patch/kernel/${KERNELPATCHDIR}/series.conf; then
@@ -501,20 +495,17 @@ compile_kernel()
 	rsync --remove-source-files -rq ./*.deb "${DEB_STORAGE}/" || exit_with_error "Failed moving kernel DEBs"
 }
 
-
 compile_sunxi_tools()
 {
 	# Compile and install only if git commit hash changed
 	cd $EXTER/cache/sources/sunxi-tools || exit
 	# need to check if /usr/local/bin/sunxi-fexc to detect new Docker containers with old cached sources
-	if [[ ! -f .commit_id || $(improved_git rev-parse @ 2>/dev/null) != $(<.commit_id) || ! -f /usr/local/bin/sunxi-fexc ]]; then
-		display_alert "Compiling" "sunxi-tools" "info"
-		make -s clean >/dev/null
-		make -s tools >/dev/null
-		mkdir -p /usr/local/bin/
-		make install-tools >/dev/null 2>&1
-		improved_git rev-parse @ 2>/dev/null > .commit_id
-	fi
+    
+    display_alert "Compiling" "sunxi-tools" "info"
+    make -s clean >/dev/null
+    make -s tools >/dev/null
+    mkdir -p /usr/local/bin/
+    make install-tools >/dev/null 2>&1
 }
 
 grab_version()

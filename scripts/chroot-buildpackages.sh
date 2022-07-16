@@ -37,11 +37,7 @@ create_chroot()
 	local includes="ccache,locales,git,ca-certificates,devscripts,libfile-fcntllock-perl,debhelper,rsync,python3,distcc,apt-utils"
 
 	# perhaps a temporally workaround
-	case $release in
-		buster|bullseye|focal|bookworm)
-			includes=${includes}",perl-openssl-defaults,libnet-ssleay-perl"
-		;;
-	esac
+	includes=${includes}",perl-openssl-defaults,libnet-ssleay-perl"
 
 	if [[ $NO_APT_CACHER != yes ]]; then
 		local mirror_addr="http://localhost:3142/${apt_mirror[${release}]}"
@@ -140,8 +136,6 @@ chroot_prepare_distccd()
 	chown -R distccd /tmp/distcc
 }
 
-# chroot_build_packages
-#
 chroot_build_packages()
 {
 	local built_ok=()
@@ -334,7 +328,6 @@ create_build_script ()
 	chmod +x "${target_dir}"/root/build.sh
 }
 
-
 chroot_installpackages_local()
 {
 	local conf=$EXTER/config/aptly-temp.conf
@@ -394,5 +387,5 @@ chroot_installpackages()
 	chmod +x "${SDCARD}"/tmp/install.sh
 	chroot "${SDCARD}" /bin/bash -c "/tmp/install.sh" >> "${DEST}"/${LOG_SUBPATH}/install.log 2>&1
 
-	[[ -f ${SDCARD}/etc/hostapd.conf ]] && sed -i "s/^ssid=.*/ssid=OrangePi/" ${SDCARD}/etc/hostapd.conf
+	[[ -f ${SDCARD}/etc/hostapd.conf ]] && sed -i "s/^ssid=.*/ssid=$VENDOR/" ${SDCARD}/etc/hostapd.conf
 }

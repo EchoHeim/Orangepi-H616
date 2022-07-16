@@ -25,8 +25,6 @@ cd "${SRC}" || exit
 [[ -z "${CHROOT_CACHE_VERSION}" ]] && CHROOT_CACHE_VERSION=7
 
 cd ${SRC}/scripts
-BUILD_REPOSITORY_URL=$(improved_git remote get-url $(improved_git remote 2>/dev/null | grep origin) 2>/dev/null)
-BUILD_REPOSITORY_COMMIT=$(improved_git describe --match=d_e_a_d_b_e_e_f --always --dirty 2>/dev/null)
 ROOTFS_CACHE_MAX=200 # max number of rootfs cache, older ones will be cleaned up
 
 DEB_STORAGE=$DEST/debs
@@ -98,12 +96,6 @@ source "${EXTER}/config/sources/families/${LINUXFAMILY}.conf"
 
 # load architecture defaults
 source "${EXTER}/config/sources/${ARCH}.conf"
-
-## Extensions: at this point we've sourced all the config files that will be used,
-##             and (hopefully) not yet invoked any extension methods. So this is the perfect
-##             place to initialize the extension manager. It will create functions
-##             like the 'post_family_config' that is invoked below.
-initialize_extension_manager
 
 show_menu() {
 	provided_title=$1
