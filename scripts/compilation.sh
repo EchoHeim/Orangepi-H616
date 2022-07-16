@@ -416,13 +416,6 @@ compile_kernel()
 		cp -p "${EXTER}/config/kernel/${LINUXCONFIG}.config" .config
 	fi
 
-	call_extension_method "custom_kernel_config" << 'CUSTOM_KERNEL_CONFIG'
-*Kernel .config is in place, still clean from git version*
-Called after ${LINUXCONFIG}.config is put in place (.config).
-Before any olddefconfig any Kconfig make is called.
-A good place to customize the .config directly.
-CUSTOM_KERNEL_CONFIG
-
 	# hack for deb builder. To pack what's missing in headers pack.
 	cp "$EXTER"/patch/misc/headers-debian-byteshift.patch /tmp
 
@@ -506,7 +499,6 @@ CUSTOM_KERNEL_CONFIG
 	rm -f linux-firmware-image-*.deb
 
 	rsync --remove-source-files -rq ./*.deb "${DEB_STORAGE}/" || exit_with_error "Failed moving kernel DEBs"
-
 }
 
 

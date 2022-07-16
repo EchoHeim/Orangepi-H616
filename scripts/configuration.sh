@@ -105,13 +105,6 @@ source "${EXTER}/config/sources/${ARCH}.conf"
 ##             like the 'post_family_config' that is invoked below.
 initialize_extension_manager
 
-call_extension_method "post_family_config" "config_tweaks_post_family_config" << 'POST_FAMILY_CONFIG'
-*give the config a chance to override the family/arch defaults*
-This hook is called after the family configuration (`sources/families/xxx.conf`) is sourced.
-Since the family can override values from the user configuration and the board configuration,
-it is often used to in turn override those.
-POST_FAMILY_CONFIG
-
 show_menu() {
 	provided_title=$1
 	provided_backtitle=$2
@@ -353,20 +346,6 @@ if [[ -z ${ARMBIAN_MIRROR} ]]; then
 	done
 fi
 
-
-call_extension_method "user_config" << 'USER_CONFIG'
-*Invoke function with user override*
-Allows for overriding configuration values set anywhere else.
-It is called after sourcing the `lib.config` file if it exists,
-but before assembling any package lists.
-USER_CONFIG
-
-call_extension_method "extension_prepare_config" << 'EXTENSION_PREPARE_CONFIG'
-*allow extensions to prepare their own config, after user config is done*
-Implementors should preserve variable values pre-set, but can default values an/or validate them.
-This runs *after* user_config. Don't change anything not coming from other variables or meant to be configured by the user.
-EXTENSION_PREPARE_CONFIG
-
 # apt-cacher-ng mirror configurarion
 if [[ $DISTRIBUTION == Ubuntu ]]; then
 	APT_MIRROR=$UBUNTU_MIRROR
@@ -420,13 +399,6 @@ unset LOG_OUTPUT_FILE
 
 # Give the option to configure DNS server used in the chroot during the build process
 [[ -z $NAMESERVER ]] && NAMESERVER="1.0.0.1" # default is cloudflare alternate
-
-call_extension_method "post_aggregate_packages" "user_config_post_aggregate_packages" << 'POST_AGGREGATE_PACKAGES'
-*For final user override, using a function, after all aggregations are done*
-Called after aggregating all package lists, before the end of `compilation.sh`.
-Packages will still be installed after this is called, so it is the last chance
-to confirm or change any packages.
-POST_AGGREGATE_PACKAGES
 
 # debug
 cat <<-EOF >> "${DEST}"/${LOG_SUBPATH}/output.log

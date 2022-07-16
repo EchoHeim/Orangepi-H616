@@ -101,19 +101,12 @@ BUILD_MINIMAL="no"    # Just in case BUILD_MINIMAL is not defined
 
 RELEASE="bullseye"          # 发行版本 bookworm/bullseye/focal/jammy 可选   
 SELECTED_CONFIGURATION="cli_standard"
-# SELECTED_CONFIGURATION="cli_minimal"
-
 
 source "${SRC}"/scripts/configuration.sh
 
 # optimize build time with 100% CPU usage
 CPUS=$(grep -c 'processor' /proc/cpuinfo)
 CTHREADS="-j$((CPUS + CPUS/2))"
-
-call_extension_method "post_determine_cthreads" "config_post_determine_cthreads" << 'POST_DETERMINE_CTHREADS'
-*give config a chance modify CTHREADS programatically. A build server may work better with hyperthreads-1 for example.*
-Called early, before any compilation work starts.
-POST_DETERMINE_CTHREADS
 
 branch2dir() {
 	[[ "${1}" == "head" ]] && echo "HEAD" || echo "${1##*:}"
@@ -153,7 +146,6 @@ done
 if [[ $BUILD_OPT == u-boot || $BUILD_OPT == image ]]; then
 
 	if [[ ! -f "${DEB_STORAGE}"/u-boot/${CHOSEN_UBOOT}_${REVISION}_${ARCH}.deb ]]; then
-
 		[[ -n "${ATFSOURCE}" && "${REPOSITORY_INSTALL}" != *u-boot* ]] && compile_atf
 		[[ ${REPOSITORY_INSTALL} != *u-boot* ]] && compile_uboot
 	fi
@@ -188,7 +180,6 @@ if [[ $BUILD_OPT == rootfs || $BUILD_OPT == image ]]; then
 	
 	# create board support package
 	[[ -n $RELEASE && ! -f ${DEB_STORAGE}/$RELEASE/${BSP_CLI_PACKAGE_FULLNAME}.deb ]] && create_board_package
-	
 	[[ $BSP_BUILD != yes ]] && debootstrap_ng
 
 fi

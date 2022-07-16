@@ -82,10 +82,6 @@ function pre_update_initramfs__setup_flash_kernel() {
 	chroot "$chroot_target" /bin/bash -c "chmod -v -x /etc/initramfs/post-update.d/flash-kernel" >>"${DEST}"/"${LOG_SUBPATH}"/flash-kernel.log 2>&1
 
 	export FIRMWARE_DIR="${MOUNT}"/boot/firmware
-	call_extension_method "pre_initramfs_flash_kernel" <<-'PRE_INITRAMFS_FLASH_KERNEL'
-		*prepare to update-initramfs before flashing kernel via flash_kernel*
-		A good spot to write firmware config to ${FIRMWARE_DIR} (/boot/firmware) before flash-kernel actually runs.
-	PRE_INITRAMFS_FLASH_KERNEL
 
 	local update_initramfs_cmd="update-initramfs -c -k all"
 	display_alert "Updating flash-kernel initramfs..." "$update_initramfs_cmd" ""
@@ -94,12 +90,6 @@ function pre_update_initramfs__setup_flash_kernel() {
 		display_alert "Failed to run '$update_initramfs_cmd'" "Check ${DEST}/"${LOG_SUBPATH}"/flash-kernel.log" "err"
 		exit 29
 	}
-
-	call_extension_method "pre_flash_kernel" <<-'PRE_FLASH_KERNEL'
-		*run before running flash-kernel*
-		Each board might need different stuff for flash-kernel to work. Implement it here.
-		Write to `${MOUNT}`, eg: `"${MOUNT}"/etc/flash-kernel`
-	PRE_FLASH_KERNEL
 
 	local flash_kernel_cmd="flash-kernel --machine '${FK__MACHINE_MODEL}'"
 	display_alert "flash-kernel" "${FK__MACHINE_MODEL}" "info"

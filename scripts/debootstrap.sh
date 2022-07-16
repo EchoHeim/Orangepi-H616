@@ -42,11 +42,6 @@ debootstrap_ng()
 	# stage: prepare basic rootfs: unpack cache or create from scratch
 	create_rootfs_cache
 
-	call_extension_method "pre_install_distribution_specific" "config_pre_install_distribution_specific" << 'PRE_INSTALL_DISTRIBUTION_SPECIFIC'
-*give config a chance to act before install_distribution_specific*
-Called after `create_rootfs_cache` (_prepare basic rootfs: unpack cache or create from scratch_) but before `install_distribution_specific` (_install distribution and board specific applications_).
-PRE_INSTALL_DISTRIBUTION_SPECIFIC
-
 	# stage: install kernel and u-boot packages
 	# install distribution and board specific applications
 
@@ -87,8 +82,6 @@ PRE_INSTALL_DISTRIBUTION_SPECIFIC
 	trap - INT TERM EXIT
 }
 
-# create_rootfs_cache
-#
 # unpacks cached rootfs for $RELEASE or creates one
 #
 create_rootfs_cache()
@@ -366,11 +359,6 @@ prepare_partitions()
 	UEFI_MOUNT_POINT=${UEFI_MOUNT_POINT:-/boot/efi}
 	UEFI_FS_LABEL="${UEFI_FS_LABEL:-armbiefi}"
 
-	call_extension_method "pre_prepare_partitions" "prepare_partitions_custom" <<'PRE_PREPARE_PARTITIONS'
-*allow custom options for mkfs*
-Good time to change stuff like mkfs opts, types etc.
-PRE_PREPARE_PARTITIONS
-
 	# stage: determine partition configuration
 	if [[ -n $BOOTFS_TYPE ]]; then
 		# 2 partition setup with forced /boot type
@@ -409,14 +397,6 @@ PRE_PREPARE_PARTITIONS
 	export rootfs_size=$(du -sm $SDCARD/ | cut -f1) # MiB
 	display_alert "Current rootfs size" "$rootfs_size MiB" "info"
 
-	call_extension_method "prepare_image_size" "config_prepare_image_size" << 'PREPARE_IMAGE_SIZE'
-*allow dynamically determining the size based on the $rootfs_size*
-Called after `${rootfs_size}` is known, but before `${FIXED_IMAGE_SIZE}` is taken into account.
-A good spot to determine `FIXED_IMAGE_SIZE` based on `rootfs_size`.
-UEFISIZE can be set to 0 for no UEFI partition, or to a size in MiB to include one.
-Last chance to set `USE_HOOK_FOR_PARTITION`=yes and then implement create_partition_table hook_point.
-PREPARE_IMAGE_SIZE
-
 	if [[ -n $FIXED_IMAGE_SIZE && $FIXED_IMAGE_SIZE =~ ^[0-9]+$ ]]; then
 		display_alert "Using user-defined image size" "$FIXED_IMAGE_SIZE MiB" "info"
 		local sdsize=$FIXED_IMAGE_SIZE
@@ -447,13 +427,7 @@ PREPARE_IMAGE_SIZE
 	# stage: create partition table
 	display_alert "Creating partitions" "${bootfs:+/boot: $bootfs }root: $ROOTFS_TYPE" "info"
 	parted -s ${SDCARD}.raw -- mklabel ${IMAGE_PARTITION_TABLE}
-	if [[ "${USE_HOOK_FOR_PARTITION}" == "yes" ]]; then
-		call_extension_method "create_partition_table" <<- 'CREATE_PARTITION_TABLE'
-		*only called when USE_HOOK_FOR_PARTITION=yes to create the complete partition table*
-		Finally, we can get our own partition table. You have to partition ${SDCARD}.raw
-		yourself. Good luck.
-		CREATE_PARTITION_TABLE
-	elif [[ $ROOTFS_TYPE == nfs ]]; then
+	if [[ $ROOTFS_TYPE == nfs ]]; then
 		# single /boot partition
 		parted -s ${SDCARD}.raw -- mkpart primary ${parttype[$bootfs]} ${bootstart}s "100%"
 	elif [[ $UEFISIZE -gt 0 ]]; then
@@ -500,10 +474,6 @@ PREPARE_IMAGE_SIZE
 		parted -s ${SDCARD}.raw -- mkpart primary ${parttype[$bootfs]} ${bootstart}s ${bootend}s
 		parted -s ${SDCARD}.raw -- mkpart primary ${parttype[$ROOTFS_TYPE]} ${rootstart}s "100%"
 	fi
-
-	call_extension_method "post_create_partitions" <<- 'POST_CREATE_PARTITIONS'
-	*called after all partitions are created, but not yet formatted*
-	POST_CREATE_PARTITIONS
 
 	# stage: mount image
 	# lock access to loop devices
@@ -559,11 +529,6 @@ PREPARE_IMAGE_SIZE
 	fi
 	[[ $ROOTFS_TYPE == nfs ]] && echo "/dev/nfs / nfs defaults 0 0" >> $SDCARD/etc/fstab
 	echo "tmpfs /tmp tmpfs defaults,nosuid 0 0" >> $SDCARD/etc/fstab
-
-	call_extension_method "format_partitions" <<- 'FORMAT_PARTITIONS'
-	*if you created your own partitions, this would be a good time to format them*
-	The loop device is mounted, so ${LOOP}p1 is it's first partition etc.
-	FORMAT_PARTITIONS
 
 	# stage: adjust boot script or boot environment
 	if [[ -f $SDCARD/boot/orangepiEnv.txt ]]; then
@@ -673,11 +638,6 @@ create_image()
 			  --log-file="${DEST}"/${LOG_SUBPATH}/install.log $SDCARD/boot $MOUNT
 	fi
 
-	call_extension_method "pre_update_initramfs" "config_pre_update_initramfs" << 'PRE_UPDATE_INITRAMFS'
-*allow config to hack into the initramfs create process*
-Called after rsync has synced both `/root` and `/root` on the target, but before calling `update_initramfs`.
-PRE_UPDATE_INITRAMFS
-
 	# stage: create final initramfs
 	[[ -n $KERNELSOURCE ]] && {
 		update_initramfs $MOUNT
@@ -695,21 +655,11 @@ PRE_UPDATE_INITRAMFS
 	# fix wrong / permissions
 	chmod 755 $MOUNT
 
-	call_extension_method "pre_umount_final_image" "config_pre_umount_final_image" << 'PRE_UMOUNT_FINAL_IMAGE'
-*allow config to hack into the image before the unmount*
-Called before unmounting both `/root` and `/boot`.
-PRE_UMOUNT_FINAL_IMAGE
-
 	# unmount /boot/efi first, then /boot, rootfs third, image file last
 	sync
 	[[ $UEFISIZE != 0 ]] && umount -l "${MOUNT}${UEFI_MOUNT_POINT}"
 	[[ $BOOTSIZE != 0 ]] && umount -l $MOUNT/boot
 	[[ $ROOTFS_TYPE != nfs ]] && umount -l $MOUNT
-
-	call_extension_method "post_umount_final_image" "config_post_umount_final_image" << 'POST_UMOUNT_FINAL_IMAGE'
-*allow config to hack into the image after the unmount*
-Called after unmounting both `/root` and `/boot`.
-POST_UMOUNT_FINAL_IMAGE
 
 	# to make sure its unmounted
 	while grep -Eq '(${MOUNT}|${DESTIMG})' /proc/mounts
@@ -820,12 +770,6 @@ POST_UMOUNT_FINAL_IMAGE
 
 		# write to SD card
 		pv -p -b -r -c -N "[ .... ] dd" ${FINALDEST}/${version}.img | dd of=$CARD_DEVICE bs=1M iflag=fullblock oflag=direct status=none
-
-		call_extension_method "post_write_sdcard"  <<- 'POST_BUILD_IMAGE'
-		*run after writing img to sdcard*
-		After the image is written to `$CARD_DEVICE`, but before verifying it.
-		You can still set SKIP_VERIFY=yes to skip verification.
-		POST_BUILD_IMAGE
 
 		if [[ "${SKIP_VERIFY}" != "yes" ]]; then
 			# read and compare

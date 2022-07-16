@@ -6,9 +6,6 @@
 # License version 2. This program is licensed "as is" without any
 # warranty of any kind, whether express or implied.
 
-
-# Functions:
-
 # install_common
 # install_rclocal
 # install_distribution_specific
@@ -47,8 +44,7 @@ install_common()
 	GOVERNOR=$GOVERNOR
 	EOF
 
-	# remove default interfaces file if present
-	# before installing board support package
+	# remove default interfaces file if present before installing board support package
 	rm -f "${SDCARD}"/etc/network/interfaces
 
 	# disable selinux by default
@@ -186,11 +182,6 @@ install_common()
 		fi
 	}
 
-	call_extension_method "pre_install_kernel_debs"  << 'PRE_INSTALL_KERNEL_DEBS'
-*called before installing the Armbian-built kernel deb packages*
-It is not too late to `unset KERNELSOURCE` here and avoid kernel install.
-PRE_INSTALL_KERNEL_DEBS
-
 	# install kernel
 	[[ -n $KERNELSOURCE ]] && {
 		if [[ "${REPOSITORY_INSTALL}" != *kernel* ]]; then
@@ -218,12 +209,6 @@ PRE_INSTALL_KERNEL_DEBS
 			fi
 		fi
 	}
-
-	call_extension_method "post_install_kernel_debs" << 'POST_INSTALL_KERNEL_DEBS'
-*allow config to do more with the installed kernel/headers*
-Called after packages, u-boot, kernel and headers installed in the chroot, but before the BSP is installed.
-If `KERNELSOURCE` is (still?) unset after this, Armbian-built firmware will not be installed.
-POST_INSTALL_KERNEL_DEBS
 
 	# install board support packages
 	if [[ "${REPOSITORY_INSTALL}" != *bsp* ]]; then
@@ -281,12 +266,6 @@ POST_INSTALL_KERNEL_DEBS
 
 	# execute $LINUXFAMILY-specific tweaks
 	[[ $(type -t family_tweaks) == function ]] && family_tweaks
-
-	call_extension_method "post_family_tweaks" << 'FAMILY_TWEAKS'
-*customize the tweaks made by $LINUXFAMILY-specific family_tweaks*
-It is run after packages are installed in the rootfs, but before enabling additional services.
-It allows implementors access to the rootfs (`${SDCARD}`) in its pristine state after packages are installed.
-FAMILY_TWEAKS
 
 	# enable additional services
 	chroot "${SDCARD}" /bin/bash -c "systemctl --no-reload enable orangepi-firstrun.service >/dev/null 2>&1"
@@ -558,17 +537,9 @@ install_distribution_specific()
 
 post_debootstrap_tweaks()
 {
-
 	# remove service start blockers and QEMU binary
 	rm -f "${SDCARD}"/sbin/initctl "${SDCARD}"/sbin/start-stop-daemon
 	chroot "${SDCARD}" /bin/bash -c "dpkg-divert --quiet --local --rename --remove /sbin/initctl"
 	chroot "${SDCARD}" /bin/bash -c "dpkg-divert --quiet --local --rename --remove /sbin/start-stop-daemon"
 	rm -f "${SDCARD}"/usr/sbin/policy-rc.d "${SDCARD}/usr/bin/${QEMU_BINARY}"
-
-	call_extension_method "post_post_debootstrap_tweaks" "config_post_debootstrap_tweaks" << 'POST_POST_DEBOOTSTRAP_TWEAKS'
-*run after removing diversions and qemu with chroot unmounted*
-Last chance to touch the `${SDCARD}` filesystem before it is copied to the final media.
-It is too late to run any chrooted commands, since the supporting filesystems are already unmounted.
-POST_POST_DEBOOTSTRAP_TWEAKS
-
 }

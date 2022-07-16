@@ -9,38 +9,6 @@ declare fragment_manager_cleanup_file             # this is a file used to clean
 export DEBUG_EXTENSION_CALLS=no # set to yes to log every hook function called to the main build log
 export LOG_ENABLE_EXTENSION=yes # colorful logs with stacktrace when enable_extension is called.
 
-# This is a helper function for calling hooks.
-# It follows the pattern long used in the codebase for hook-like behaviour:
-#    [[ $(type -t name_of_hook_function) == function ]] && name_of_hook_function
-# but with the following added behaviors:
-# 1) it allows for many arguments, and will treat each as a hook point.
-#    this allows for easily kept backwards compatibility when renaming hooks, for example.
-# 2) it will read the stdin and assume it's (Markdown) documentation for the hook point.
-#    combined with heredoc in the call site, it allows for "inline" documentation about the hook
-# notice: this is not involved in how the hook functions came to be. read below for that.
-call_extension_method() {
-	# First, consume the stdin and write metadata about the call.
-	write_hook_point_metadata "$@" || true
-
-	# @TODO: hack to handle stdin again, possibly with '< /dev/tty'
-
-	# Then a sanity check, hook points should only be invoked after the manager has initialized.
-	if [[ ${initialize_extension_manager_counter} -lt 1 ]]; then
-		display_alert "Extension problem" "Call to call_extension_method() (in ${BASH_SOURCE[1]- $(get_extension_hook_stracktrace "${BASH_SOURCE[*]}" "${BASH_LINENO[*]}")}) before extension manager is initialized." "err"
-	fi
-
-	# With DEBUG_EXTENSION_CALLS, log the hook call. Users might be wondering what/when is a good hook point to use, and this is visual aid.
-	[[ "${DEBUG_EXTENSION_CALLS}" == "yes" ]] &&
-		display_alert "--> Extension Method '${1}' being called from" "$(get_extension_hook_stracktrace "${BASH_SOURCE[*]}" "${BASH_LINENO[*]}")" ""
-
-	# Then call the hooks, if they are defined.
-	for hook_name in "$@"; do
-		echo "-- Extension Method being called: ${hook_name}" >>"${EXTENSION_MANAGER_LOG_FILE}"
-		# shellcheck disable=SC2086
-		[[ $(type -t ${hook_name}) == function ]] && { ${hook_name}; }
-	done
-}
-
 # what this does is a lot of bash mumbo-jumbo to find all board-,family-,config- or user-defined hook points.
 # the meat of this is 'compgen -A function', which is bash builtin that lists all defined functions.
 # it will then compose a full hook point (function) that calls all the implementing hooks.
@@ -48,7 +16,8 @@ call_extension_method() {
 # it came to be. (although it is encouraged to call hook points via call_extension_method() above)
 # to avoid hard coding the list of hook-points (eg: user_config, image_tweaks_pre_customize, etc) we use
 # a marker in the function names, namely "__" (two underscores) to determine the hook point.
-initialize_extension_manager() {
+initialize_extension_manager() 
+{
 	# before starting, auto-add extensions specified (eg, on the command-line) via the ENABLE_EXTENSIONS env var. Do it only once.
 	[[ ${initialize_extension_manager_counter} -lt 1 ]] && [[ "${ENABLE_EXTENSIONS}" != "" ]] && {
 		local auto_extension
@@ -247,7 +216,9 @@ initialize_extension_manager() {
 		display_alert "Extension manager" "processed ${hook_points_counter} Extension Methods calls and ${hook_functions_counter} Extension Method implementations" "info" | tee -a "${EXTENSION_MANAGER_LOG_FILE}"
 }
 
-cleanup_extension_manager() {
+
+cleanup_extension_manager() 
+{
 	if [[ -f "${fragment_manager_cleanup_file}" ]]; then
 		display_alert "Cleaning up" "extension manager" "info"
 		# this will unset all the functions.
@@ -268,21 +239,6 @@ run_after_build__999_finish_extension_manager() {
 	export defined_hook_point_functions hook_point_function_trace_sources
 
 	# eat our own dog food, pt2.
-	call_extension_method "extension_metadata_ready" <<'EXTENSION_METADATA_READY'
-*meta-Meta time!*
-Implement this hook to work with/on the meta-data made available by the extension manager.
-Interesting stuff to process:
-- `"${EXTENSION_MANAGER_TMP_DIR}/hook_point_calls.txt"` contains a list of all hook points called, in order.
-- For each hook_point in the list, more files will have metadata about that hook point.
-  - `${EXTENSION_MANAGER_TMP_DIR}/hook_point.orig.md` contains the hook documentation at the call site (inline docs), hopefully in Markdown format.
-  - `${EXTENSION_MANAGER_TMP_DIR}/hook_point.compat` contains the compatibility names for the hooks.
-  - `${EXTENSION_MANAGER_TMP_DIR}/hook_point.exports` contains _exported_ environment variables.
-  - `${EXTENSION_MANAGER_TMP_DIR}/hook_point.vars` contains _all_ environment variables.
-- `${defined_hook_point_functions}` is a map of _all_ the defined hook point functions and their extension information.
-- `${hook_point_function_trace_sources}` is a map of all the hook point functions _that were really called during the build_ and their BASH_SOURCE information.
-- `${hook_point_function_trace_lines}` is the same, but BASH_LINENO info.
-After this hook is done, the `${EXTENSION_MANAGER_TMP_DIR}` will be removed.
-EXTENSION_METADATA_READY
 
 	# Move temporary log file over to final destination, and start writing to it instead (although 999 is pretty late in the game)
 	mv "${EXTENSION_MANAGER_LOG_FILE}" "${DEST}/${LOG_SUBPATH:-debug}/extensions.log"

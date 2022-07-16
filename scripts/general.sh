@@ -717,10 +717,6 @@ prepare_host()
 	if [[ $NO_APT_CACHER != yes ]]; then hostdeps+=" apt-cacher-ng"; fi
 
 	export EXTRA_BUILD_DEPS=""
-	call_extension_method "add_host_dependencies" <<- 'ADD_HOST_DEPENDENCIES'
-	*run before installing host dependencies*
-	you can add packages to install, space separated, to ${EXTRA_BUILD_DEPS} here.
-	ADD_HOST_DEPENDENCIES
 
 	if [ -n "${EXTRA_BUILD_DEPS}" ]; then hostdeps+=" ${EXTRA_BUILD_DEPS}"; fi
 
@@ -735,12 +731,6 @@ prepare_host()
 	update-ccache-symlinks
 
 	export FINAL_HOST_DEPS="$hostdeps ${EXTRA_BUILD_DEPS}"
-	call_extension_method "host_dependencies_ready" <<- 'HOST_DEPENDENCIES_READY'
-	*run after all host dependencies are installed*
-	At this point we can read `${FINAL_HOST_DEPS}`, but changing won't have any effect.
-	All the dependencies, including the default/core deps and the ones added via `${EXTRA_BUILD_DEPS}`
-	are installed at this point. The system clock has not yet been synced.
-	HOST_DEPENDENCIES_READY
 
 	# sync clock
 	if [[ $SYNC_CLOCK != no ]]; then
