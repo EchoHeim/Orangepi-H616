@@ -295,10 +295,8 @@ create_rootfs_cache()
 	fi
 
 	mount_chroot "$SDCARD"
-} #############################################################################
+} 
 
-# prepare_partitions
-#
 # creates image file, partitions and fs
 # and mounts it to local dir
 # FS-dependent stuff (boot and root fs partition types) happens here
@@ -310,6 +308,8 @@ prepare_partitions()
 	# possible partition combinations
 	# /boot: none, ext4, ext2, fat (BOOTFS_TYPE)
 	# root: ext4, btrfs, f2fs, nfs (ROOTFS_TYPE)
+
+    BOOTFS_TYPE=fat
 
 	# declare makes local variables by default if used inside a function
 	# NOTE: mountopts string should always start with comma if not empty
@@ -330,7 +330,7 @@ prepare_partitions()
 	# add -N number of inodes to keep mount from running out
 
 	local node_number=1024
-	if [[ $HOSTRELEASE =~ bionic|buster|bullseye|bookworm|cosmic|focal|hirsute|impish|jammy|sid ]]; then
+	if [[ $HOSTRELEASE =~ bullseye|bookworm|cosmic|focal|jammy ]]; then
 		mkopts[ext4]="-q -m 2 -O ^64bit,^metadata_csum -N $((128*${node_number}))"
 	elif [[ $HOSTRELEASE == xenial ]]; then
 		mkopts[ext4]="-q -m 2 -N $((128*${node_number}))"
@@ -632,12 +632,7 @@ update_initramfs()
 #
 create_image()
 {
-	# stage: create file name
-	if [[ $SELECTED_CONFIGURATION == "cli_standard" ]]; then
-		IMAGE_TYPE=server
-	elif [[ $SELECTED_CONFIGURATION == "cli_minimal" ]]; then
-		IMAGE_TYPE=minimal
-	fi
+	IMAGE_TYPE=server
 
 	local version="${BOARD^}_${REVISION}_${DISTRIBUTION,}_${RELEASE}_${IMAGE_TYPE}_linux$(grab_version "$LINUXSOURCEDIR")"
 	[[ $ROOTFS_TYPE == nfs ]] && version=${version}_nfsboot

@@ -115,8 +115,6 @@ call_extension_method "post_determine_cthreads" "config_post_determine_cthreads"
 Called early, before any compilation work starts.
 POST_DETERMINE_CTHREADS
 
-IMAGE_TYPE=user-built
-
 branch2dir() {
 	[[ "${1}" == "head" ]] && echo "HEAD" || echo "${1##*:}"
 }

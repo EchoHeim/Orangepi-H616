@@ -25,33 +25,20 @@ create_chroot()
 	declare -A qemu_binary apt_mirror components
 	qemu_binary['armhf']='qemu-arm-static'
 	qemu_binary['arm64']='qemu-aarch64-static'
-	apt_mirror['stretch']="$DEBIAN_MIRROR"
-	apt_mirror['buster']="$DEBIAN_MIRROR"
 	apt_mirror['bullseye']="$DEBIAN_MIRROR"
 	apt_mirror['bookworm']="$DEBIAN_MIRROR"
-	apt_mirror['xenial']="$UBUNTU_MIRROR"
-	apt_mirror['bionic']="$UBUNTU_MIRROR"
 	apt_mirror['focal']="$UBUNTU_MIRROR"
-	apt_mirror['hirsute']="$UBUNTU_MIRROR"
-	apt_mirror['impish']="$UBUNTU_MIRROR"
-	components['stretch']='main,contrib'
 	apt_mirror['jammy']="$UBUNTU_MIRROR"
-	components['buster']='main,contrib'
 	components['bullseye']='main,contrib'
 	components['bookworm']='main,contrib'
-	components['sid']='main,contrib'
-	components['xenial']='main,universe,multiverse'
-	components['bionic']='main,universe,multiverse'
 	components['focal']='main,universe,multiverse'
-	components['hirsute']='main,universe,multiverse'
-	components['impish']='main,universe,multiverse'
 	components['jammy']='main,universe,multiverse'
 	display_alert "Creating build chroot" "$release/$arch" "info"
 	local includes="ccache,locales,git,ca-certificates,devscripts,libfile-fcntllock-perl,debhelper,rsync,python3,distcc,apt-utils"
 
 	# perhaps a temporally workaround
 	case $release in
-		buster|bullseye|focal|hirsute|sid|bookworm)
+		buster|bullseye|focal|bookworm)
 			includes=${includes}",perl-openssl-defaults,libnet-ssleay-perl"
 		;;
 	esac
@@ -111,15 +98,14 @@ create_chroot()
 	date +%s >"$target_dir/root/.update-timestamp"
 
 	case $release in
-	bullseye|focal|hirsute|sid|bookworm)
+	bullseye|focal|bookworm)
 		chroot "${target_dir}" /bin/bash -c "apt-get install python-is-python3"
 		;;
 	esac
 
 	touch "${target_dir}"/root/.debootstrap-complete
 	display_alert "Debootstrap complete" "${release}/${arch}" "info"
-} #############################################################################
-
+} 
 
 # chroot_prepare_distccd <release> <arch>
 #
@@ -129,16 +115,10 @@ chroot_prepare_distccd()
 	local arch=$2
 	local dest=/tmp/distcc/${release}-${arch}
 	declare -A gcc_version gcc_type
-	gcc_version['stretch']='6.3'
-	gcc_version['buster']='8.3'
 	gcc_version['bullseye']='9.2'
 	gcc_version['bookworm']='10.2'
-	gcc_version['xenial']='5.4'
-	gcc_version['bionic']='5.4'
 	gcc_version['focal']='9.2'
 	gcc_version['jammy']='10.2'
-	gcc_version['hirsute']='10.2'
-	gcc_version['sid']='10.2'
 	gcc_type['armhf']='arm-linux-gnueabihf-'
 	gcc_type['arm64']='aarch64-linux-gnu-'
 	rm -f "${dest}"/cmdlist
@@ -167,15 +147,8 @@ chroot_build_packages()
 	local built_ok=()
 	local failed=()
 
-	if [[ $IMAGE_TYPE == user-built ]]; then
-		# if user-built image compile only for selected arch/release
-		target_release="${RELEASE}"
-		target_arch="${ARCH}"
-	else
-		# only make packages for recent releases. There are no changes on older
-		target_release="stretch bionic buster bullseye bookworm focal hirsute jammy sid"
-		target_arch="armhf arm64"
-	fi
+    target_release="${RELEASE}"
+    target_arch="${ARCH}"
 
 	for release in $target_release; do
 		for arch in $target_arch; do
@@ -274,9 +247,8 @@ chroot_build_packages()
 			display_alert "$p"
 		done
 	fi
-} #############################################################################
+} 
 
-# create build script
 create_build_script ()
 {
 	cat <<-EOF > "${target_dir}"/root/build.sh
@@ -362,24 +334,19 @@ create_build_script ()
 	chmod +x "${target_dir}"/root/build.sh
 }
 
-# chroot_installpackages_local
-#
+
 chroot_installpackages_local()
 {
 	local conf=$EXTER/config/aptly-temp.conf
 	rm -rf /tmp/aptly-temp/
 	mkdir -p /tmp/aptly-temp/
-	# aptly -config="${conf}" repo create temp >> "${DEST}"/${LOG_SUBPATH}/install.log
-	# NOTE: this works recursively
 
     aptly -config="${conf}" repo add temp "${DEB_ORANGEPI}/extra/${RELEASE}-desktop/" >> "${DEST}"/${LOG_SUBPATH}/install.log 2>&1
     aptly -config="${conf}" repo add temp "${DEB_ORANGEPI}/extra/${RELEASE}-utils/" >> "${DEST}"/${LOG_SUBPATH}/install.log 2>&1
 
 	# -gpg-key="925644A6"
 	[[ ! -d /root/.gnupg ]] && mkdir -p /root/.gnupg
-	# aptly -keyring="$EXTER/packages/extras-buildpkgs/buildpkg-public.gpg" -secret-keyring="$EXTER/packages/extras-buildpkgs/buildpkg.gpg" -batch=true -config="${conf}" \
-	# 	 -gpg-key="925644A6" -passphrase="testkey1234" -component=temp -distribution="${RELEASE}" publish repo temp >> "${DEST}"/${LOG_SUBPATH}/install.log
-	#aptly -config="${conf}" -listen=":8189" serve &
+
 	aptly -config="${conf}" -listen=":8189" serve >> "${DEST}"/debug/install.log 2>&1 &
 	local aptly_pid=$!
 	cp $EXTER/packages/extras-buildpkgs/buildpkg.key "${SDCARD}"/tmp/buildpkg.key
@@ -395,8 +362,6 @@ chroot_installpackages_local()
 	kill "${aptly_pid}" >> "${DEST}"/${LOG_SUBPATH}/install.log 2>&1
 }
 
-# chroot_installpackages
-#
 chroot_installpackages()
 {
 	local install_list=""
@@ -431,4 +396,3 @@ chroot_installpackages()
 
 	[[ -f ${SDCARD}/etc/hostapd.conf ]] && sed -i "s/^ssid=.*/ssid=OrangePi/" ${SDCARD}/etc/hostapd.conf
 }
-

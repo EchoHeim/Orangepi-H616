@@ -297,9 +297,6 @@ FAMILY_TWEAKS
 	chroot "${SDCARD}" /bin/bash -c "systemctl --no-reload enable orangepi-resize-filesystem.service >/dev/null 2>&1"
 	chroot "${SDCARD}" /bin/bash -c "systemctl --no-reload enable orangepi-hardware-monitor.service >/dev/null 2>&1"
 
-	# copy "first run automated config, optional user configured"
- 	cp ${EXTER}/packages/bsp/orangepi_first_run.txt.template "${SDCARD}"/boot/orangepi_first_run.txt.template
-
 	# Cosmetic fix [FAILED] Failed to start Set console font and keymap at first boot
 	[[ -f "${SDCARD}"/etc/console-setup/cached_setup_font.sh ]] \
 	&& sed -i "s/^printf '.*/printf '\\\033\%\%G'/g" "${SDCARD}"/etc/console-setup/cached_setup_font.sh
@@ -470,13 +467,11 @@ install_rclocal()
 
 install_distribution_specific()
 {
-
 	display_alert "Applying distribution specific tweaks for" "$RELEASE" "info"
 
 	case $RELEASE in
 
 	bullseye)
-
 			# remove doubled uname from motd
 			[[ -f "${SDCARD}"/etc/update-motd.d/10-uname ]] && rm "${SDCARD}"/etc/update-motd.d/10-uname
 			# rc.local is not existing but one might need it
@@ -484,12 +479,9 @@ install_distribution_specific()
 			# fix missing versioning
 			[[ $(grep -L "VERSION_ID=" "${SDCARD}"/etc/os-release) ]] && echo 'VERSION_ID="11"' >> "${SDCARD}"/etc/os-release
 			[[ $(grep -L "VERSION=" "${SDCARD}"/etc/os-release) ]] && echo 'VERSION="11 (bullseye)"' >> "${SDCARD}"/etc/os-release
-
-
 		;;
 	
 	bookworm)
-
 			# remove doubled uname from motd
 			[[ -f "${SDCARD}"/etc/update-motd.d/10-uname ]] && rm "${SDCARD}"/etc/update-motd.d/10-uname
 			# rc.local is not existing but one might need it
@@ -500,10 +492,9 @@ install_distribution_specific()
 
 			# remove security updates repository since it does not exists yet
 			sed '/security/ d' -i "${SDCARD}"/etc/apt/sources.list
-
 		;;
 
-	bionic|focal|hirsute|impish|jammy)
+	bionic|focal|impish|jammy)
 
 			# by using default lz4 initrd compression leads to corruption, go back to proven method
 			sed -i "s/^COMPRESS=.*/COMPRESS=gzip/" "${SDCARD}"/etc/initramfs-tools/initramfs.conf
