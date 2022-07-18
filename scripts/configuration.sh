@@ -90,7 +90,6 @@ show_select_menu() {
 			  3>&1 1>&2 2>&3
 }
 
-
 # Expected variables
 # - aggregated_content
 # - potential_paths
@@ -106,10 +105,7 @@ aggregate_content() {
 			echo -e "${filepath/"$EXTER"\//} yes" >> "${LOG_OUTPUT_FILE}"
 			aggregated_content+=$(cat "${filepath}")
 			aggregated_content+="${separator}"
-#		else
-#			echo -e "${filepath/"$EXTER"\//} no\n" >> "${LOG_OUTPUT_FILE}"
 		fi
-
 	done
 	echo "" >> "${LOG_OUTPUT_FILE}"
 	unset LOG_OUTPUT_FILE
@@ -143,10 +139,6 @@ DEBOOTSTRAP_CONFIG_PATH="${CLI_CONFIG_PATH}/debootstrap"
 
 AGGREGATION_SEARCH_ROOT_ABSOLUTE_DIRS="
 ${EXTER}/config
-${EXTER}/config/optional/_any_board/_config
-${EXTER}/config/optional/architectures/${ARCH}/_config
-${EXTER}/config/optional/families/${LINUXFAMILY}/_config
-${EXTER}/config/optional/boards/${BOARD}/_config
 ${USERPATCHES_PATH}
 "
 
@@ -162,10 +154,6 @@ cli/${RELEASE}/main
 
 PACKAGES_SEARCH_ROOT_ABSOLUTE_DIRS="
 ${EXTER}/packages
-${EXTER}/config/optional/_any_board/_packages
-${EXTER}/config/optional/architectures/${ARCH}/_packages
-${EXTER}/config/optional/families/${LINUXFAMILY}/_packages
-${EXTER}/config/optional/boards/${BOARD}/_packages
 "
 
 get_all_potential_paths() {
@@ -230,24 +218,6 @@ DEBIAN_MIRROR='mirrors.tuna.tsinghua.edu.cn/debian'
 DEBIAN_SECURTY='mirrors.tuna.tsinghua.edu.cn/debian-security'
 UBUNTU_MIRROR='mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/'
 
-# if [[ "${ARCH}" == "amd64" ]]; then
-# 	UBUNTU_MIRROR='archive.ubuntu.com/ubuntu' # ports are only for non-amd64, of course.
-
-#     if [[ -n ${CUSTOM_UBUNTU_MIRROR} ]]; then # ubuntu redirector doesn't work well on amd64
-#         UBUNTU_MIRROR="${CUSTOM_UBUNTU_MIRROR}"
-#     fi
-# fi
-
-# don't use mirrors that throws garbage on 404
-if [[ -z ${ARMBIAN_MIRROR} ]]; then
-	while true; do
-
-		ARMBIAN_MIRROR=$(wget -SO- -T 1 -t 1 https://redirect.armbian.com 2>&1 | egrep -i "Location" | awk '{print $2}' | head -1)
-		[[ ${ARMBIAN_MIRROR} != *armbian.hosthatch* ]] && break
-
-	done
-fi
-
 # apt-cacher-ng mirror configurarion
 if [[ $DISTRIBUTION == Ubuntu ]]; then
 	APT_MIRROR=$UBUNTU_MIRROR
@@ -273,15 +243,9 @@ aggregate_all_cli "packages.uninstall" " "
 PACKAGE_LIST_UNINSTALL="$(cleanup_list aggregated_content)"
 unset aggregated_content
 
-
 if [[ -n $PACKAGE_LIST_RM ]]; then
 	display_alert "Package remove list ${PACKAGE_LIST_RM}"
-	# Turns out that \b can be tricked by dashes.
-	# So if you remove mesa-utils but still want to install "mesa-utils-extra"
-	# a "\b(mesa-utils)\b" filter will convert "mesa-utils-extra" to "-extra".
-	# \W is not tricked by this but consumes the surrounding spaces, so we
-	# replace the occurence by one space, to avoid sticking the next word to
-	# the previous one after consuming the spaces.
+
 	DEBOOTSTRAP_LIST=$(sed -r "s/\W($(tr ' ' '|' <<< ${PACKAGE_LIST_RM}))\W/ /g" <<< " ${DEBOOTSTRAP_LIST} ")
 	PACKAGE_LIST=$(sed -r "s/\W($(tr ' ' '|' <<< ${PACKAGE_LIST_RM}))\W/ /g" <<< " ${PACKAGE_LIST} ")
 	PACKAGE_MAIN_LIST=$(sed -r "s/\W($(tr ' ' '|' <<< ${PACKAGE_LIST_RM}))\W/ /g" <<< " ${PACKAGE_MAIN_LIST} ")
@@ -292,7 +256,6 @@ if [[ -n $PACKAGE_LIST_RM ]]; then
 	PACKAGE_LIST="$(echo ${PACKAGE_LIST})"
 	PACKAGE_MAIN_LIST="$(echo ${PACKAGE_MAIN_LIST})"
 fi
-
 
 LOG_OUTPUT_FILE="$SRC/output/${LOG_SUBPATH}/debootstrap-list.log"
 echo -e "\nVariables after manual configuration" >>$LOG_OUTPUT_FILE

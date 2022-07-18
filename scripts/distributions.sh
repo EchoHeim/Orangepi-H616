@@ -417,30 +417,27 @@ install_common()
 
 	# disable MOTD for first boot - we want as clean 1st run as possible
 	chmod -x "${SDCARD}"/etc/update-motd.d/*
-
 }
 
 install_rclocal()
 {
+    cat <<-EOF > "${SDCARD}"/etc/rc.local
+    #!/bin/sh -e
+    #
+    # rc.local
+    #
+    # This script is executed at the end of each multiuser runlevel.
+    # Make sure that the script will "exit 0" on success or any other
+    # value on error.
+    #
+    # In order to enable or disable this script just change the execution
+    # bits.
+    #
+    # By default this script does nothing.
 
-		cat <<-EOF > "${SDCARD}"/etc/rc.local
-		#!/bin/sh -e
-		#
-		# rc.local
-		#
-		# This script is executed at the end of each multiuser runlevel.
-		# Make sure that the script will "exit 0" on success or any other
-		# value on error.
-		#
-		# In order to enable or disable this script just change the execution
-		# bits.
-		#
-		# By default this script does nothing.
-
-		exit 0
-		EOF
-		chmod +x "${SDCARD}"/etc/rc.local
-
+    exit 0
+    EOF
+    chmod +x "${SDCARD}"/etc/rc.local
 }
 
 install_distribution_specific()
@@ -530,9 +527,6 @@ install_distribution_specific()
 		cat "${EXTER}"/config/modules/"${MODULES_INITRD}" >> "${SDCARD}"/etc/initramfs-tools/modules
 	fi
 }
-
-
-
 
 post_debootstrap_tweaks()
 {
