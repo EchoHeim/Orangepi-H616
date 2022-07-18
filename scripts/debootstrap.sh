@@ -6,9 +6,6 @@
 # License version 2. This program is licensed "as is" without any
 # warranty of any kind, whether express or implied.
 
-
-# Functions:
-
 # create_rootfs_cache
 # prepare_partitions
 # update_initramfs
@@ -86,7 +83,7 @@ debootstrap_ng()
 #
 create_rootfs_cache()
 {
-	local packages_hash=$(get_package_list_hash "$ROOTFSCACHE_VERSION")
+    local packages_hash=$(get_package_list_hash "$ROOTFSCACHE_VERSION")
 	local cache_type="cli"
 	[[ ${BUILD_MINIMAL} == yes ]] && local cache_type="minimal"
 	local cache_name=${RELEASE}-${cache_type}-${ARCH}.$packages_hash.tar.lz4
@@ -104,14 +101,9 @@ create_rootfs_cache()
 	else
 		display_alert "local not found" "Creating new rootfs cache for $RELEASE" "info"
 
-		# stage: debootstrap base system
-		if [[ $NO_APT_CACHER != yes ]]; then
-			# apt-cacher-ng apt-get proxy parameter
-			local apt_extra="-o Acquire::http::Proxy=\"http://${APT_PROXY_ADDR:-localhost:3142}\""
-			local apt_mirror="http://${APT_PROXY_ADDR:-localhost:3142}/$APT_MIRROR"
-		else
-			local apt_mirror="http://$APT_MIRROR"
-		fi
+        # apt-cacher-ng apt-get proxy parameter
+        local apt_extra="-o Acquire::http::Proxy=\"http://${APT_PROXY_ADDR:-localhost:3142}\""
+        local apt_mirror="http://${APT_PROXY_ADDR:-localhost:3142}/$APT_MIRROR"
 
 		# fancy progress bars
 		[[ -z $OUTPUT_DIALOG ]] && local apt_extra_progress="--show-progress -o DPKG::Progress-Fancy=1"
@@ -301,8 +293,6 @@ prepare_partitions()
 	# possible partition combinations
 	# /boot: none, ext4, ext2, fat (BOOTFS_TYPE)
 	# root: ext4, btrfs, f2fs, nfs (ROOTFS_TYPE)
-
-    BOOTFS_TYPE=fat
 
 	# declare makes local variables by default if used inside a function
 	# NOTE: mountopts string should always start with comma if not empty

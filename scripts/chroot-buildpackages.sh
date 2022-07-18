@@ -39,11 +39,7 @@ create_chroot()
 	# perhaps a temporally workaround
 	includes=${includes}",perl-openssl-defaults,libnet-ssleay-perl"
 
-	if [[ $NO_APT_CACHER != yes ]]; then
-		local mirror_addr="http://localhost:3142/${apt_mirror[${release}]}"
-	else
-		local mirror_addr="http://${apt_mirror[${release}]}"
-	fi
+	local mirror_addr="http://localhost:3142/${apt_mirror[${release}]}"
 
 	mkdir -p "${target_dir}"
 	cd "${target_dir}"
@@ -66,8 +62,8 @@ create_chroot()
 	[[ $? -ne 0 || ! -f "${target_dir}"/bin/bash ]] && exit_with_error "Create chroot second stage failed"
 
 	create_sources_list "$release" "${target_dir}"
-	[[ $NO_APT_CACHER != yes ]] && \
-		echo 'Acquire::http { Proxy "http://localhost:3142"; };' > "${target_dir}"/etc/apt/apt.conf.d/02proxy
+
+    echo 'Acquire::http { Proxy "http://localhost:3142"; };' > "${target_dir}"/etc/apt/apt.conf.d/02proxy
 	cat <<-EOF > "${target_dir}"/etc/apt/apt.conf.d/71-no-recommends
 	APT::Install-Recommends "0";
 	APT::Install-Suggests "0";
@@ -241,7 +237,7 @@ chroot_build_packages()
 			display_alert "$p"
 		done
 	fi
-} 
+}
 
 create_build_script ()
 {
@@ -371,8 +367,9 @@ chroot_installpackages()
 	fi
 	display_alert "Installing extras-buildpkgs" "$install_list"
 
-	[[ $NO_APT_CACHER != yes ]] && local apt_extra="-o Acquire::http::Proxy=\"http://${APT_PROXY_ADDR:-localhost:3142}\" -o Acquire::http::Proxy::localhost=\"DIRECT\""
-	cat <<-EOF > "${SDCARD}"/tmp/install.sh
+	local apt_extra="-o Acquire::http::Proxy=\"http://${APT_PROXY_ADDR:-localhost:3142}\" -o Acquire::http::Proxy::localhost=\"DIRECT\""
+	
+    cat <<-EOF > "${SDCARD}"/tmp/install.sh
 	#!/bin/bash
 	apt-key add /tmp/buildpkg.key
 	apt-get $apt_extra -q update

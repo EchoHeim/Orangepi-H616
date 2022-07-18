@@ -15,10 +15,10 @@ if [ "$-" != "${-#*i}" ]; then
 		# No kernel update involved, just regular packages like e.g. dbus require a reboot
 		Packages="$(egrep -v "linux-base|linux-image" /var/run/reboot-required.pkgs | sort | uniq | tr '\n' ',' | sed -e 's/,/, /g' -e 's/,\ $//')"
 		OlderThanOneDay=$(find /var/run/reboot-required -mtime +1)
-	        if [ "X${OlderThanOneDay}" = "X" ]; then
-			printf "\n[\e[0;92m some packages require a reboot (${Packages})\x1B[0m ]\n\n"
-	        else
-			printf "\n[\e[0;91m some packages require a reboot since more than 1 day (${Packages})\x1B[0m ]\n\n"
-	        fi
+        if [ "X${OlderThanOneDay}" = "X" ]; then
+        printf "\n[\e[0;92m some packages require a reboot (${Packages})\x1B[0m ]\n\n"
+        else
+        printf "\n[\e[0;91m some packages require a reboot since more than 1 day (${Packages})\x1B[0m ]\n\n"
+        fi
 	fi
 fi

@@ -194,7 +194,6 @@ create_sources_list()
 	esac
 }
 
-
 #--------------------------------------------------------------------------------------------------------------------------------
 # Let's have unique way of displaying alerts
 #--------------------------------------------------------------------------------------------------------------------------------
@@ -396,8 +395,7 @@ DISTRIBUTIONS_DESC_DIR="external/config/distributions"
 
 function distro_menu ()
 {
-# create a select menu for choosing a distribution based EXPERT status
-
+    # create a select menu for choosing a distribution based EXPERT status
 	local distrib_dir="${1}"
 
 	if [[ -d "${distrib_dir}" && -f "${distrib_dir}/support" ]]; then
@@ -427,7 +425,6 @@ function distros_options() {
 }
 
 function set_distribution_status() {
-
 	local distro_support_desc_filepath="${SRC}/${DISTRIBUTIONS_DESC_DIR}/${RELEASE}/support"
 	if [[ ! -f "${distro_support_desc_filepath}" ]]; then
 		exit_with_error "Distribution ${distribution_name} does not exist"
@@ -436,13 +433,11 @@ function set_distribution_status() {
 	fi
 
 	[[ "${DISTRIBUTION_STATUS}" != "supported" ]] && [[ "${EXPERT}" != "yes" ]] && exit_with_error "Orange Pi ${RELEASE} is unsupported and, therefore, only available to experts (EXPERT=yes)"
-
 }
 
 adding_packages()
 {
-# add deb files to repository if they are not already there
-
+    # add deb files to repository if they are not already there
 	display_alert "Checking and adding to repository $release" "$3" "ext"
 	for f in "${DEB_STORAGE}${2}"/*.deb
 	do
@@ -457,7 +452,6 @@ adding_packages()
 			aptly repo add -force-replace=true -config="${SCRIPTPATH}config/${REPO_CONFIG}" "${1}" "${f}" &>/dev/null
 		fi
 	done
-
 }
 
 # * installation will break if we try to install when package manager is running
@@ -565,7 +559,6 @@ install_pkg_deb ()
 		dpkg-query -W \
 		  -f '${binary:Package;-27} ${Version;-23}\n' \
 		  $for_install >>$log_file
-
 	fi
 
 	# We will show the status after installation all listed
@@ -582,7 +575,6 @@ install_pkg_deb ()
 
 prepare_host_basic()
 {
-
 	# command:package1 package2 ...
 	# list of commands that are neeeded:packages where this command is
 	local check_pack install_pack
@@ -689,35 +681,8 @@ prepare_host()
 		fi
 	fi
 
-	if grep -qE "(Microsoft|WSL)" /proc/version; then
-		if [ -f /.dockerenv ]; then
-			display_alert "Building images using Docker on WSL2 may fail" "" "wrn"
-		else
-			exit_with_error "Windows subsystem for Linux is not a supported build environment"
-		fi
-	fi
-
-	if systemd-detect-virt -q -c; then
-		display_alert "Running in container" "$(systemd-detect-virt)" "info"
-		# disable apt-cacher unless NO_APT_CACHER=no is not specified explicitly
-		if [[ $NO_APT_CACHER != no ]]; then
-			display_alert "apt-cacher is disabled in containers, set NO_APT_CACHER=no to override" "" "wrn"
-			NO_APT_CACHER=yes
-            echo "apt-cacher is dis------------------------------abled in containers" >> ~/test.txt
-		else
-            echo "apt-cacher is disabled in containers===========================" >> ~/test.txt
-        fi
-		CONTAINER_COMPAT=yes
-		SYNC_CLOCK=no
-	fi
-
 	# Skip verification if you are working offline
 	if ! $offline; then
-
-	# warning: apt-cacher-ng will fail if installed and used both on host and in
-	# container/chroot environment with shared network
-	# set NO_APT_CACHER=yes to prevent installation errors in such case
-	if [[ $NO_APT_CACHER != yes ]]; then hostdeps+=" apt-cacher-ng"; fi
 
 	export EXTRA_BUILD_DEPS=""
 
@@ -824,18 +789,11 @@ function webseed ()
 	unset text
 	# Hardcoded to EU mirrors since
 	local CCODE=$(curl -s redirect.armbian.com/geoip | jq '.continent.code' -r)
-	WEBSEED=($(curl -s https://redirect.armbian.com/mirrors | jq -r '.'${CCODE}' | .[] | values'))
+	# WEBSEED=($(curl -s https://redirect.armbian.com/mirrors | jq -r '.'${CCODE}' | .[] | values'))
 	# aria2 simply split chunks based on sources count not depending on download speed
 	# when selecting china mirrors, use only China mirror, others are very slow there
-	if [[ $DOWNLOAD_MIRROR == china ]]; then
-		WEBSEED=(
-		https://mirrors.tuna.tsinghua.edu.cn/armbian-releases/
-		)
-	elif [[ $DOWNLOAD_MIRROR == bfsu ]]; then
-		WEBSEED=(
-		https://mirrors.bfsu.edu.cn/armbian-releases/
-		)
-	fi
+    WEBSEED=(https://mirrors.tuna.tsinghua.edu.cn/armbian-releases/)
+
 	for toolchain in ${WEBSEED[@]}; do
 		text="${text} ${toolchain}${1}"
 	done

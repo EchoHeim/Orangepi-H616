@@ -133,7 +133,6 @@ install_common()
 
 	# Prepare and export caching-related params common to all apt calls below, to maximize apt-cacher-ng usage
 	export APT_EXTRA_DIST_PARAMS=""
-	[[ $NO_APT_CACHER != yes ]] && APT_EXTRA_DIST_PARAMS="-o Acquire::http::Proxy=\"http://${APT_PROXY_ADDR:-localhost:3142}\" -o Acquire::http::Proxy::localhost=\"DIRECT\""
 
 	display_alert "Cleaning" "package lists"
 	chroot "${SDCARD}" /bin/bash -c "apt-get clean"

@@ -19,7 +19,6 @@ HOSTRELEASE=$(cat /etc/os-release | grep VERSION_CODENAME | cut -d"=" -f2)
 [[ -z $HOSTRELEASE ]] && HOSTRELEASE=$(cut -d'/' -f1 /etc/debian_version)
 [[ -z $EXIT_PATCHING_ERROR ]] && EXIT_PATCHING_ERROR="" # exit patching if failed
 [[ -z $HOST ]] && HOST="Hurakan" # set hostname to the board
-[[ -z $CHINA_DOWNLOAD_MIRROR ]] && CHINA_DOWNLOAD_MIRROR=tsinghua
 cd "${SRC}" || exit
 [[ -z "${ROOTFSCACHE_VERSION}" ]] && ROOTFSCACHE_VERSION=11
 [[ -z "${CHROOT_CACHE_VERSION}" ]] && CHROOT_CACHE_VERSION=7
@@ -46,21 +45,6 @@ ROOT_MAPPER="orangepi-root"
 # small SD card with kernel, boot script and .dtb/.bin files
 [[ $ROOTFS_TYPE == nfs ]] && FIXED_IMAGE_SIZE=64
 
-# Since we are having too many options for mirror management,
-# then here is yet another mirror related option.
-# Respecting user's override in case a mirror is unreachable.
-case $REGIONAL_MIRROR in
-	china)
-		[[ -z $USE_MAINLINE_GOOGLE_MIRROR ]] && [[ -z $MAINLINE_MIRROR ]] && MAINLINE_MIRROR=tuna
-		[[ -z $USE_GITHUB_UBOOT_MIRROR ]] && [[ -z $UBOOT_MIRROR ]] && UBOOT_MIRROR=gitee
-		[[ -z $GITHUB_MIRROR ]] && GITHUB_MIRROR=gitclone
-		[[ -z $DOWNLOAD_MIRROR ]] && DOWNLOAD_MIRROR=china
-		;;
-	*)
-		;;
-esac
-
-
 MAINLINE_KERNEL_DIR="$SRC/kernel"
 MAINLINE_UBOOT_DIR="$SRC/u-boot"
 
@@ -73,10 +57,6 @@ ATF_COMPILE=yes
 
 [[ -z $CRYPTROOT_SSH_UNLOCK ]] && CRYPTROOT_SSH_UNLOCK=yes
 [[ -z $CRYPTROOT_SSH_UNLOCK_PORT ]] && CRYPTROOT_SSH_UNLOCK_PORT=2022
-# Default to pdkdf2, this used to be the default with cryptroot <= 2.0, however
-# cryptroot 2.1 changed that to Argon2i. Argon2i is a memory intensive
-# algorithm which doesn't play well with SBCs (need 1GiB RAM by default !)
-# https://gitlab.com/cryptsetup/cryptsetup/-/issues/372
 [[ -z $CRYPTROOT_PARAMETERS ]] && CRYPTROOT_PARAMETERS="--pbkdf pbkdf2"
 [[ -z $WIREGUARD ]] && WIREGUARD="no"
 [[ -z $EXTRAWIFI ]] && EXTRAWIFI="yes"
@@ -87,45 +67,23 @@ ATF_COMPILE=yes
 [[ -z $EXTRA_ROOTFS_MIB_SIZE ]] && EXTRA_ROOTFS_MIB_SIZE=0
 [[ -z $BUILD_KSRC ]] && BUILD_KSRC="no"
 
-# single ext4 partition is the default and preferred configuration
-#BOOTFS_TYPE=''
-[[ ! -f ${EXTER}/config/sources/families/$LINUXFAMILY.conf ]] && \
-	exit_with_error "Sources configuration not found" "$LINUXFAMILY"
-
 source "${EXTER}/config/sources/families/${LINUXFAMILY}.conf"
-
-# load architecture defaults
 source "${EXTER}/config/sources/${ARCH}.conf"
 
 show_menu() {
 	provided_title=$1
 	provided_backtitle=$2
 	provided_menuname=$3
-	# Myy : I don't know why there's a TTY_Y - 8...
-	#echo "Provided title : $provided_title"
-	#echo "Provided backtitle : $provided_backtitle"
-	#echo "Provided menuname : $provided_menuname"
-	#echo "Provided options : " "${@:4}"
-	#echo "TTY X: $TTY_X Y: $TTY_Y"
 	whiptail --title "${provided_title}" --backtitle "${provided_backtitle}" --notags \
                           --menu "${provided_menuname}" "${TTY_Y}" "${TTY_X}" $((TTY_Y - 8))  \
 			  "${@:4}" \
 			  3>&1 1>&2 2>&3
 }
 
-# Myy : FIXME Factorize
 show_select_menu() {
 	provided_title=$1
 	provided_backtitle=$2
 	provided_menuname=$3
-	#dialog --stdout --title "${provided_title}" --backtitle "${provided_backtitle}" \
-	#--checklist "${provided_menuname}" $TTY_Y $TTY_X $((TTY_Y - 8)) "${@:4}"
-
-	#whiptail --separate-output --title "${provided_title}" --backtitle "${provided_backtitle}" \
-	#                  --checklist "${provided_menuname}" "${TTY_Y}" "${TTY_X}" $((TTY_Y - 8))  \
-	#		  "${@:4}" \
-	#		  3>&1 1>&2 2>&3
-
 	whiptail --title "${provided_title}" --backtitle "${provided_backtitle}" \
 	                  --checklist "${provided_menuname}" "${TTY_Y}" "${TTY_X}" $((TTY_Y - 8))  \
 			  "${@:4}" \
@@ -222,34 +180,7 @@ get_all_potential_paths() {
 			done
 		done
 	done
-	# for ppath in ${potential_paths}; do
-	#  	echo "Checking for ${ppath}"
-	#  	if [[ -f "${ppath}" ]]; then
-	#  		echo "OK !|"
-	#  	else
-	#  		echo "Nope|"
-	#  	fi
-	# done
 }
-
-# Environment variables expected :
-# - aggregated_content
-# Arguments :
-# 1. File to look up in each directory
-# 2. The separator to add between each concatenated file
-# 3. Relative directories paths added to ${3}
-# 4. Relative directories paths added to ${4}
-#
-# The function will basically generate a list of potential paths by
-# generating all the potential paths combinations leading to the
-# looked up file
-# ${AGGREGATION_SEARCH_ROOT_ABSOLUTE_DIRS}/${3}/${4}/${1}
-# Then it will concatenate the content of all the available files
-# into ${aggregated_content}
-#
-# TODO :
-# ${4} could be removed by just adding the appropriate paths to ${3}
-# dynamically for each case
 
 aggregate_all_root_rel_sub() {
 	local separator="${2}"
@@ -295,38 +226,17 @@ show_checklist_variables "DEBOOTSTRAP_LIST DEBOOTSTRAP_COMPONENTS PACKAGE_LIST P
 
 unset LOG_OUTPUT_FILE
 
-DEBIAN_MIRROR='deb.debian.org/debian'
-DEBIAN_SECURTY='security.debian.org/'
-UBUNTU_MIRROR='ports.ubuntu.com/'
+DEBIAN_MIRROR='mirrors.tuna.tsinghua.edu.cn/debian'
+DEBIAN_SECURTY='mirrors.tuna.tsinghua.edu.cn/debian-security'
+UBUNTU_MIRROR='mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/'
 
-if [[ $DOWNLOAD_MIRROR == "china" ]] ; then
+# if [[ "${ARCH}" == "amd64" ]]; then
+# 	UBUNTU_MIRROR='archive.ubuntu.com/ubuntu' # ports are only for non-amd64, of course.
 
-	if [[ ${CHINA_DOWNLOAD_MIRROR} == tsinghua ]]; then
-		DEBIAN_MIRROR='mirrors.tuna.tsinghua.edu.cn/debian'
-		DEBIAN_SECURTY='mirrors.tuna.tsinghua.edu.cn/debian-security'
-		UBUNTU_MIRROR='mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/'
-	fi
-
-	if [[ ${CHINA_DOWNLOAD_MIRROR} == huawai ]]; then
-		DEBIAN_MIRROR='repo.huaweicloud.com/debian'
-		DEBIAN_SECURTY='repo.huaweicloud.com/debian-security'
-		UBUNTU_MIRROR='repo.huaweicloud.com/ubuntu-ports/'
-	fi
-fi
-
-if [[ $DOWNLOAD_MIRROR == "bfsu" ]] ; then
-	DEBIAN_MIRROR='mirrors.bfsu.edu.cn/debian'
-	DEBIAN_SECURTY='mirrors.bfsu.edu.cn/debian-security'
-	UBUNTU_MIRROR='mirrors.bfsu.edu.cn/ubuntu-ports/'
-fi
-
-if [[ "${ARCH}" == "amd64" ]]; then
-	UBUNTU_MIRROR='archive.ubuntu.com/ubuntu' # ports are only for non-amd64, of course.
-
-		if [[ -n ${CUSTOM_UBUNTU_MIRROR} ]]; then # ubuntu redirector doesn't work well on amd64
-			UBUNTU_MIRROR="${CUSTOM_UBUNTU_MIRROR}"
-		fi
-fi
+#     if [[ -n ${CUSTOM_UBUNTU_MIRROR} ]]; then # ubuntu redirector doesn't work well on amd64
+#         UBUNTU_MIRROR="${CUSTOM_UBUNTU_MIRROR}"
+#     fi
+# fi
 
 # don't use mirrors that throws garbage on 404
 if [[ -z ${ARMBIAN_MIRROR} ]]; then

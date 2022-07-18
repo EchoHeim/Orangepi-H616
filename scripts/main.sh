@@ -18,8 +18,7 @@ umask 002
 DEST="${SRC}"/output
 
 REVISION="3.0.4"
-
-[[ $DOWNLOAD_MIRROR == "china" ]] && NTP_SERVER="cn.pool.ntp.org"
+NTP_SERVER="cn.pool.ntp.org"
 
 if [[ $BUILD_ALL != "yes" ]]; then
 	# override stty size
@@ -29,8 +28,6 @@ if [[ $BUILD_ALL != "yes" ]]; then
 	TTY_Y=$(($(stty size | awk '{print $1}')-6)) 			# determine terminal height
 fi
 
-# We'll use this title on all menus
-backtitle="Orange Pi building script, http://www.orangepi.org" 
 titlestr="Choose an option"
 
 # Warnings mitigation
