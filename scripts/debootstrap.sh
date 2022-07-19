@@ -618,20 +618,13 @@ create_image()
 	echo -e "\nCopying files to [/boot]" >>"${DEST}"/${LOG_SUBPATH}/install.log
 	if [[ $(findmnt --target $MOUNT/boot -o FSTYPE -n) == vfat ]]; then
 		# fat32
-		rsync -rLtWh \
-			  --info=progress0,stats1 \
-			  --log-file="${DEST}"/${LOG_SUBPATH}/install.log $SDCARD/boot $MOUNT
+		rsync -rLtWh --info=progress0,stats1 --log-file="${DEST}"/${LOG_SUBPATH}/install.log $SDCARD/boot $MOUNT
 	else
 		# ext4
-		rsync -aHWXh \
-			  --info=progress0,stats1 \
-			  --log-file="${DEST}"/${LOG_SUBPATH}/install.log $SDCARD/boot $MOUNT
+		rsync -aHWXh --info=progress0,stats1 --log-file="${DEST}"/${LOG_SUBPATH}/install.log $SDCARD/boot $MOUNT
 	fi
 
-	# stage: create final initramfs
-	[[ -n $KERNELSOURCE ]] && {
-		update_initramfs $MOUNT
-	}
+	update_initramfs $MOUNT
 
 	# DEBUG: print free space
 	local freespace=$(LC_ALL=C df -h)

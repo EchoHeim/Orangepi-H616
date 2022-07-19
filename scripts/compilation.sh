@@ -28,32 +28,21 @@ compile_atf()
 		(cd "${EXTER}/cache/sources/${ATFSOURCEDIR}"; make distclean > /dev/null 2>&1)
 	fi
 
-	if [[ $USE_OVERLAYFS == yes ]]; then
-		local atfdir
-		atfdir=$(overlayfs_wrapper "wrap" "$EXTER/cache/sources/$ATFSOURCEDIR" "atf_${LINUXFAMILY}_${BRANCH}")
-	else
-		local atfdir="$EXTER/cache/sources/$ATFSOURCEDIR"
-	fi
-	cd "$atfdir" || exit
+	cd "$EXTER/cache/sources/$ATFSOURCEDIR" 
 
 	display_alert "Compiling ATF" "" "info"
 
-    # build aarch64
-    if [[ $(dpkg --print-architecture) == amd64 ]]; then
+    local toolchain
+    toolchain=$(find_toolchain "$ATF_COMPILER" "$ATF_USE_GCC")
+    echo "toolchain: $toolchain"
+    [[ -z $toolchain ]] && exit_with_error "Could not find required toolchain" "${ATF_COMPILER}gcc $ATF_USE_GCC"
 
-        local toolchain
-        toolchain=$(find_toolchain "$ATF_COMPILER" "$ATF_USE_GCC")
-        [[ -z $toolchain ]] && exit_with_error "Could not find required toolchain" "${ATF_COMPILER}gcc $ATF_USE_GCC"
-
-        if [[ -n $ATF_TOOLCHAIN2 ]]; then
-            local toolchain2_type toolchain2_ver toolchain2
-            toolchain2_type=$(cut -d':' -f1 <<< "${ATF_TOOLCHAIN2}")
-            toolchain2_ver=$(cut -d':' -f2 <<< "${ATF_TOOLCHAIN2}")
-            toolchain2=$(find_toolchain "$toolchain2_type" "$toolchain2_ver")
-            [[ -z $toolchain2 ]] && exit_with_error "Could not find required toolchain" "${toolchain2_type}gcc $toolchain2_ver"
-        fi
-
-    # build aarch64
+    if [[ -n $ATF_TOOLCHAIN2 ]]; then
+        local toolchain2_type toolchain2_ver toolchain2
+        toolchain2_type=$(cut -d':' -f1 <<< "${ATF_TOOLCHAIN2}")
+        toolchain2_ver=$(cut -d':' -f2 <<< "${ATF_TOOLCHAIN2}")
+        toolchain2=$(find_toolchain "$toolchain2_type" "$toolchain2_ver")
+        [[ -z $toolchain2 ]] && exit_with_error "Could not find required toolchain" "${toolchain2_type}gcc $toolchain2_ver"
     fi
 
 	display_alert "Compiler version" "${ATF_COMPILER}gcc $(eval env PATH="${toolchain}:${PATH}" "${ATF_COMPILER}gcc" -dumpversion)" "info"
@@ -113,36 +102,25 @@ compile_uboot()
 		(cd $BOOTSOURCEDIR; make clean > /dev/null 2>&1)
 	fi
 
-	if [[ $USE_OVERLAYFS == yes ]]; then
-		local ubootdir
-		ubootdir=$(overlayfs_wrapper "wrap" "$BOOTSOURCEDIR" "u-boot_${LINUXFAMILY}_${BRANCH}")
-	else
-		local ubootdir="$BOOTSOURCEDIR"
-	fi
+	local ubootdir="$BOOTSOURCEDIR"
+
 	cd "${ubootdir}" || exit
 
-	# read uboot version
-	local version hash
-	version=$(grab_version "$ubootdir")
+	local version
+	version="2021.10"
 
 	display_alert "Compiling u-boot" "v$version" "info"
 
-    # build aarch64
-    if [[ $(dpkg --print-architecture) == amd64 ]]; then
+    local toolchain
+    toolchain=$(find_toolchain "$UBOOT_COMPILER" "$UBOOT_USE_GCC")
+    [[ -z $toolchain ]] && exit_with_error "Could not find required toolchain" "${UBOOT_COMPILER}gcc $UBOOT_USE_GCC"
 
-        local toolchain
-        toolchain=$(find_toolchain "$UBOOT_COMPILER" "$UBOOT_USE_GCC")
-        [[ -z $toolchain ]] && exit_with_error "Could not find required toolchain" "${UBOOT_COMPILER}gcc $UBOOT_USE_GCC"
-
-        if [[ -n $UBOOT_TOOLCHAIN2 ]]; then
-            local toolchain2_type toolchain2_ver toolchain2
-            toolchain2_type=$(cut -d':' -f1 <<< "${UBOOT_TOOLCHAIN2}")
-            toolchain2_ver=$(cut -d':' -f2 <<< "${UBOOT_TOOLCHAIN2}")
-            toolchain2=$(find_toolchain "$toolchain2_type" "$toolchain2_ver")
-            [[ -z $toolchain2 ]] && exit_with_error "Could not find required toolchain" "${toolchain2_type}gcc $toolchain2_ver"
-        fi
-
-    # build aarch64
+    if [[ -n $UBOOT_TOOLCHAIN2 ]]; then
+        local toolchain2_type toolchain2_ver toolchain2
+        toolchain2_type=$(cut -d':' -f1 <<< "${UBOOT_TOOLCHAIN2}")
+        toolchain2_ver=$(cut -d':' -f2 <<< "${UBOOT_TOOLCHAIN2}")
+        toolchain2=$(find_toolchain "$toolchain2_type" "$toolchain2_ver")
+        [[ -z $toolchain2 ]] && exit_with_error "Could not find required toolchain" "${toolchain2_type}gcc $toolchain2_ver"
     fi
 
 	display_alert "Compiler version" "${UBOOT_COMPILER}gcc $(eval env PATH="${toolchain}:${toolchain2}:${PATH}" "${UBOOT_COMPILER}gcc" -dumpversion)" "info"
@@ -185,34 +163,16 @@ compile_uboot()
 			${PROGRESS_LOG_TO_FILE:+' | tee -a $DEST/${LOG_SUBPATH}/compilation.log'} \
 			${OUTPUT_VERYSILENT:+' >/dev/null 2>/dev/null'}
 
-	        if [[ "${version}" != 2014.07 ]]; then
+        # orangepi specifics u-boot settings
+        [[ -f .config ]] && sed -i 's/CONFIG_LOCALVERSION=""/CONFIG_LOCALVERSION="-orangepi"/g' .config
+        [[ -f .config ]] && sed -i 's/CONFIG_LOCALVERSION_AUTO=.*/# CONFIG_LOCALVERSION_AUTO is not set/g' .config
 
-			# orangepi specifics u-boot settings
-			[[ -f .config ]] && sed -i 's/CONFIG_LOCALVERSION=""/CONFIG_LOCALVERSION="-orangepi"/g' .config
-			[[ -f .config ]] && sed -i 's/CONFIG_LOCALVERSION_AUTO=.*/# CONFIG_LOCALVERSION_AUTO is not set/g' .config
+        [[ -f tools/logos/udoo.bmp ]] && cp "${EXTER}"/packages/blobs/splash/udoo.bmp tools/logos/udoo.bmp
+        touch .scmversion
 
-			# for modern kernel and non spi targets
-			if [[ ${BOOTBRANCH} =~ ^tag:v201[8-9](.*) && ${target} != "spi" && -f .config ]]; then
-
-				sed -i 's/^.*CONFIG_ENV_IS_IN_FAT.*/# CONFIG_ENV_IS_IN_FAT is not set/g' .config
-				sed -i 's/^.*CONFIG_ENV_IS_IN_EXT4.*/CONFIG_ENV_IS_IN_EXT4=y/g' .config
-				sed -i 's/^.*CONFIG_ENV_IS_IN_MMC.*/# CONFIG_ENV_IS_IN_MMC is not set/g' .config
-				sed -i 's/^.*CONFIG_ENV_IS_NOWHERE.*/# CONFIG_ENV_IS_NOWHERE is not set/g' .config | echo \
-				"# CONFIG_ENV_IS_NOWHERE is not set" >> .config
-				echo 'CONFIG_ENV_EXT4_INTERFACE="mmc"' >> .config
-				echo 'CONFIG_ENV_EXT4_DEVICE_AND_PART="0:auto"' >> .config
-				echo 'CONFIG_ENV_EXT4_FILE="/boot/boot.env"' >> .config
-
-			fi
-
-			[[ -f tools/logos/udoo.bmp ]] && cp "${EXTER}"/packages/blobs/splash/udoo.bmp tools/logos/udoo.bmp
-			touch .scmversion
-
-			# $BOOTDELAY can be set in board family config, ensure autoboot can be stopped even if set to 0
-			[[ $BOOTDELAY == 0 ]] && echo -e "CONFIG_ZERO_BOOTDELAY_CHECK=y" >> .config
-			[[ -n $BOOTDELAY ]] && sed -i "s/^CONFIG_BOOTDELAY=.*/CONFIG_BOOTDELAY=${BOOTDELAY}/" .config || [[ -f .config ]] && echo "CONFIG_BOOTDELAY=${BOOTDELAY}" >> .config
-
-		fi
+        # $BOOTDELAY can be set in board family config, ensure autoboot can be stopped even if set to 0
+        [[ $BOOTDELAY == 0 ]] && echo -e "CONFIG_ZERO_BOOTDELAY_CHECK=y" >> .config
+        [[ -n $BOOTDELAY ]] && sed -i "s/^CONFIG_BOOTDELAY=.*/CONFIG_BOOTDELAY=${BOOTDELAY}/" .config || [[ -f .config ]] && echo "CONFIG_BOOTDELAY=${BOOTDELAY}" >> .config
 
 		# workaround when two compilers are needed
 		cross_compile="CROSS_COMPILE=$CCACHE $UBOOT_COMPILER";
@@ -242,11 +202,7 @@ compile_uboot()
 				f_dst=$(basename "${f_src}")
 			fi
 			[[ ! -f $f_src ]] && exit_with_error "U-boot file not found" "$(basename "${f_src}")"
-			if [[ "${version}" =~ 2014.07|2011.09 ]]; then
-				cp "${f_src}" "$uboottempdir/packout/${f_dst}"
-			else
-				cp "${f_src}" "$uboottempdir/${uboot_name}/usr/lib/${uboot_name}/${f_dst}"
-			fi
+			cp "${f_src}" "$uboottempdir/${uboot_name}/usr/lib/${uboot_name}/${f_dst}"
 		done
 	done <<< "$UBOOT_TARGET_MAP"
 
@@ -359,10 +315,8 @@ compile_kernel()
 	rm -f localversion
 
 	# read kernel version
-	local version hash
+	local version 
 	version=$(grab_version "$kerneldir")
-
-	# read kernel git hash
 
 	# Apply a series of patches if a series file exists
 	if test -f "${EXTER}"/patch/kernel/${KERNELPATCHDIR}/series.conf; then
@@ -497,7 +451,7 @@ compile_kernel()
 
 compile_sunxi_tools()
 {
-	# Compile and install only if git commit hash changed
+	# Compile and install only if git commit changed
 	cd $EXTER/cache/sources/sunxi-tools || exit
 	# need to check if /usr/local/bin/sunxi-fexc to detect new Docker containers with old cached sources
     

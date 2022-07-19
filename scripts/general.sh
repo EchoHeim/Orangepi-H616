@@ -110,7 +110,7 @@ exit_with_error()
 	local _description=$1
 	local _highlight=$2
 	_file=$(basename "${BASH_SOURCE[1]}")
-	local stacktrace="$(get_extension_hook_stracktrace "${BASH_SOURCE[*]}" "${BASH_LINENO[*]}")"
+	# local stacktrace="$(get_extension_hook_stracktrace "${BASH_SOURCE[*]}" "${BASH_LINENO[*]}")"
 
 	display_alert "ERROR in function $_function" "$stacktrace" "err"
 	display_alert "$_description" "$_highlight" "err"
@@ -608,13 +608,6 @@ prepare_host()
 {
 	display_alert "Preparing" "host" "info"
 
-	# The 'offline' variable must always be set to 'true' or 'false'
-	if [ "$OFFLINE_WORK" == "yes" ]; then
-		local offline=true
-	else
-		local offline=false
-	fi
-
 	# wait until package manager finishes possible system maintanace
 	wait_for_package_manager
 
@@ -628,7 +621,6 @@ prepare_host()
 
 	# packages list for host
 	# NOTE: please sync any changes here with the Dockerfile and Vagrantfile
-
 	local hostdeps="acl aptly aria2 bc binfmt-support bison btrfs-progs       \
 	build-essential  ca-certificates ccache cpio cryptsetup curl              \
 	debian-archive-keyring debian-keyring debootstrap device-tree-compiler    \
@@ -642,22 +634,8 @@ prepare_host()
 	systemd-container u-boot-tools udev unzip uuid-dev wget whiptail zip      \
 	zlib1g-dev"
 
-    if [[ $(dpkg --print-architecture) == amd64 ]]; then
-
-        hostdeps+=" distcc lib32ncurses-dev lib32stdc++6 libc6-i386"
-        grep -q i386 <(dpkg --print-foreign-architectures) || dpkg --add-architecture i386
-
-    elif [[ $(dpkg --print-architecture) == arm64 ]]; then
-
-        hostdeps+=" gcc-arm-linux-gnueabi gcc-arm-none-eabi libc6 libc6-amd64-cross qemu"
-
-    else
-
-        display_alert "Please read documentation to set up proper compilation environment"
-        display_alert "https://www.armbian.com/using-armbian-tools/"
-        exit_with_error "Running this tool on non x86_64 build host is not supported"
-
-    fi
+    hostdeps+=" distcc lib32ncurses-dev lib32stdc++6 libc6-i386"
+    grep -q i386 <(dpkg --print-foreign-architectures) || dpkg --add-architecture i386
 
 	# Add support for Ubuntu 20.04, 21.04 and Mint 20.x
 	if [[ $HOSTRELEASE =~ ^(focal|ulyana|ulyssa|bullseye|bookworm|uma)$ ]]; then
@@ -670,26 +648,11 @@ prepare_host()
 
 	display_alert "Build host OS release" "${HOSTRELEASE:-(unknown)}" "info"
 
-	# NO_HOST_RELEASE_CHECK overrides the check for a supported host system
-	# Disable host OS check at your own risk. Any issues reported with unsupported releases will be closed without discussion
-	if [[ -z $HOSTRELEASE || "jammy buster bullseye bookworm focal debbie tricia ulyana ulyssa uma" != *"$HOSTRELEASE"* ]]; then
-		if [[ $NO_HOST_RELEASE_CHECK == yes ]]; then
-			display_alert "You are running on an unsupported system" "${HOSTRELEASE:-(unknown)}" "wrn"
-			display_alert "Do not report any errors, warnings or other issues encountered beyond this point" "" "wrn"
-		else
-			exit_with_error "It seems you ignore documentation and run an unsupported build system: ${HOSTRELEASE:-(unknown)}"
-		fi
-	fi
-
-	# Skip verification if you are working offline
-	if ! $offline; then
-
 	export EXTRA_BUILD_DEPS=""
-
 	if [ -n "${EXTRA_BUILD_DEPS}" ]; then hostdeps+=" ${EXTRA_BUILD_DEPS}"; fi
 
 	display_alert "Installing build dependencies"
-	# don't prompt for apt cacher selection
+
 	sudo echo "apt-cacher-ng    apt-cacher-ng/tunnelenable      boolean false" | sudo debconf-set-selections
 
 	LOG_OUTPUT_FILE="${DEST}"/${LOG_SUBPATH}/hostdeps.log
@@ -701,10 +664,8 @@ prepare_host()
 	export FINAL_HOST_DEPS="$hostdeps ${EXTRA_BUILD_DEPS}"
 
 	# sync clock
-	if [[ $SYNC_CLOCK != no ]]; then
-		display_alert "Syncing clock" "${NTP_SERVER:-pool.ntp.org}" "info"
-		ntpdate -s "${NTP_SERVER:-pool.ntp.org}"
-	fi
+    display_alert "Syncing clock" "${NTP_SERVER:-pool.ntp.org}" "info"
+    ntpdate -s "${NTP_SERVER:-pool.ntp.org}"
 
 	# create directory structure
 	mkdir -p $SRC/output $EXTER/cache $USERPATCHES_PATH
@@ -718,50 +679,41 @@ prepare_host()
 	fi
 	mkdir -p $DEST/debs/{extra,u-boot}  $DEST/{config,debug,patch,images} $USERPATCHES_PATH/overlay $EXTER/cache/{debs,sources,hash} $SRC/toolchains  $SRC/.tmp
 
-    # build aarch64
-	if [[ $(dpkg --print-architecture) == amd64 ]]; then
-		if [[ "${SKIP_EXTERNAL_TOOLCHAINS}" != "yes" ]]; then
+    # bind mount toolchain if defined
+    if [[ -d "${ARMBIAN_CACHE_TOOLCHAIN_PATH}" ]]; then
+        mountpoint -q "${SRC}"/cache/toolchain && umount -l "${SRC}"/cache/toolchain
+        mount --bind "${ARMBIAN_CACHE_TOOLCHAIN_PATH}" "${SRC}"/cache/toolchain
+    fi
 
-			# bind mount toolchain if defined
-			if [[ -d "${ARMBIAN_CACHE_TOOLCHAIN_PATH}" ]]; then
-				mountpoint -q "${SRC}"/cache/toolchain && umount -l "${SRC}"/cache/toolchain
-				mount --bind "${ARMBIAN_CACHE_TOOLCHAIN_PATH}" "${SRC}"/cache/toolchain
-			fi
+    display_alert "Checking for external GCC compilers" "" "info"
+    # download external Linaro compiler and missing special dependencies since they are needed for certain sources
 
-			display_alert "Checking for external GCC compilers" "" "info"
-			# download external Linaro compiler and missing special dependencies since they are needed for certain sources
+    local toolchains=(
+        "gcc-arm-9.2-2019.12-x86_64-aarch64-none-linux-gnu.tar.xz"
+        )
 
-		local toolchains=(
-			"gcc-arm-9.2-2019.12-x86_64-aarch64-none-linux-gnu.tar.xz"
-			)
+    USE_TORRENT_STATUS=${USE_TORRENT}
+    USE_TORRENT="no"
 
-		USE_TORRENT_STATUS=${USE_TORRENT}
-		USE_TORRENT="no"
+    cd $SRC/toolchains/gcc-arm-9.2-2019.12-x86_64-aarch64-none-linux-gnu/
+    sudo cat libexec.tar.gz* | sudo tar zx
 
-        cd $SRC/toolchains/gcc-arm-9.2-2019.12-x86_64-aarch64-none-linux-gnu/
-        sudo cat libexec.tar.gz* | sudo tar zx
+    USE_TORRENT=${USE_TORRENT_STATUS}
 
-		USE_TORRENT=${USE_TORRENT_STATUS}
-
-		rm -rf $SRC/toolchains/*.tar.xz*
-		local existing_dirs=( $(ls -1 $SRC/toolchains) )
-		for dir in ${existing_dirs[@]}; do
-			local found=no
-			for toolchain in ${toolchains[@]}; do
-				local filename=${toolchain##*/}
-				local dirname=${filename//.tar.xz}
-				[[ $dir == $dirname ]] && found=yes
-			done
-			if [[ $found == no ]]; then
-				display_alert "Removing obsolete toolchain" "$dir"
-				rm -rf $SRC/toolchains/$dir
-			fi
-		done
-			else
-				display_alert "Ignoring toolchains" "SKIP_EXTERNAL_TOOLCHAINS: ${SKIP_EXTERNAL_TOOLCHAINS}" "info"
-			fi
-		fi
-	fi # check offline
+    rm -rf $SRC/toolchains/*.tar.xz*
+    local existing_dirs=( $(ls -1 $SRC/toolchains) )
+    for dir in ${existing_dirs[@]}; do
+        local found=no
+        for toolchain in ${toolchains[@]}; do
+            local filename=${toolchain##*/}
+            local dirname=${filename//.tar.xz}
+            [[ $dir == $dirname ]] && found=yes
+        done
+        if [[ $found == no ]]; then
+            display_alert "Removing obsolete toolchain" "$dir"
+            rm -rf $SRC/toolchains/$dir
+        fi
+    done
 
 	# enable arm binary format so that the cross-architecture chroot environment will work
 	if [[ $BUILD_OPT == "image" || $BUILD_OPT == "rootfs" ]]; then

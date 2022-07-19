@@ -2,7 +2,6 @@
 #
 # Main program
 #
-
 cleanup_list() {
 	local varname="${1}"
 	local list_to_clean="${!varname}"
@@ -19,6 +18,7 @@ DEST="${SRC}"/output
 
 REVISION="3.0.4"
 NTP_SERVER="cn.pool.ntp.org"
+titlestr="Choose an option"
 
 if [[ $BUILD_ALL != "yes" ]]; then
 	# override stty size
@@ -27,8 +27,6 @@ if [[ $BUILD_ALL != "yes" ]]; then
 	TTY_X=$(($(stty size | awk '{print $2}')-6)) 			# determine terminal width
 	TTY_Y=$(($(stty size | awk '{print $1}')-6)) 			# determine terminal height
 fi
-
-titlestr="Choose an option"
 
 # Warnings mitigation
 [[ -z $LANGUAGE ]] && export LANGUAGE="en_US:en"            # set to english if not set
@@ -62,9 +60,6 @@ SHOW_WARNING=yes
 
 CCACHE=ccache
 export PATH="/usr/lib/ccache:$PATH"
-# private ccache directory to avoid permission issues when using build script with "sudo"
-# see https://ccache.samba.org/manual.html#_sharing_a_cache for alternative solution
-[[ $PRIVATE_CCACHE == yes ]] && export CCACHE_DIR=$EXTER/cache/ccache
 
 # if BUILD_OPT, KERNEL_CONFIGURE, BOARD, BRANCH or RELEASE are not set, display selection menu
 if [[ -z $BUILD_OPT ]]; then
@@ -94,8 +89,7 @@ source "${SRC}/userpatches/board.conf"
 LINUXFAMILY="${BOARDFAMILY}"
 
 BRANCH="current"
-BUILD_MINIMAL="no"    # Just in case BUILD_MINIMAL is not defined
-
+BUILD_MINIMAL="no"          # Just in case BUILD_MINIMAL is not defined
 RELEASE="bullseye"          # 发行版本 bookworm/bullseye/focal/jammy 可选   
 SELECTED_CONFIGURATION="cli_standard"
 
@@ -109,8 +103,9 @@ branch2dir() {
 	[[ "${1}" == "head" ]] && echo "HEAD" || echo "${1##*:}"
 }
 
-BOOTSOURCEDIR="${BOOTDIR}/$(branch2dir "${BOOTBRANCH}")"
-LINUXSOURCEDIR="${KERNELDIR}/$(branch2dir "${KERNELBRANCH}")"
+BOOTSOURCEDIR="${BOOTDIR}/v2021.10-sunxi"
+LINUXSOURCEDIR="${KERNELDIR}/orange-pi-5.16-sunxi64"
+
 [[ -n $ATFSOURCE ]] && ATFSOURCEDIR="${ATFDIR}/$(branch2dir "${ATFBRANCH}")"
 
 BSP_CLI_PACKAGE_NAME="orangepi-bsp-cli-${BOARD}"
@@ -125,15 +120,9 @@ do_default() {
 
 start=$(date +%s)
 
-# Check and install dependencies, directory structure and settings
-# The OFFLINE_WORK variable inside the function
 prepare_host
 
-[[ "${JUST_INIT}" == "yes" ]] && exit 0
-
 [[ $CLEAN_LEVEL == *sources* ]] && cleaning "sources"
-
-# fetch_from_repo <url> <dir> <ref> <subdir_flag>
 
 for option in $(tr ',' ' ' <<< "$CLEAN_LEVEL"); do
 	[[ $option != sources ]] && cleaning "$option"

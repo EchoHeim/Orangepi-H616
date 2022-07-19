@@ -295,13 +295,11 @@ Branch: $BRANCH
 Minimal: $BUILD_MINIMAL
 
 Kernel configuration:
-Repository: $KERNELSOURCE
 Branch: $KERNELBRANCH
 Config file: $LINUXCONFIG
 
 U-boot configuration:
-Repository: $BOOTSOURCE
-Branch: $BOOTBRANCH
+
 Config file: $BOOTCONFIG
 
 Partitioning configuration: $IMAGE_PARTITION_TABLE offset: $OFFSET
