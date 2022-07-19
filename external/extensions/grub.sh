@@ -1,7 +1,6 @@
 # This runs *after* user_config. Don't change anything not coming from other variables or meant to be configured by the user.
 function extension_prepare_config__prepare_flash_kernel() {
 	# Extension configuration defaults.
-	export DISTRO_GENERIC_KERNEL=${DISTRO_GENERIC_KERNEL:-no}                    # if yes, does not build our own kernel, instead, uses generic one from distro
 	export UEFI_GRUB_TERMINAL="${UEFI_GRUB_TERMINAL:-serial console}"            # 'serial' forces grub menu on serial console. empty to not include
 	export UEFI_GRUB_DISABLE_OS_PROBER="${UEFI_GRUB_DISABLE_OS_PROBER:-}"        # 'true' will disable os-probing, useful for SD cards.
 	export UEFI_GRUB_DISTRO_NAME="${UEFI_GRUB_DISTRO_NAME:-Armbian}"             # Will be used on grub menu display
@@ -48,16 +47,10 @@ function extension_prepare_config__prepare_flash_kernel() {
 		fi
 	fi
 
-	if [[ "${DISTRO_GENERIC_KERNEL}" == "yes" ]]; then
-		export VER="generic"
-		unset KERNELSOURCE                 # This should make Armbian skip most stuff. At least, I hacked it to.
-		export INSTALL_ARMBIAN_FIRMWARE=no # Should skip build and install of Armbian-firmware.
-	else
-		export KERNELDIR="linux-uefi-${LINUXFAMILY}" # Avoid sharing a source tree with others, until we know it's safe.
-		# Don't install anything. Armbian handles everything.
-		DISTRO_KERNEL_PACKAGES=""
-		DISTRO_FIRMWARE_PACKAGES=""
-	fi
+    export KERNELDIR="linux-uefi-${LINUXFAMILY}" # Avoid sharing a source tree with others, until we know it's safe.
+    # Don't install anything. Armbian handles everything.
+    DISTRO_KERNEL_PACKAGES=""
+    DISTRO_FIRMWARE_PACKAGES=""
 
 	export PACKAGE_LIST_BOARD="${PACKAGE_LIST_BOARD} ${DISTRO_FIRMWARE_PACKAGES} ${DISTRO_KERNEL_PACKAGES}  ${uefi_packages}"
 

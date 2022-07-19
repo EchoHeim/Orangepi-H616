@@ -172,60 +172,30 @@ install_common()
 	# install u-boot
 	# @TODO: add install_bootloader() extension method, refactor into u-boot extension
 	[[ "${BOOTCONFIG}" != "none" ]] && {
-		if [[ "${REPOSITORY_INSTALL}" != *u-boot* ]]; then
-			UBOOT_VER=$(dpkg --info "${DEB_STORAGE}/u-boot/${CHOSEN_UBOOT}_${REVISION}_${ARCH}.deb" | grep Descr | awk '{print $(NF)}')
-			install_deb_chroot "${DEB_STORAGE}/u-boot/${CHOSEN_UBOOT}_${REVISION}_${ARCH}.deb"
-		else
-			UBOOT_VER=$(dpkg --info "${DEB_ORANGEPI}/u-boot/${CHOSEN_UBOOT}_${REVISION}_${ARCH}.deb" | grep Descr | awk '{print $(NF)}')
-			install_deb_chroot "${DEB_ORANGEPI}/u-boot/${CHOSEN_UBOOT}_${REVISION}_${ARCH}.deb" "orangepi"
-		fi
+        UBOOT_VER=$(dpkg --info "${DEB_STORAGE}/u-boot/${CHOSEN_UBOOT}_${REVISION}_${ARCH}.deb" | grep Descr | awk '{print $(NF)}')
+        install_deb_chroot "${DEB_STORAGE}/u-boot/${CHOSEN_UBOOT}_${REVISION}_${ARCH}.deb"
 	}
 
 	# install kernel
 	[[ -n $KERNELSOURCE ]] && {
-		if [[ "${REPOSITORY_INSTALL}" != *kernel* ]]; then
-			VER=$(dpkg --info "${DEB_STORAGE}/${CHOSEN_KERNEL}_${REVISION}_${ARCH}.deb" | awk -F"-" '/Source:/{print $2}')
-
-			install_deb_chroot "${DEB_STORAGE}/${CHOSEN_KERNEL}_${REVISION}_${ARCH}.deb"
-			if [[ -f ${DEB_STORAGE}/${CHOSEN_KERNEL/image/dtb}_${REVISION}_${ARCH}.deb ]]; then
-				install_deb_chroot "${DEB_STORAGE}/${CHOSEN_KERNEL/image/dtb}_${REVISION}_${ARCH}.deb"
-			fi
-			if [[ $INSTALL_HEADERS == yes ]]; then
-				install_deb_chroot "${DEB_STORAGE}/${CHOSEN_KERNEL/image/headers}_${REVISION}_${ARCH}.deb"
-			fi
-		else
-			VER=$(dpkg --info "${DEB_ORANGEPI}/${CHOSEN_KERNEL}_${REVISION}_${ARCH}.deb" | grep Descr | awk '{print $(NF)}')
-			VER="${VER/-$LINUXFAMILY/}"
-
-			install_deb_chroot "${DEB_ORANGEPI}/${CHOSEN_KERNEL}_${REVISION}_${ARCH}.deb" "orangepi"
-
-			if [[ -f ${DEB_ORANGEPI}/${CHOSEN_KERNEL/image/dtb}_${REVISION}_${ARCH}.deb ]]; then
-				install_deb_chroot "${DEB_ORANGEPI}/${CHOSEN_KERNEL/image/dtb}_${REVISION}_${ARCH}.deb" "orangepi"
-			fi
-
-			if [[ $INSTALL_HEADERS == yes ]]; then
-				install_deb_chroot "${DEB_ORANGEPI}/${CHOSEN_KERNEL/image/headers}_${REVISION}_${ARCH}.deb" "orangepi"
-			fi
-		fi
+        VER=$(dpkg --info "${DEB_STORAGE}/${CHOSEN_KERNEL}_${REVISION}_${ARCH}.deb" | awk -F"-" '/Source:/{print $2}')
+        install_deb_chroot "${DEB_STORAGE}/${CHOSEN_KERNEL}_${REVISION}_${ARCH}.deb"
+        if [[ -f ${DEB_STORAGE}/${CHOSEN_KERNEL/image/dtb}_${REVISION}_${ARCH}.deb ]]; then
+            install_deb_chroot "${DEB_STORAGE}/${CHOSEN_KERNEL/image/dtb}_${REVISION}_${ARCH}.deb"
+        fi
+        if [[ $INSTALL_HEADERS == yes ]]; then
+            install_deb_chroot "${DEB_STORAGE}/${CHOSEN_KERNEL/image/headers}_${REVISION}_${ARCH}.deb"
+        fi
 	}
 
 	# install board support packages
-	if [[ "${REPOSITORY_INSTALL}" != *bsp* ]]; then
-		install_deb_chroot "${DEB_STORAGE}/$RELEASE/${BSP_CLI_PACKAGE_FULLNAME}.deb" | tee "${DEST}"/${LOG_SUBPATH}/install.log 2>&1
-	else
-		install_deb_chroot "${DEB_ORANGEPI}/$RELEASE/${CHOSEN_ROOTFS}_${BSP_CLI_PACKAGE_FULLNAME}.deb" "orangepi"
-	fi
+	install_deb_chroot "${DEB_STORAGE}/$RELEASE/${BSP_CLI_PACKAGE_FULLNAME}.deb" | tee "${DEST}"/${LOG_SUBPATH}/install.log 2>&1
 
 	# install kernel sources
 	if [[ -f ${DEB_STORAGE}/${CHOSEN_KSRC}_${REVISION}_all.deb && $INSTALL_KSRC == yes ]]; then
 		install_deb_chroot "${DEB_STORAGE}/${CHOSEN_KSRC}_${REVISION}_all.deb"
 	elif [[ $INSTALL_KSRC == yes ]]; then
 		display_alert "Please set BUILD_KSRC=yes to generate the kernel source package" "" "wrn"
-	fi
-
-	# install wireguard tools
-	if [[ $WIREGUARD == yes ]]; then
-		chroot "${SDCARD}" /bin/bash -c "apt-get -y -qq install wireguard-tools --no-install-recommends" >> "${DEST}"/debug/install.log 2>&1
 	fi
 
 	# freeze orangepi packages
@@ -412,7 +382,6 @@ install_common()
 	# nsswitch settings for sane DNS behavior: remove resolve, assure libnss-myhostname support
 	sed "s/hosts\:.*/hosts:          files mymachines dns myhostname/g" -i "${SDCARD}"/etc/nsswitch.conf
 
-	# build logo in any case
 	boot_logo
 
 	# disable MOTD for first boot - we want as clean 1st run as possible

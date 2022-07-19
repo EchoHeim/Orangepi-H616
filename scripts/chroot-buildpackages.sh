@@ -330,9 +330,6 @@ chroot_installpackages_local()
 	rm -rf /tmp/aptly-temp/
 	mkdir -p /tmp/aptly-temp/
 
-    aptly -config="${conf}" repo add temp "${DEB_ORANGEPI}/extra/${RELEASE}-desktop/" >> "${DEST}"/${LOG_SUBPATH}/install.log 2>&1
-    aptly -config="${conf}" repo add temp "${DEB_ORANGEPI}/extra/${RELEASE}-utils/" >> "${DEST}"/${LOG_SUBPATH}/install.log 2>&1
-
 	# -gpg-key="925644A6"
 	[[ ! -d /root/.gnupg ]] && mkdir -p /root/.gnupg
 
@@ -370,17 +367,19 @@ chroot_installpackages()
 	local apt_extra="-o Acquire::http::Proxy=\"http://${APT_PROXY_ADDR:-localhost:3142}\" -o Acquire::http::Proxy::localhost=\"DIRECT\""
 	
     cat <<-EOF > "${SDCARD}"/tmp/install.sh
-	#!/bin/bash
-	apt-key add /tmp/buildpkg.key
-	apt-get $apt_extra -q update
-	apt-get -q ${apt_extra} --show-progress -o DPKG::Progress-Fancy=1 install -y ${install_list}
-	apt-get clean
-	apt-key del "925644A6"
-	rm /etc/apt/sources.list.d/orangepi-temp.list 2>/dev/null
-	rm /etc/apt/preferences.d/90-orangepi-temp.pref 2>/dev/null
-	rm /tmp/buildpkg.key 2>/dev/null
-	rm -- "\$0"
-	EOF
+#!/bin/bash
+apt-key add /tmp/buildpkg.key
+apt-get $apt_extra -q update
+apt-get -q ${apt_extra} --show-progress -o DPKG::Progress-Fancy=1 install -y ${install_list}
+apt-get clean
+apt-key del "925644A6"
+rm /etc/apt/sources.list.d/orangepi-temp.list 2>/dev/null
+rm /etc/apt/preferences.d/90-orangepi-temp.pref 2>/dev/null
+rm /tmp/buildpkg.key 2>/dev/null
+rm -- "\$0"
+
+EOF
+
 	chmod +x "${SDCARD}"/tmp/install.sh
 	chroot "${SDCARD}" /bin/bash -c "/tmp/install.sh" >> "${DEST}"/${LOG_SUBPATH}/install.log 2>&1
 

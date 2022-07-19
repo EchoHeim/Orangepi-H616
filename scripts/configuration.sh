@@ -27,7 +27,6 @@ cd ${SRC}/scripts
 ROOTFS_CACHE_MAX=200 # max number of rootfs cache, older ones will be cleaned up
 
 DEB_STORAGE=$DEST/debs
-DEB_ORANGEPI=$EXTER/cache/debs
 
 # TODO: fixed name can't be used for parallel image building
 ROOT_MAPPER="orangepi-root"
