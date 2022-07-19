@@ -422,21 +422,21 @@ install_common()
 install_rclocal()
 {
     cat <<-EOF > "${SDCARD}"/etc/rc.local
-    #!/bin/sh -e
-    #
-    # rc.local
-    #
-    # This script is executed at the end of each multiuser runlevel.
-    # Make sure that the script will "exit 0" on success or any other
-    # value on error.
-    #
-    # In order to enable or disable this script just change the execution
-    # bits.
-    #
-    # By default this script does nothing.
+#!/bin/sh -e
+#
+# rc.local
+#
+# This script is executed at the end of each multiuser runlevel.
+# Make sure that the script will "exit 0" on success or any other
+# value on error.
+#
+# In order to enable or disable this script just change the execution
+# bits.
+#
+# By default this script does nothing.
 
-    exit 0
-    EOF
+exit 0
+EOF
     chmod +x "${SDCARD}"/etc/rc.local
 }
 
@@ -449,7 +449,7 @@ install_distribution_specific()
 	bullseye)
 			# remove doubled uname from motd
 			[[ -f "${SDCARD}"/etc/update-motd.d/10-uname ]] && rm "${SDCARD}"/etc/update-motd.d/10-uname
-			# rc.local is not existing but one might need it
+
 			install_rclocal
 			# fix missing versioning
 			[[ $(grep -L "VERSION_ID=" "${SDCARD}"/etc/os-release) ]] && echo 'VERSION_ID="11"' >> "${SDCARD}"/etc/os-release
@@ -459,17 +459,18 @@ install_distribution_specific()
 	bookworm)
 			# remove doubled uname from motd
 			[[ -f "${SDCARD}"/etc/update-motd.d/10-uname ]] && rm "${SDCARD}"/etc/update-motd.d/10-uname
-			# rc.local is not existing but one might need it
+
 			install_rclocal
+
 			# fix missing versioning
 			[[ $(grep -L "VERSION_ID=" "${SDCARD}"/etc/os-release) ]] && echo 'VERSION_ID="12"' >> "${SDCARD}"/etc/os-release
-			[[ $(grep -L "VERSION=" "${SDCARD}"/etc/os-release) ]] && echo 'VERSION="11 (bookworm)"' >> "${SDCARD}"/etc/os-release
+			[[ $(grep -L "VERSION=" "${SDCARD}"/etc/os-release) ]] && echo 'VERSION="12 (bookworm)"' >> "${SDCARD}"/etc/os-release
 
 			# remove security updates repository since it does not exists yet
 			sed '/security/ d' -i "${SDCARD}"/etc/apt/sources.list
 		;;
 
-	bionic|focal|impish|jammy)
+    focal|jammy)
 
 			# by using default lz4 initrd compression leads to corruption, go back to proven method
 			sed -i "s/^COMPRESS=.*/COMPRESS=gzip/" "${SDCARD}"/etc/initramfs-tools/initramfs.conf
@@ -483,7 +484,6 @@ install_distribution_specific()
 			# remove motd news from motd.ubuntu.com
 			[[ -f "${SDCARD}"/etc/default/motd-news ]] && sed -i "s/^ENABLED=.*/ENABLED=0/" "${SDCARD}"/etc/default/motd-news
 
-			# rc.local is not existing but one might need it
 			install_rclocal
 
 			if [ -d "${SDCARD}"/etc/NetworkManager ]; then
@@ -493,11 +493,11 @@ install_distribution_specific()
 			fi
 
 			# Basic Netplan config. Let NetworkManager/networkd manage all devices on this system
-			[[ -d "${SDCARD}"/etc/netplan ]] && cat <<-EOF > "${SDCARD}"/etc/netplan/orangepi-default.yaml
+			[[ -d "${SDCARD}"/etc/netplan ]] && cat <<-EOF > "${SDCARD}"/etc/netplan/sys-default.yaml
 			network:
 			  version: 2
 			  renderer: $RENDERER
-			EOF
+EOF
 
 			# DNS fix
 			if [ -n "$NAMESERVER" ]; then
