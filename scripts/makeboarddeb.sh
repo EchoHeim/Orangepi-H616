@@ -127,10 +127,8 @@ create_board_package()
 	cat <<-EOF > "${destination}"/DEBIAN/postrm
 	#!/bin/sh
 	if [ remove = "\$1" ] || [ abort-install = "\$1" ]; then
-
 	    systemctl disable orangepi-hardware-monitor.service orangepi-hardware-optimize.service >/dev/null 2>&1
 	    systemctl disable orangepi-zram-config.service orangepi-ramlog.service >/dev/null 2>&1
-
 	fi
 	exit 0
 	EOF
@@ -148,21 +146,18 @@ create_board_package()
 
 	# check if it was disabled in config and disable in new service
 	if [ -n "\$(grep -w '^ENABLED=false' /etc/default/log2ram 2> /dev/null)" ]; then
-
 	    sed -i "s/^ENABLED=.*/ENABLED=false/" /etc/default/system-ramlog
-
 	fi
 
 	# fix boot delay "waiting for suspend/resume device"
 	if [ -f "/etc/initramfs-tools/initramfs.conf" ]; then
-
 	    if ! grep --quiet "RESUME=none" /etc/initramfs-tools/initramfs.conf; then
 	         echo "RESUME=none" >> /etc/initramfs-tools/initramfs.conf
 	    fi
-
 	fi
 
 	EOF
+
 	# install bootscripts if they are not present. Fix upgrades from old images
 	if [[ $FORCE_BOOTSCRIPT_UPDATE == yes ]]; then
 	    cat <<-EOF >> "${destination}"/DEBIAN/postinst

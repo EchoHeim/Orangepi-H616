@@ -262,7 +262,6 @@ create_rootfs_cache()
 
 		# needed for backend to keep current only
 		touch $cache_fname.current
-
 	fi
 
 	# used for internal purposes. Faster rootfs cache rebuilding
@@ -292,7 +291,7 @@ prepare_partitions()
 
 	# possible partition combinations
 	# /boot: none, ext4, ext2, fat (BOOTFS_TYPE)
-	# root: ext4, btrfs, f2fs, nfs (ROOTFS_TYPE)
+	# root: ext4, btrfs, f2fs (ROOTFS_TYPE)
 
 	# declare makes local variables by default if used inside a function
 	# NOTE: mountopts string should always start with comma if not empty
@@ -307,7 +306,6 @@ prepare_partitions()
 	parttype[f2fs]=ext4 # not a copy-paste error
 	parttype[btrfs]=btrfs
 	parttype[xfs]=xfs
-	# parttype[nfs] is empty
 
 	# metadata_csum and 64bit may need to be disabled explicitly when migrating to newer supported host OS releases
 	# add -N number of inodes to keep mount from running out
@@ -320,10 +318,7 @@ prepare_partitions()
 	fi
 	mkopts[fat]='-n BOOT'
 	mkopts[ext2]='-q'
-	# mkopts[f2fs] is empty
 	mkopts[btrfs]='-m dup'
-	# mkopts[xfs] is empty
-	# mkopts[nfs] is empty
 
 	mkfs[ext4]=ext4
 	mkfs[ext2]=ext2
@@ -331,15 +326,9 @@ prepare_partitions()
 	mkfs[f2fs]=f2fs
 	mkfs[btrfs]=btrfs
 	mkfs[xfs]=xfs
-	# mkfs[nfs] is empty
 
 	mountopts[ext4]=',commit=600,errors=remount-ro'
-	# mountopts[ext2] is empty
-	# mountopts[fat] is empty
-	# mountopts[f2fs] is empty
 	mountopts[btrfs]=',commit=600'
-	# mountopts[xfs] is empty
-	# mountopts[nfs] is empty
 
 	# default BOOTSIZE to use if not specified
 	DEFAULT_BOOTSIZE=256	# MiB
@@ -460,12 +449,10 @@ prepare_partitions()
 	[[ -z $LOOP ]] && exit_with_error "Unable to find free loop device"
 
 	check_loop_device "$LOOP"
-
 	losetup $LOOP ${SDCARD}.raw
 
 	# loop device was grabbed here, unlock
 	flock -u $FD
-
 	partprobe $LOOP
 
 	# stage: create fs, mount partitions, create fstab
@@ -508,18 +495,18 @@ prepare_partitions()
 	if [[ -f $SDCARD/boot/orangepiEnv.txt ]]; then
 		echo "rootdev=$rootfs" >> $SDCARD/boot/orangepiEnv.txt
 		echo "rootfstype=$ROOTFS_TYPE" >> $SDCARD/boot/orangepiEnv.txt
+        echo "orangepiEnv  =========" >> /home/lodge/test.txt
 	elif [[ $rootpart != 1 ]]; then
 		local bootscript_dst=${BOOTSCRIPT##*:}
 		sed -i 's/mmcblk0p1/mmcblk0p2/' $SDCARD/boot/$bootscript_dst
 		sed -i -e "s/rootfstype=ext4/rootfstype=$ROOTFS_TYPE/" \
 			-e "s/rootfstype \"ext4\"/rootfstype \"$ROOTFS_TYPE\"/" $SDCARD/boot/$bootscript_dst
 	fi
-
+    
 	# recompile .cmd to .scr if boot.cmd exists
 	[[ -f $SDCARD/boot/boot.cmd ]] && \
 		mkimage -C none -A arm -T script -d $SDCARD/boot/boot.cmd $SDCARD/boot/boot.scr > /dev/null 2>&1
-
-} #############################################################################
+} 
 
 # update_initramfs
 #

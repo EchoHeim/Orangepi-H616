@@ -2,9 +2,6 @@
 #
 # Copyright (c) Authors: https://www.armbian.com/authors
 #
-# This file is licensed under the terms of the GNU General Public
-# License version 2. This program is licensed "as is" without any
-# warranty of any kind, whether express or implied.
 
 . /etc/board-release
 . /etc/os-release
@@ -32,14 +29,6 @@ case "$1" in
 	# Run a q&d benchmark to be able to identify cards way too slow easily
 	echo -e "\n### quick iozone test:$(cd /root; iozone -e -I -a -s 1M -r 4k -i 0 -i 1 -i 2 | grep '^            1024' | sed 's/            1024      //')" >> $Log
 
-	# Bluetooth tweaks
-
-	#case ${BOARD} in
-	#	orangepizeroplus2*|orangepiwin)
-	#		update-rc.d ap6212-bluetooth defaults
-	#		;;
-	#esac
-
 	# Debian Buster desktop bugfix https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=923289
 	[[ -d /etc/lightdm ]] && dpkg-reconfigure libgdk-pixbuf2.0-0 && update-mime-database /usr/share/mime
 
@@ -66,44 +55,6 @@ case "$1" in
 		/etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xfwm4.xml
 	fi
 
-	# randomize mac in orangepiEnv.txt
-	if [[ -f /boot/orangepiEnv.txt ]]; then
-		get_random_mac
-		sed  -i "s/^ethaddr=.*/ethaddr=$MACADDR/" /boot/orangepiEnv.txt
-		get_random_mac
-		sed  -i "s/^eth1addr=.*/eth1addr=$MACADDR/" /boot/orangepiEnv.txt
-	fi
-
-	# hardware workarounds per family
-	case $LINUXFAMILY in
-		sun7i|sun8i)
-			# set some mac address for BT
-			[[ -n $(lsmod | egrep "dhd|brcmfmac" ) ]] && \
-				(MACADDR=$(printf '43:29:B1:%02X:%02X:%02X\n' $[RANDOM%256] $[RANDOM%256] $[RANDOM%256]) ; \
-				sed -i "s/^MAC_ADDR=.*/MAC_ADDR=${MACADDR}/" /etc/default/brcm40183 ;\
-				sed -i "s/^MAC_ADDR=.*/MAC_ADDR=${MACADDR}/" /etc/default/ap6212 \
-				echo -e "\n### [firstrun] Use MAC address ${MACADDR} for Bluetooth from now" >>${Log})
-
-			case $BOARD_NAME in
-				"Orange Pi Zero")
-					get_random_mac
-					echo "options xradio_wlan macaddr=${MACADDR}" >/etc/modprobe.d/xradio_wlan.conf
-					echo -e "\n### [firstrun] Use MAC address ${MACADDR} for Wi-Fi from now" >>${Log}
-					cd /etc/network/ && ln -sf interfaces.network-manager interfaces
-					(modprobe -r xradio_wlan && sleep 1 && modprobe xradio_wlan) &
-					;;
-			esac
-
-			# trigger red or blue LED as user feedback
-			echo heartbeat >/sys/class/leds/*red*/trigger 2>/dev/null || echo heartbeat >/sys/class/leds/*blue*/trigger 2>/dev/null
-			;;
-		*)
-
-	esac
-
-	# varios temporary hardware workarounds
-	#[[ $LINUXFAMILY == rk3399 || $LINUXFAMILY == rockchip64 ]] && [[ $BOARD != helios64 && $BOARD != khadas-edge ]] && set_fixed_mac
-	#[[ $LINUXFAMILY == rk3399 ]] && set_fixed_mac
 	systemctl disable orangepi-firstrun
 	exit 0
 	;;

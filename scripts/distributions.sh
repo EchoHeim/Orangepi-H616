@@ -100,7 +100,6 @@ install_common()
     fi
 
     cp "${EXTER}/config/bootenv/${BOOTENV_FILE}" "${SDCARD}"/boot/orangepiEnv.txt
-
     echo "overlay_prefix=$OVERLAY_PREFIX" >> "${SDCARD}"/boot/orangepiEnv.txt
 
 	# initial date for fake-hwclock
