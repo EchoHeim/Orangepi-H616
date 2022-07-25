@@ -101,13 +101,6 @@ install_common()
 
     cp "${EXTER}/config/bootenv/${BOOTENV_FILE}" "${SDCARD}"/boot/orangepiEnv.txt
 
-    # TODO: modify $bootscript_dst or orangepiEnv.txt to make NFS boot universal
-    # instead of copying sunxi-specific template
-    if [[ $ROOTFS_TYPE == nfs ]]; then
-        display_alert "Copying NFS boot script template"
-        cp "${EXTER}"/config/templates/nfs-boot.cmd.template "${SDCARD}"/boot/boot.cmd
-    fi
-
     echo "overlay_prefix=$OVERLAY_PREFIX" >> "${SDCARD}"/boot/orangepiEnv.txt
 
 	# initial date for fake-hwclock
@@ -201,17 +194,17 @@ install_common()
 	fi
 
 	# add user
-	chroot "${SDCARD}" /bin/bash -c "adduser --quiet --disabled-password --shell /bin/bash --home /home/${OPI_USERNAME} --gecos ${OPI_USERNAME} ${OPI_USERNAME}"
-	chroot "${SDCARD}" /bin/bash -c "(echo ${OPI_PWD};echo ${OPI_PWD};) | passwd "${OPI_USERNAME}" >/dev/null 2>&1"
+	chroot "${SDCARD}" /bin/bash -c "adduser --quiet --disabled-password --shell /bin/bash --home /home/${USER_NAME} --gecos ${USER_NAME} ${USER_NAME}"
+	chroot "${SDCARD}" /bin/bash -c "(echo ${USER_PWD};echo ${USER_PWD};) | passwd "${USER_NAME}" >/dev/null 2>&1"
 	for additionalgroup in sudo netdev audio video disk tty users games dialout plugdev input bluetooth systemd-journal ssh; do
-	        chroot "${SDCARD}" /bin/bash -c "usermod -aG ${additionalgroup} ${OPI_USERNAME} 2>/dev/null"
+	        chroot "${SDCARD}" /bin/bash -c "usermod -aG ${additionalgroup} ${USER_NAME} 2>/dev/null"
 	done
 
 	# fix for gksu in Xenial
-	touch ${SDCARD}/home/${OPI_USERNAME}/.Xauthority
-	chroot "${SDCARD}" /bin/bash -c "chown ${OPI_USERNAME}:${OPI_USERNAME} /home/${OPI_USERNAME}/.Xauthority"
+	touch ${SDCARD}/home/${USER_NAME}/.Xauthority
+	chroot "${SDCARD}" /bin/bash -c "chown ${USER_NAME}:${USER_NAME} /home/${USER_NAME}/.Xauthority"
 
-    echo -e "%${OPI_USERNAME} ALL=(ALL) NOPASSWD: ALL" >> ${SDCARD}/etc/sudoers
+    echo -e "%${USER_NAME} ALL=(ALL) NOPASSWD: ALL" >> ${SDCARD}/etc/sudoers
 
     echo -e 'export PATH="$PATH:/usr/sbin:/sbin"' >> ${SDCARD}/etc/profile
 
@@ -295,10 +288,6 @@ install_common()
 	IFS=$ifs
 
 	[[ $LINUXFAMILY == sun*i ]] && mkdir -p "${SDCARD}"/boot/overlay-user
-
-	# to prevent creating swap file on NFS (needs specific kernel options)
-	# and f2fs/btrfs (not recommended or needs specific kernel options)
-	[[ $ROOTFS_TYPE != ext4 ]] && touch "${SDCARD}"/var/swap
 
 	# install initial asound.state if defined
 	mkdir -p "${SDCARD}"/var/lib/alsa/

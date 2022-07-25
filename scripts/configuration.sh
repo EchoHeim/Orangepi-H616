@@ -7,42 +7,34 @@
 # warranty of any kind, whether express or implied.
 
 [[ -z $VENDOR ]] && VENDOR="Hurakan"
-[[ -z $ROOTPWD ]] && ROOTPWD="root" # Must be changed @first login
-[[ -z $OPI_USERNAME ]] && OPI_USERNAME="biqu" 
-[[ -z $OPI_PWD ]] && OPI_PWD="biqu" 
-[[ -z $MAINTAINER ]] && MAINTAINER="Hurakan" # deb signature
-[[ -z $MAINTAINERMAIL ]] && MAINTAINERMAIL="leeboby@aliyun.com" # deb signature
-[[ -z $DEB_COMPRESS ]] && DEB_COMPRESS="xz" # compress .debs with XZ by default. Use 'none' for faster/larger builds
-TZDATA=$(cat /etc/timezone) # Timezone for target is taken from host or defined here.
-USEALLCORES=yes # Use all CPU cores for compiling
+[[ -z $ROOTPWD ]] && ROOTPWD="root"             # Must be changed @first login
+[[ -z $USER_NAME ]] && USER_NAME="biqu"
+[[ -z $USER_PWD ]] && USER_PWD="biqu"
+[[ -z $MAINTAINER ]] && MAINTAINER="Hurakan"    # deb signature
+[[ -z $MAINTAINERMAIL ]] && MAINTAINERMAIL="leeboby@aliyun.com"     # deb signature
+[[ -z $DEB_COMPRESS ]] && DEB_COMPRESS="xz"     # compress .debs with XZ by default. Use 'none' for faster/larger builds
+TZDATA=$(cat /etc/timezone)     # Timezone for target is taken from host or defined here.
+USEALLCORES=yes                 # Use all CPU cores for compiling
 HOSTRELEASE=$(cat /etc/os-release | grep VERSION_CODENAME | cut -d"=" -f2)
 [[ -z $HOSTRELEASE ]] && HOSTRELEASE=$(cut -d'/' -f1 /etc/debian_version)
-[[ -z $EXIT_PATCHING_ERROR ]] && EXIT_PATCHING_ERROR="" # exit patching if failed
-[[ -z $HOST ]] && HOST="Hurakan" # set hostname to the board
+[[ -z $EXIT_PATCHING_ERROR ]] && EXIT_PATCHING_ERROR=""     # exit patching if failed
+[[ -z $HOST ]] && HOST="Hurakan"                            # set hostname to the board
 cd "${SRC}" || exit
 [[ -z "${ROOTFSCACHE_VERSION}" ]] && ROOTFSCACHE_VERSION=11
 [[ -z "${CHROOT_CACHE_VERSION}" ]] && CHROOT_CACHE_VERSION=7
 
 cd ${SRC}/scripts
-ROOTFS_CACHE_MAX=200 # max number of rootfs cache, older ones will be cleaned up
+ROOTFS_CACHE_MAX=200            # max number of rootfs cache, older ones will be cleaned up
 
 DEB_STORAGE=$DEST/debs
 
 # TODO: fixed name can't be used for parallel image building
 ROOT_MAPPER="orangepi-root"
-[[ -z $ROOTFS_TYPE ]] && ROOTFS_TYPE=ext4 # default rootfs type is ext4
+[[ -z $ROOTFS_TYPE ]] && ROOTFS_TYPE=ext4       # default rootfs type is ext4
 [[ "ext4 f2fs btrfs xfs nfs fel" != *$ROOTFS_TYPE* ]] && exit_with_error "Unknown rootfs type" "$ROOTFS_TYPE"
 
-[[ -z $BTRFS_COMPRESSION ]] && BTRFS_COMPRESSION=zlib # default btrfs filesystem compression method is zlib
+[[ -z $BTRFS_COMPRESSION ]] && BTRFS_COMPRESSION=zlib   # default btrfs filesystem compression method is zlib
 [[ ! $BTRFS_COMPRESSION =~ zlib|lzo|zstd|none ]] && exit_with_error "Unknown btrfs compression method" "$BTRFS_COMPRESSION"
-
-# Fixed image size is in 1M dd blocks (MiB)
-# to get size of block device /dev/sdX execute as root:
-# echo $(( $(blockdev --getsize64 /dev/sdX) / 1024 / 1024 ))
-[[ "f2fs" == *$ROOTFS_TYPE* && -z $FIXED_IMAGE_SIZE ]] && exit_with_error "Please define FIXED_IMAGE_SIZE"
-
-# small SD card with kernel, boot script and .dtb/.bin files
-[[ $ROOTFS_TYPE == nfs ]] && FIXED_IMAGE_SIZE=64
 
 MAINLINE_KERNEL_DIR="$SRC/kernel"
 MAINLINE_UBOOT_DIR="$SRC/u-boot"

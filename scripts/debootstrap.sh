@@ -356,17 +356,6 @@ prepare_partitions()
 		local bootpart=1
 		local rootpart=2
 		[[ -z $BOOTSIZE || $BOOTSIZE -le 8 ]] && BOOTSIZE=${DEFAULT_BOOTSIZE}
-	elif [[ $ROOTFS_TYPE != ext4 && $ROOTFS_TYPE != nfs ]]; then
-		# 2 partition setup for non-ext4 local root
-		local bootfs=ext4
-		local bootpart=1
-		local rootpart=2
-		[[ -z $BOOTSIZE || $BOOTSIZE -le 8 ]] && BOOTSIZE=${DEFAULT_BOOTSIZE}
-	elif [[ $ROOTFS_TYPE == nfs ]]; then
-		# single partition ext4 /boot, no root
-		local bootfs=ext4
-		local bootpart=1
-		[[ -z $BOOTSIZE || $BOOTSIZE -le 8 ]] && BOOTSIZE=${DEFAULT_BOOTSIZE} # For cleanup processing only
 	elif [[ $UEFISIZE -gt 0 ]]; then
 		if [[ "${IMAGE_PARTITION_TABLE}" == "gpt" ]]; then
 			# efi partition and ext4 root. some juggling is done by parted/sgdisk
@@ -391,7 +380,7 @@ prepare_partitions()
 		display_alert "Using user-defined image size" "$FIXED_IMAGE_SIZE MiB" "info"
 		local sdsize=$FIXED_IMAGE_SIZE
 		# basic sanity check
-		if [[ $ROOTFS_TYPE != nfs && $sdsize -lt $rootfs_size ]]; then
+		if [[ $sdsize -lt $rootfs_size ]]; then
 			exit_with_error "User defined image size is too small" "$sdsize <= $rootfs_size"
 		fi
 	else
@@ -417,10 +406,7 @@ prepare_partitions()
 	# stage: create partition table
 	display_alert "Creating partitions" "${bootfs:+/boot: $bootfs }root: $ROOTFS_TYPE" "info"
 	parted -s ${SDCARD}.raw -- mklabel ${IMAGE_PARTITION_TABLE}
-	if [[ $ROOTFS_TYPE == nfs ]]; then
-		# single /boot partition
-		parted -s ${SDCARD}.raw -- mkpart primary ${parttype[$bootfs]} ${bootstart}s "100%"
-	elif [[ $UEFISIZE -gt 0 ]]; then
+	if [[ $UEFISIZE -gt 0 ]]; then
 		# uefi partition + root partition
 		if [[ "${IMAGE_PARTITION_TABLE}" == "gpt" ]]; then
 			if [[ ${BIOSSIZE} -gt 0 ]]; then
@@ -491,9 +477,7 @@ prepare_partitions()
 		display_alert "Creating rootfs" "$ROOTFS_TYPE on $rootdevice"
 		mkfs.${mkfs[$ROOTFS_TYPE]} ${mkopts[$ROOTFS_TYPE]} $rootdevice >> "${DEST}"/${LOG_SUBPATH}/install.log 2>&1
 		[[ $ROOTFS_TYPE == ext4 ]] && tune2fs -o journal_data_writeback $rootdevice > /dev/null
-		if [[ $ROOTFS_TYPE == btrfs && $BTRFS_COMPRESSION != none ]]; then
-			local fscreateopt="-o compress-force=${BTRFS_COMPRESSION}"
-		fi
+
 		mount ${fscreateopt} $rootdevice $MOUNT/
 		# create fstab (and crypttab) entry
 
@@ -517,7 +501,7 @@ prepare_partitions()
 		mount ${LOOP}p${uefipart} "${MOUNT}${UEFI_MOUNT_POINT}"
 		echo "UUID=$(blkid -s UUID -o value ${LOOP}p${uefipart}) ${UEFI_MOUNT_POINT} vfat defaults 0 2" >>$SDCARD/etc/fstab
 	fi
-	[[ $ROOTFS_TYPE == nfs ]] && echo "/dev/nfs / nfs defaults 0 0" >> $SDCARD/etc/fstab
+
 	echo "tmpfs /tmp tmpfs defaults,nosuid 0 0" >> $SDCARD/etc/fstab
 
 	# stage: adjust boot script or boot environment
@@ -534,7 +518,6 @@ prepare_partitions()
 	# recompile .cmd to .scr if boot.cmd exists
 	[[ -f $SDCARD/boot/boot.cmd ]] && \
 		mkimage -C none -A arm -T script -d $SDCARD/boot/boot.cmd $SDCARD/boot/boot.scr > /dev/null 2>&1
-
 
 } #############################################################################
 
@@ -590,28 +573,21 @@ create_image()
 	IMAGE_TYPE=server
 
 	local version="${BOARD^}_${REVISION}_${DISTRIBUTION,}_${RELEASE}_${IMAGE_TYPE}_linux$(grab_version "$LINUXSOURCEDIR")"
-	[[ $ROOTFS_TYPE == nfs ]] && version=${version}_nfsboot
 
 	destimg=$DEST/images/${version}
 	rm -rf $destimg
 	mkdir -p $destimg
 
-	if [[ $ROOTFS_TYPE != nfs ]]; then
-		display_alert "Copying files to" "/"
-		echo -e "\nCopying files to [/]" >>"${DEST}"/${LOG_SUBPATH}/install.log
-		rsync -aHWXh \
-			  --exclude="/boot/*" \
-			  --exclude="/dev/*" \
-			  --exclude="/proc/*" \
-			  --exclude="/run/*" \
-			  --exclude="/tmp/*" \
-			  --exclude="/sys/*" \
-			  --info=progress0,stats1 $SDCARD/ $MOUNT/ >> "${DEST}"/${LOG_SUBPATH}/install.log 2>&1
-	else
-		display_alert "Creating rootfs archive" "rootfs.tgz" "info"
-		tar cp --xattrs --directory=$SDCARD/ --exclude='./boot/*' --exclude='./dev/*' --exclude='./proc/*' --exclude='./run/*' --exclude='./tmp/*' \
-			--exclude='./sys/*' . | pv -p -b -r -s $(du -sb $SDCARD/ | cut -f1) -N "rootfs.tgz" | gzip -c > $destimg/${version}-rootfs.tgz
-	fi
+    display_alert "Copying files to" "/"
+    echo -e "\nCopying files to [/]" >>"${DEST}"/${LOG_SUBPATH}/install.log
+    rsync -aHWXh \
+            --exclude="/boot/*" \
+            --exclude="/dev/*" \
+            --exclude="/proc/*" \
+            --exclude="/run/*" \
+            --exclude="/tmp/*" \
+            --exclude="/sys/*" \
+            --info=progress0,stats1 $SDCARD/ $MOUNT/ >> "${DEST}"/${LOG_SUBPATH}/install.log 2>&1
 
 	# stage: rsync /boot
 	display_alert "Copying files to" "/boot"
@@ -768,5 +744,4 @@ create_image()
 		# display warning when we want to write sd card under Docker
 		display_alert "Can't write to $CARD_DEVICE" "Enable docker privileged mode in config-docker.conf" "wrn"
 	fi
-
 }

@@ -38,6 +38,7 @@
 
 	leds {
 		compatible = "gpio-leds";
+        status = "disabled";
 
 		led-0 {
 			function = LED_FUNCTION_POWER;
