@@ -495,18 +495,17 @@ prepare_partitions()
 	if [[ -f $SDCARD/boot/orangepiEnv.txt ]]; then
 		echo "rootdev=$rootfs" >> $SDCARD/boot/orangepiEnv.txt
 		echo "rootfstype=$ROOTFS_TYPE" >> $SDCARD/boot/orangepiEnv.txt
-        echo "orangepiEnv  =========" >> /home/lodge/test.txt
 	elif [[ $rootpart != 1 ]]; then
 		local bootscript_dst=${BOOTSCRIPT##*:}
 		sed -i 's/mmcblk0p1/mmcblk0p2/' $SDCARD/boot/$bootscript_dst
 		sed -i -e "s/rootfstype=ext4/rootfstype=$ROOTFS_TYPE/" \
 			-e "s/rootfstype \"ext4\"/rootfstype \"$ROOTFS_TYPE\"/" $SDCARD/boot/$bootscript_dst
 	fi
-    
+
 	# recompile .cmd to .scr if boot.cmd exists
 	[[ -f $SDCARD/boot/boot.cmd ]] && \
 		mkimage -C none -A arm -T script -d $SDCARD/boot/boot.cmd $SDCARD/boot/boot.scr > /dev/null 2>&1
-} 
+}
 
 # update_initramfs
 #

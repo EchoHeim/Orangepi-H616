@@ -432,15 +432,15 @@
 				function = "uart0";
 			};
 
-			// uart1_pins: uart1-pins {
-			// 	pins = "PG6", "PG7";
-			// 	function = "uart1";
-			// };
+			uart1_pins: uart1-pins {
+				pins = "PG6", "PG7";
+				function = "uart1";
+			};
 
-			// uart1_rts_cts_pins: uart1-rts-cts-pins {
-			// 	pins = "PG8", "PG9";
-			// 	function = "uart1";
-			// };
+			uart1_rts_cts_pins: uart1-rts-cts-pins {
+				pins = "PG8", "PG9";
+				function = "uart1";
+			};
 
 			uart2_ph_pins: uart2-ph-pins {
 				pins = "PH5", "PH6";
