@@ -6,7 +6,6 @@ Description=Orange Pi first run optional user configuration
 Wants=network-online.target
 After=network.target network-online.target
 ConditionPathExists=/boot/orangepi_first_run.txt
-ConditionPathExists=/root/.not_logged_in_yet
 
 [Service]
 Type=idle

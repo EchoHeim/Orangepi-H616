@@ -17,30 +17,6 @@ LINUXFAMILY=$2
 BOARD=$3
 BUILD_DESKTOP=$4
 
-Main() {
-	case $RELEASE in
-		xenial)
-			# your code here
-			;;
-		stretch)
-			# your code here
-			# InstallOpenMediaVault # uncomment to get an OMV 4 image
-			;;
-		buster)
-			# your code here
-			;;
-		bullseye)
-			# your code here
-			;;
-		bionic)
-			# your code here
-			;;
-		focal)
-			# your code here
-			;;
-	esac
-} # Main
-
 InstallOpenMediaVault() {
 	# use this routine to create a Debian based fully functional OpenMediaVault
 	# image (OMV 3 on Jessie, OMV 4 with Stretch). Use of mainline kernel highly
@@ -56,7 +32,6 @@ InstallOpenMediaVault() {
 	# https://forum.armbian.com/index.php?/topic/2644-openmediavault-3x-customize-imagesh/
 
 	echo root:openmediavault | chpasswd
-	rm /root/.not_logged_in_yet
 	. /etc/default/cpufrequtils
 	export LANG=C LC_ALL="en_US.UTF-8"
 	export DEBIAN_FRONTEND=noninteractive
@@ -220,8 +195,6 @@ UnattendedStorageBenchmark() {
 	# Useful to use the same OS image with a bunch of different SD cards or eMMC modules
 	# to test for performance differences without wasting too much time.
 
-	rm /root/.not_logged_in_yet
-
 	apt-get -qq install time
 
 	wget -qO /usr/local/bin/sd-card-bench.sh https://raw.githubusercontent.com/ThomasKaiser/sbc-bench/master/sd-card-bench.sh
@@ -238,5 +211,3 @@ InstallAdvancedDesktop()
 	[[ -f /usr/share/doc/avahi-daemon/examples/ssh.service ]] && cp /usr/share/doc/avahi-daemon/examples/ssh.service /etc/avahi/services/
 	apt clean
 } # InstallAdvancedDesktop
-
-Main "$@"

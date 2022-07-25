@@ -8,23 +8,18 @@
 
 . /etc/board-release
 
-
 check_abort()
 {
-
 	echo -e "\nDisabling user account creation procedure\n"
-	rm -f /root/.not_logged_in_yet
 	if [[ ${USER_SHELL} == zsh ]]; then
 		printf "\nYou selected \e[0;91mZSH\x1B[0m as your default shell. If you want to use it right away, please logout and login! \n\n"
 	fi
 	trap - INT
 	exit 0
-
 }
 
 read_password()
 {
-
 	unset password
 	unset charcount
 	prompt="$1 password: "
@@ -58,13 +53,10 @@ read_password()
 	done
 
 	stty echo
-
 }
-
 
 set_shell()
 {
-
 	optionsAudits=($(cat /etc/shells | grep "zsh\|/bash" | sed 's/\/bin\///g' | sed 's/\/usr//g' | uniq))
 	USER_SHELL="bash"
 
@@ -93,12 +85,10 @@ set_shell()
 	# change shell for future users
 	sed -i "s|^SHELL=.*|SHELL=${SHELL_PATH}|" /etc/default/useradd
 	sed -i "s|^DSHELL=.*|DSHELL=${SHELL_PATH}|" /etc/adduser.conf
-
 }
 
 set_timezone_and_locales()
 {
-
 	# Grab this machine's public IP address
 	PUBLIC_IP=`curl --max-time 5 -s https://ipinfo.io/ip`
 
@@ -218,79 +208,3 @@ add_profile_sync_settings()
 	systemctl --user enable psd.service >/dev/null 2>&1
 	systemctl --user start psd.service >/dev/null 2>&1
 }
-
-add_user()
-{
-	read -t 0 temp
-	REPEATS=3
-	while [ -f "/root/.not_logged_in_yet" ]; do
-		echo -e "\nPlease provide a username (eg. your first name): \c"
-		read -e username
-		if ! grep '^[a-zA-Z]*$' <<< $username > /dev/null ; then
-			echo -e "\n\x1B[91mError\x1B[0m: illegal characters in username"
-			return
-		fi
-
-
-		RealUserName="$(echo "$username" | tr '[:upper:]' '[:lower:]' | tr -d -c '[:alnum:]')"
-		[ -z "$RealUserName" ] && return
-		if ! id "$RealUserName" >/dev/null 2>&1; then break; else echo -e "Username \e[0;31m$RealUserName\x1B[0m already exists on the system."; fi
-	done
-
-	while [ -f "/root/.not_logged_in_yet" ]; do
-		read_password "Create user ($username)"
-		first_input="$password"
-		echo ""
-		read_password "Repeat user ($username)"
-		second_input="$password"
-		echo ""
-		if [[ "$first_input" == "$second_input" ]]; then
-			result="$(cracklib-check <<<"$password")"
-			okay="$(awk -F': ' '{ print $2}' <<<"$result")"
-			if [[ "$okay" == "OK" ]]; then
-				echo -e ""
-				read -e -p "Please provide your real name: " -i "${RealUserName^}" RealName
-
-				adduser --quiet --disabled-password --home /home/"$RealUserName" --gecos "$RealName" "$RealUserName"
-				(echo "$first_input";echo "$second_input";) | passwd "$RealUserName" >/dev/null 2>&1
-				for additionalgroup in sudo netdev audio video disk tty users games dialout plugdev input bluetooth systemd-journal ssh; do
-					usermod -aG "${additionalgroup}" "${RealUserName}" 2>/dev/null
-				done
-
-				# fix for gksu in Xenial
-				touch /home/"$RealUserName"/.Xauthority
-				chown "$RealUserName":"$RealUserName" /home/"$RealUserName"/.Xauthority
-				RealName="$(awk -F":" "/^${RealUserName}:/ {print \$5}" </etc/passwd | cut -d',' -f1)"
-				[ -z "$RealName" ] && RealName="$RealUserName"
-				echo -e "\nDear \e[0;92m${RealName}\x1B[0m, your account \e[0;92m${RealUserName}\x1B[0m has been created and is sudo enabled."
-				echo -e "Please use this account for your daily work from now on.\n"
-				rm -f /root/.not_logged_in_yet
-				chmod +x /etc/update-motd.d/*
-				# set up profile sync daemon on desktop systems
-				command -v psd >/dev/null 2>&1
-				if [ $? -eq 0 ]; then
-					echo -e "${RealUserName} ALL=(ALL) NOPASSWD: /usr/bin/psd-overlay-helper" >> /etc/sudoers
-					touch /home/"${RealUserName}"/.activate_psd
-					chown "$RealUserName":"$RealUserName" /home/"${RealUserName}"/.activate_psd
-				fi
-				break
-			else
-				echo -e "Rejected - \e[0;31m$okay.\x1B[0m Try again [${REPEATS}]."
-				REPEATS=$((REPEATS - 1))
-			fi
-		elif [[ -n $password ]]; then
-			echo -e "Rejected - \e[0;31mpasswords do not match.\x1B[0m Try again [${REPEATS}]."
-			REPEATS=$((REPEATS - 1))
-		fi
-		[[ "$REPEATS" -eq 0 ]] && exit
-	done
-
-}
-
-if [[ -f /root/.not_logged_in_yet && -n $(tty) ]]; then
-
-	echo -e "New to Orange Pi? Support: \e[1m\e[39mhttp://www.orangepi.org\x1B[0m\n"
-
-	rm -f /root/.not_logged_in_yet
-
-fi
