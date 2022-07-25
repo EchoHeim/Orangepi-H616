@@ -1,9 +1,3 @@
-## Supported boards
-
-Soc | Boards |
-|:--|:--|
-| Allwinner H616 | Orange Pi Zero2 | 
-
 ## 主机环境
 
 ubuntu22.04
